@@ -53,36 +53,28 @@ def cleanElectrons(electrons, muons):
     return cleanedElectrons
 
 
-def elFakeSel(electrons, muons):
-    fakeElectrons = op.select(electrons, lambda el: op.AND(
-        elConePt(cleanElectrons(electrons, muons))[el.idx] >= 10,
-        op.OR(
-            op.AND(op.abs(el.eta+el.deltaEtaSC)
-                   <= 1.479, el.sieie <= 0.011),
-            op.AND(op.abs(el.eta+el.deltaEtaSC)
-                   > 1.479, el.sieie <= 0.030)
-        ),
-        el.hoe <= 0.10,
-        el.eInvMinusPInv >= -0.04,
-        # op.OR(el.mvaTTH >= 0.30, op.AND(el.jetRelIso < 0.7, el.mvaFall17V2noIso_W90)),
-        # op.switch(el.mvaTTV, el.mvaTTV >= 0.30, el.mvaTTH < 0.30, self.lambda_lepton_associatedJetLessThanTightBtag(el), self.lambda_lepton_associatedJetLessThanMediumBtag(el)),
-        el.lostHits == 0,
-        el.convVeto
-    ))
-    return fakeElectrons
 
 
 def ak4jetDef(jet):
     return op.AND(
-        jet.jetId & 2,  # tight
-        jet.pt > 25.,
+        #jet.jetId & 2,  # tight
+        jet.pt > 30.,
         op.abs(jet.eta) <= 2.4
     )
+
+def cleanJets(jets, muons, electrons, sort=True):
+    jets = op.select(jets, lambda jet: op.AND(
+            op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(jet.p4, ele.p4) < 0.4)),
+            op.NOT(op.rng_any(muons, lambda mu: op.deltaR(jet.p4, mu.p4) < 0.4))
+        ))
+    if sort:
+        jets = op.sort(jets, lambda j: -j.pt)
+    return jets
 
 
 def ak8jetDef(jet):
     return op.AND(
-        jet.jetId & 2,  # tight
+        #        jet.jetId & 2,  # tight
         jet.subJet1.isValid,
         jet.subJet2.isValid,
         jet.subJet1.pt > 20.,
@@ -92,6 +84,5 @@ def ak8jetDef(jet):
         jet.msoftdrop >= 30.,
         jet.msoftdrop <= 210.,
         jet.pt > 200.,
-        op.abs(jet.eta) <= 2.4,
-        jet.tau2 / jet.tau1 <= 0.75
+        op.abs(jet.eta) <= 2.4
     )

@@ -6,12 +6,12 @@ from bamboo import treefunctions as op
 from itertools import chain
 
 
-class NanoBaseHHWWbb(NanoAODModule, HistogramsModule):
+class NanoBaseJME(NanoAODModule, HistogramsModule):
     def __init__(self, args):
-        super(NanoBaseHHWWbb, self).__init__(args)
+        super(NanoBaseJME, self).__init__(args)
 
     def addArgs(self, parser):
-        super(NanoBaseHHWWbb, self).addArgs(parser)
+        super(NanoBaseJME, self).addArgs(parser)
         parser.add_argument("--era",
                             action='store',
                             type=str,
@@ -47,7 +47,7 @@ class NanoBaseHHWWbb(NanoAODModule, HistogramsModule):
             varReaders = []
             return NanoAODDescription(groups=groups, collections=collections, systVariations=varReaders)
 
-        tree, noSel, backend, lumiArgs = super(NanoBaseHHWWbb, self).prepareTree(tree=tree,
+        tree, noSel, backend, lumiArgs = super(NanoBaseJME, self).prepareTree(tree=tree,
                                                                                  sample=sample,
                                                                                  sampleCfg=sampleCfg,
                                                                                  description=getNanoAODDescription(),
