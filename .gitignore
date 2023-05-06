@@ -2,3 +2,4 @@ bamboo
 bamboovenv
 build-plotit
 plotIt
+**/__pycache__
