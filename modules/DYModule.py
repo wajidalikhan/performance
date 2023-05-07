@@ -138,6 +138,7 @@ class DYModule(NanoBaseJME):
         plots+=cp.AK4jetPlots(ak4Jets, noSel, "noSel")
         plots+=cp.AK4jetPlots(ak4JetsID, noSel, "noSelJetID")
         plots+=cp.AK4jetPlots(ak4Jetspt40, noSel, "noSelJetpt40")
+        plots+=cp.eventPlots(tree, noSel, "noSel")
 
         ### two leptons
         plots+=cp.muonPlots(muons, hasTwoSFLeptons, "hasTwoSFLeptons")
@@ -160,6 +161,7 @@ class DYModule(NanoBaseJME):
 
             plots+=cp.responsePlots(matchedjets, Zmasscut, "response",tree)
 
+        plots+=cp.eventPlots(tree, Zmasscut, "Zmasscut")
         # Cutflow report
         yields.add(hasTwoSFLeptons, 'two lepton')
         yields.add(Zmasscut, 'zmass cut')

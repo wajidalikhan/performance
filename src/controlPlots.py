@@ -143,3 +143,11 @@ def responsePlots(jets, sel, sel_tag, tree):
             plots.append(Plot.make1D(f"{sel_tag}_{etatag}_{pttag}", response,sel,EqBin(100,0.,3.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
 
     return plots
+
+
+def eventPlots(tree, sel, sel_tag):
+    plots = []
+    
+    plots.append(Plot.make1D(f"{sel_tag}_event_goodnpvs",tree.PV.npvsGood,sel,EqBin(100,0.,100.),xTitle = "Number of good PVs"))
+
+    return plots
