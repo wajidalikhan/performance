@@ -5,7 +5,7 @@ from bamboo import treefunctions as op
 
 def muonDef(mu):
     return op.AND(
-        mu.pt >= 5.,
+        mu.pt >= 35.,
         op.abs(mu.eta) <= 2.4,
         op.abs(mu.dxy) <= 0.05,
         op.abs(mu.dz) <= 0.1,
@@ -25,7 +25,7 @@ def muonConePt(muons):
 
 def elDef(el):
     return op.AND(
-        el.pt >= 7.,
+        el.pt >= 35.,
         op.abs(el.eta) <= 2.5,
         op.abs(el.dxy) <= 0.05,
         op.abs(el.dz) <= 0.1,
