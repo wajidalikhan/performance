@@ -47,11 +47,11 @@ class DYModule(NanoBaseJME):
             op.select(tree.Jet, lambda jet: defs.ak4jetDef(jet)), lambda jet: -jet.pt)
 
         ## jet - lepton cleaning
-        #clak4Jets = defs.cleanJets(ak4Jets, muons, clElectrons)
+        clak4Jets = defs.cleanJets(ak4Jets, muons, clElectrons)
 
         ## jet ID & pT recommendations
         ak4JetsID = op.select(
-            ak4Jets, lambda jet: jet.jetId & 2)
+            clak4Jets, lambda jet: jet.jetId & 2)
 
         ak4Jetspt40 = op.select(
             ak4JetsID, lambda jet: jet.pt > 40)
@@ -75,20 +75,17 @@ class DYModule(NanoBaseJME):
 
 
         # lepton channels
-        eePair = op.combine(clElectrons, N=2, pred=lambda el1,
-                            el2: el1.charge != el2.charge)
-        mumuPair = op.combine(muons, N=2, pred=lambda mu1,
-                              mu2: mu1.charge != mu2.charge)
+        # eePair = op.combine(clElectrons, N=2, pred=lambda el1,
+        #                     el2: el1.charge != el2.charge)
+        # mumuPair = op.combine(muons, N=2, pred=lambda mu1,
+        #                       mu2: mu1.charge != mu2.charge)
 
-
-        firstEEpair = eePair[0]
-        firstMUMUpair = mumuPair[0]
 
         ### reconstruct Z boson
         Zboson = op.multiSwitch(
-            (op.rng_len(firstMUMUpair)==1,op.sum(firstMUMUpair[0].p4,firstMUMUpair[1].p4)),
-            (op.rng_len(firstEEpair)==1,op.sum(firstEEpair[0].p4,firstEEpair[1].p4)),
-            None
+            (op.rng_len(muons)>0,op.sum(muons[0].p4,muons[1].p4)),
+            (op.rng_len(clElectrons)>0,op.sum(clElectrons[0].p4,clElectrons[1].p4)),
+            op.withMass(muons[0].p4,0)
         )
 
         ### Z mass selection
@@ -99,6 +96,32 @@ class DYModule(NanoBaseJME):
 
         #### deltaphi selection on jets
 
+        if sampleCfg['type'] == 'mc':
+            #### efficiency and purity
+            ### efficiency match to generator jets with deltaR<0.2 and pT gen >30, pt reco > 20
+            recojetpt30 = op.select(ak4Jets, lambda jet: jet.pt > 30)
+            recojetpt20 = op.select(ak4Jets, lambda jet: jet.pt > 20)
+            
+            # firstgenjet = tree.Jet[0].chHEF
+            
+            effjets = op.select(recojetpt20, lambda jet: op.AND(
+                op.deltaR(jet.p4,jet.genJet.p4) < 0.2,
+                jet.genJet.pt > 30
+            ))
+
+            purityjets = op.select(recojetpt30, lambda jet: op.AND(
+                op.deltaR(jet.p4,jet.genJet.p4) < 0.2,
+                jet.genJet.pt > 20
+            ))
+            
+            pujets = op.select(ak4Jets, lambda jet: 
+                op.deltaR(jet.p4,jet.genJet.p4) > 0.4
+            )
+
+            matchedjets = op.select(ak4Jets, lambda jet: op.AND( 
+                jet.idx < 3,
+                op.deltaR(jet.p4,jet.genJet.p4) < 0.2
+            ))
 
 
         #############################################################################
@@ -109,24 +132,32 @@ class DYModule(NanoBaseJME):
         ### noSel
         plots+=cp.muonPlots(muons, noSel, "noSel")
         plots+=cp.electronPlots(electrons, noSel, "noSel")
-        # plots+=cp.AK4jetPlots(ak4Jets, noSel, "noSel")
-        # plots+=cp.AK4jetPlots(ak4JetsID, noSel, "noSelJetID")
-        # plots+=cp.AK4jetPlots(ak4Jetspt40, noSel, "noSelJetpt40")
+        plots+=cp.AK4jetPlots(ak4Jets, noSel, "noSel")
+        plots+=cp.AK4jetPlots(ak4JetsID, noSel, "noSelJetID")
+        plots+=cp.AK4jetPlots(ak4Jetspt40, noSel, "noSelJetpt40")
 
         ### two leptons
-        # plots+=cp.muonPlots(muons, hasTwoSFLeptons, "hasTwoSFLeptons")
-        # plots+=cp.electronPlots(electrons, hasTwoSFLeptons, "hasTwoSFLeptons")
-        #plots+=cp.ZbosonPlots(Zboson, hasTwoSFLeptons, "hasTwoSFLeptons")
+        plots+=cp.muonPlots(muons, hasTwoSFLeptons, "hasTwoSFLeptons")
+        plots+=cp.electronPlots(electrons, hasTwoSFLeptons, "hasTwoSFLeptons")
+        plots+=cp.ZbosonPlots(Zboson, hasTwoSFLeptons, "hasTwoSFLeptons")
 
         ### zmass cut
-        # plots+=cp.muonPlots(muons, Zmasscut, "Zmasscut")
-        # plots+=cp.electronPlots(electrons, Zmasscut, "Zmasscut")
-        #plots+=cp.ZbosonPlots(Zboson, Zmasscut, "Zmasscut")
-        # plots+=cp.AK4jetPlots(ak4Jets, Zmasscut, "Zmasscut")
-        # plots+=cp.AK4jetPlots(ak4JetsID, Zmasscut, "ZmasscutJetID")
-        # plots+=cp.AK4jetPlots(ak4Jetspt40, Zmasscut, "ZmasscutJetpt40")
+        plots+=cp.muonPlots(muons, Zmasscut, "Zmasscut")
+        plots+=cp.electronPlots(electrons, Zmasscut, "Zmasscut")
+        plots+=cp.ZbosonPlots(Zboson, Zmasscut, "Zmasscut")
+        plots+=cp.AK4jetPlots(ak4Jets, Zmasscut, "Zmasscut")
+        plots+=cp.AK4jetPlots(ak4JetsID, Zmasscut, "ZmasscutJetID")
+        plots+=cp.AK4jetPlots(ak4Jetspt40, Zmasscut, "ZmasscutJetpt40")
+
+        if sampleCfg['type'] == 'mc':  
+            plots+=cp.effPurityPlots(effjets,Zmasscut,"effPurity_effmatched", tree)
+            plots+=cp.effPurityPlots(ak4Jets,Zmasscut,"effPurity_allrecojets",tree)
+            plots+=cp.effPurityPlots(purityjets,Zmasscut,"effPurity_puritymatched",tree)
+            plots+=cp.effPurityPlots(pujets,Zmasscut,"effPurity_pujets",tree)
+
+            plots+=cp.responsePlots(matchedjets, Zmasscut, "response",tree)
 
         # Cutflow report
         yields.add(hasTwoSFLeptons, 'two lepton')
-        # yields.add(Zmasscut, 'zmass cut')
+        yields.add(Zmasscut, 'zmass cut')
         return plots

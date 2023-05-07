@@ -42,8 +42,8 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
                 print("Couldn't find branch tree.HLT.%s, will omit it!" % HLT)
 
         def getNanoAODDescription():
-            groups = ["HLT_", "MET_"]
-            collections = ["nElectron", "nJet", "nMuon", "nFatJet", "nSubJet"]
+            groups = ["HLT_", "MET_","PV_","Pileup_"]
+            collections = ["nElectron", "nJet", "nMuon", "nFatJet", "nSubJet","nGenJet"]
             varReaders = []
             return NanoAODDescription(groups=groups, collections=collections, systVariations=varReaders)
 
