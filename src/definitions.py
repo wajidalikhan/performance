@@ -58,8 +58,8 @@ def cleanElectrons(electrons, muons):
 def ak4jetDef(jet):
     return op.AND(
         #jet.jetId & 2,  # tight
-        jet.pt > 30.,
-        op.abs(jet.eta) <= 2.4
+        jet.pt > 20.,
+        #op.abs(jet.eta) <= 2.4
     )
 
 def cleanJets(jets, muons, electrons, sort=True):
