@@ -32,12 +32,10 @@ class ModuleRunner(VariablesBase, Constants):
     ''' Class container for list of objects for particular year '''
     def __init__(self, years, ModuleName):
         VariablesBase.__init__(self)
-        Constants.__init__(self)
         self.years = years
         self.ModuleName = ModuleName+'Module.py'
-        self.ncores = 3
-        # self.lumi_fb  = round(float(ROOT.Year2Lumi[self.year]),1)
         print(self)
+        Constants.__init__(self)
 
     def __str__(self):
         print(blue('--> ModuleRunner info:'))
@@ -54,9 +52,9 @@ class ModuleRunner(VariablesBase, Constants):
                     'era': year,
                     'group': ds,
                     # 'db': 'das:/TTTo2L2Nu_CP5_13p6TeV_powheg-pythia8/Run3Winter22NanoAOD-122X_mcRun3_2021_realistic_v9-v1/NANOAODSIM',
-                    'files': self.files[ds],
+                    'files': os.path.join(self.jme_path, self.files[ds]),
                     'type': self.type[ds],
-                    'split': 34,
+                    'split': 100,
                     }
                 if sample_infos[ds]['type']=='mc':
                     sample_infos[ds]['cross-section'] = self.xsec[ds]

@@ -1,7 +1,7 @@
 class Constants():
     def __init__(self):
         self.lumi = {
-            '2022':      34202,
+            '2022': 4960,
         }
         self.lumi_legend = {
             '2022': '34',
@@ -16,8 +16,8 @@ class Constants():
             '2022': 43,
         }
         self.xsec = {
-            'TTbar': 88.4,
-            'DY':    88.4,
+            'TTbar': 831.76,
+            'DY':    5558,
         }
         self.type = {
             'TTbar': 'mc',
@@ -25,9 +25,9 @@ class Constants():
             'Muon':  'data',
         }
         self.files = {
-            'TTbar': '../datasets/TTbar_2022_Winter22_Nano10_das.txt',
-            'DY':    '../datasets/DY_2022_Winter22_Nano10_jme.txt',
-            'Muon':  '../datasets/Muon_2022RunC_Prompt_Nano10_jme.txt',
+            'TTbar': 'datasets/TTbar_2022_Winter22_Nano10_das.txt',
+            'DY':    'datasets/DY_2022_Winter22_Nano10_jme.txt',
+            'Muon':  'datasets/Muon_2022RunC_Prompt_Nano10_jme.txt',
         }
 
         self._plot_info = {

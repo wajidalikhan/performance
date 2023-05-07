@@ -2,22 +2,20 @@
 
 Setup based on Bamboo (https://gitlab.cern.ch/cp3-cms/bamboo) to validate JME diliverables
 
-you need to create the file `~/.config/bamboorc`
+you need to create the file `bamboo.ini`
 with the folling information:
 ```sh
 [batch]
-backend = slurm
+backend = htcondor
 
-[slurm]
-sbatch_additionalOptions = --licenses=cms_storage:3
-sbatch_qos = cp3
-sbatch_partition = cp3
+[htcondor]
+jobflavour = "longlunch"
 
 [das]
-sitename = T2_BE_UCL
-storageroot = /storage/data/cms
-checklocalfiles = no
-xrootdredirector = xrootd-cms.infn.it
+sitename = T2_CH_CERN
+storageroot = /eos/cms
+xrootdredirector = cms-xrd-global.cern.ch
+
 ```
 
 In case you update module, you should reinstall the packages dependencies using:

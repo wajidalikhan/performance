@@ -22,8 +22,8 @@ def cyan(string):
 def bold(string):
     return modify_printed_string('\033[1m',string)
 
-def prettydict(d, indent=8, color=blue):
-    space = max([0]+[len(str(x)) for x in d])+2
+def prettydict(d, indent=4, color=blue):
+    space = max([0]+[len(str(x)) for x in d])+indent
     for key, value in d.items():
         print(color(" "*indent + str(key))),
         if isinstance(value, dict):
