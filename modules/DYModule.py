@@ -2,6 +2,7 @@
 from bamboo.plots import Plot, CutFlowReport
 from bamboo.plots import EquidistantBinning as EqBin
 from bamboo import treefunctions as op
+from bamboo.analysisutils import forceDefine
 
 import src.definitions as defs
 
@@ -34,6 +35,7 @@ class DYModule(NanoBaseJME):
         )
         # Cleaned Electrons
         clElectrons = defs.cleanElectrons(electrons, muons)
+
 
         # AK8 Jets
         ak8Jets = op.sort(
@@ -72,6 +74,7 @@ class DYModule(NanoBaseJME):
                        clElectrons[0].pt > 25., clElectrons[1].pt > 15. )
             )
         ))
+
 
 
         # lepton channels
