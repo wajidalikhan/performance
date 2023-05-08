@@ -23,10 +23,11 @@ def bold(string):
     return modify_printed_string('\033[1m',string)
 
 def prettydict(d, indent=4, color=blue):
-    space = max([0]+[len(str(x)) for x in d])+indent
+    space = max([0]+[len(str(x)) for x in d])+2
+    print('')
     for key, value in d.items():
-        print(color(" "*indent + str(key))),
+        print(color(" "*indent + str(key)),end='')
         if isinstance(value, dict):
-            prettydict(value, len(" "*indent + str(key)+" "*(space+1-len(str(key)))))
+            prettydict(value, indent=len(" "*(space)), color=color)
         else:
-            print(color(" "*(space-len(str(key))) + str(value)))
+            print(color(" "*(space-len(key)) + str(value)))

@@ -4,20 +4,31 @@ from ModuleRunner import ModuleRunner
 
 def main():
 
-    # years = ['UL16postVFP', 'UL17', 'UL18']
     years = ['2022']
-    ModuleName = 'DY'
     
-    MR = ModuleRunner(years, ModuleName)
-    # MR.CleanWorkdirs()
+    runs = ['C','D']
+    campaigns = {'mc': 'Winter22',   'data': 'Prompt'}
+    
+    runs = ['E','F','G']
+    campaigns = {'mc': 'Winter22',   'data': 'Prompt'}
+
+    runs = ['C','D','E']
+    campaigns = {'mc': 'Summer22',   'data': 'ReReco'}
+
+    # runs = ['F','G']
+    # campaigns = {'mc': 'Summer22EE', 'data': 'Prompt'}
+    
+    module = 'DY'
+    
+    # maxFiles=10
+    maxFiles=1
+    
+    MR = ModuleRunner(module=module, years=years, runs=runs, campaigns=campaigns)
     MR.CreateConfigFiles()
-    # MR.Split()
-    # MR.Submit()
-    # MR.CheckStatus()
-    # MR.Resubmit()
+    MR.Test(maxFiles=maxFiles)
     # MR.RunLocal()
-    # MR.Merge()
-    # MR.MergeRunII()
+    # MR.Submit()
+    # MR.RunLocal()
 
 
 

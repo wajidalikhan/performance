@@ -1,4 +1,4 @@
-import os, sys, itertools
+import os, subprocess, yaml
 from collections import OrderedDict
 from printing_utils import green, blue, prettydict
 
@@ -9,33 +9,30 @@ class GenericPath:
     def __init__(self):
         self.username = os.environ['USER']
         self.jme_path = os.environ['JMEVALIDATIONPATH']
+        self.local_path = os.environ['PWD']
         self.config_path = os.path.join(self.jme_path, 'config')
+        self.module_path = os.path.join(self.jme_path, 'modules')
 
 
-class VariablesBase(GenericPath):
-    ''' Class container for list of objects '''
-    def __init__(self):
-        GenericPath.__init__(self)
-        self.RunPeriods_Dict    = {'2022': ['C', 'D', 'E', 'F', 'G'],
-                                   }
-        self.Datasets           = ['DY', 'Muon']
-        self.years              = sorted(self.RunPeriods_Dict.keys())
-        self.AllRunPeriods      = list(set(itertools.chain.from_iterable(self.RunPeriods_Dict.values())))
-        self.defineGroups()
-    
-    def defineGroups(self):
-        self.groups = OrderedDict()
-        self.groups.setdefault('TTbar',['TTbar'])
-
-            
-class ModuleRunner(VariablesBase, Constants):
+class ModuleRunner(GenericPath, Constants):
     ''' Class container for list of objects for particular year '''
-    def __init__(self, years, ModuleName):
-        VariablesBase.__init__(self)
+    def __init__(self, module, years, runs, campaigns, extraName=None):
+        GenericPath.__init__(self)
+        self.module = module
+        self.module_name = os.path.join(self.module_path, self.module+'Module.py')
+        self.output_path = os.path.join(self.jme_path,'outputs', self.module+'Module')
         self.years = years
-        self.ModuleName = ModuleName+'Module.py'
+        self.runs = runs
+        self.campaigns = campaigns
+        self._unique_name = f'year_{"".join(self.runs)}_{"_".join(self.campaigns.values())}'
+        if extraName:
+            self._unique_name += '_'+extraName
+        self.split_files_in = 100
         print(self)
         Constants.__init__(self)
+    
+    def get_unique_name(self,year):
+        return self._unique_name.replace('year',year)
 
     def __str__(self):
         print(blue('--> ModuleRunner info:'))
@@ -43,18 +40,18 @@ class ModuleRunner(VariablesBase, Constants):
         return blue('--> ModuleRunner info: end.')
 
     def CreateConfigFiles(self):
-        import yaml
         for year in self.years:
-            era_infos = {year: {'luminosity': self.lumi[year]}}
+            era_infos = {year: {'luminosity': self.get_lumi(year,self.runs)}}
             sample_infos = {}
-            for ds in self.Datasets:
+            for ds in self.get_datasets(year,self.runs):
+                if not any([x in ds for x in self.modules[self.module]]): continue
                 sample_infos[ds] = {
                     'era': year,
                     'group': ds,
                     # 'db': 'das:/TTTo2L2Nu_CP5_13p6TeV_powheg-pythia8/Run3Winter22NanoAOD-122X_mcRun3_2021_realistic_v9-v1/NANOAODSIM',
-                    'files': os.path.join(self.jme_path, self.files[ds]),
-                    'type': self.type[ds],
-                    'split': 100,
+                    'files': os.path.join(self.jme_path, self.get_files(year=year, campaigns=self.campaigns, dataset=ds)),
+                    'type': self.get_type(dataset=ds,year=year),
+                    'split': self.split_files_in,
                     }
                 if sample_infos[ds]['type']=='mc':
                     sample_infos[ds]['cross-section'] = self.xsec[ds]
@@ -68,52 +65,31 @@ class ModuleRunner(VariablesBase, Constants):
                 'samples': sample_infos,
                 'plotIt': self.plot_info(year),
             }
-            config_file_name = os.path.join(self.config_path,f'config_{year}.yml')
+            config_file_name = os.path.join(self.config_path,f'config_{self.get_unique_name(year)}.yml')
             with open(config_file_name, 'w') as f:
                 yaml.dump(info,f, indent=2, sort_keys=False) 
 
-    # def RunAnalyser(self, options):
-    #     commands = []
-    #     path = os.path.join(self.config_path, 'workdir_'+self.ModuleName)
-    #     for year in self.years:
-    #         xmlfilename = os.path.join(self.config_path, 'workdir_'+self.ModuleName, self.ModuleName+'Config_'+year+'.xml')
-    #         commands.append([path, 'submit.py %s -%s' %(xmlfilename, options)])
-    #     a = parallelize(commands, ncores=self.ncores, cwd=True, remove_temp_files=False)
+    def RunAnalyser(self, distributed, maxFiles):
+        ''' Options for distributed: [sequential, parallel, driver]'''
+        module_name = self.module_name.replace(self.local_path+'/','')
+        for year in self.years:
+            print(green(f'--> Runnnig bambooRun for {year}'))
+            config_file_name = os.path.join(self.config_path,f'config_{self.get_unique_name(year)}.yml').replace(self.local_path+'/','')
+            outpath = os.path.join(self.output_path,self.get_unique_name(year)).replace(self.local_path+'/','')
+            cmd = f'bambooRun -m {module_name} {config_file_name} -o {outpath} --distributed {distributed} --envConfig bamboo.init'
+            if maxFiles:
+                cmd += f' --maxFiles {maxFiles}'
+            print(green('  --> Executing command: '+cmd))
+            subprocess.run(cmd, shell=True)
+            print(green(f'--> Finished running for {year}'))
 
-    # def CleanWorkdirs(self):
-    #     self.RunAnalyser(options='c')
+    def Submit(self, maxFiles=None):
+        self.RunAnalyser(distributed='driver', maxFiles=maxFiles)
+    
+    def RunLocal(self,distributed='sequential', maxFiles=None):
+        self.RunAnalyser(distributed=distributed, maxFiles=maxFiles)
 
-    # def Split(self):
-    #     self.RunAnalyser(options='d')
-
-    # def Submit(self):
-    #     self.CompileCode()
-    #     self.RunAnalyser(options='s')
-
-    # def Resubmit(self):
-    #     self.RunAnalyser(options='s')
-
-    # def CheckStatus(self):
-    #     self.RunAnalyser(options='o')
-
-    # def Merge(self):
-    #     self.RunAnalyser(options='f')
-    #     # self.RunAnalyser(options='p')
-
-    # def RunLocal(self,ncores=4):
-    #     import glob, sys
-    #     if not ncores:
-    #         ncores = self.ncores
-    #     print(green('--> Locally running jobs on %i cores' % (ncores)))
-    #     commands = []
-    #     path = os.path.join(self.config_path, 'workdir_'+self.ModuleName)
-    #     for year in self.years:
-    #         for missing_files in glob.glob(os.path.join(self.config_path, 'workdir_'+self.ModuleName, 'workdir_'+self.ModuleName+'Config_'+year,'*','commands_missing_files.txt')):
-    #             with open(missing_files, 'r') as f:
-    #                 for l in f.readlines():
-    #                     commands.append(l.rstrip('\n'))
-    #     commands = [[self.config_path, c] for c in commands]
-    #     parallelize(commands, ncores=ncores, cwd=True)
-    #     print(green('--> Finished running missing jobs locally.'))
+    def Test(self, distributed='sequential', maxFiles=1):
+        self.RunLocal(distributed=distributed, maxFiles=maxFiles)
 
     
