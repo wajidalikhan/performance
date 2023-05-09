@@ -48,11 +48,11 @@ def AK4jetPlots(jets, sel, sel_tag, maxJets=4):
     chHEF = op.map(jets, lambda j: j.chHEF)
     plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_chHEF",chHEF,sel,EqBin(20,0.,1.), xTitle=f"chHEF"))
     
-    hfEmEF = op.map(jets, lambda j: j.hfEmEF)
-    plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_hfEmEF",hfEmEF,sel,EqBin(20,0.,1.), xTitle=f"hfEmEF"))
+    # hfEmEF = op.map(jets, lambda j: j.hfEmEF)
+    # plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_hfEmEF",hfEmEF,sel,EqBin(20,0.,1.), xTitle=f"hfEmEF"))
 
-    hfHEF = op.map(jets, lambda j: j.hfHEF)
-    plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_hfHEF",hfHEF,sel,EqBin(20,0.,1.), xTitle=f"hfHEF"))
+    # hfHEF = op.map(jets, lambda j: j.hfHEF)
+    # plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_hfHEF",hfHEF,sel,EqBin(20,0.,1.), xTitle=f"hfHEF"))
 
     muEF = op.map(jets, lambda j: j.muEF)
     plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_muEF",muEF,sel,EqBin(20,0.,1.), xTitle=f"muEF"))
