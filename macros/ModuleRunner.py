@@ -24,7 +24,7 @@ class ModuleRunner(GenericPath, Constants):
         self.years = years
         self.runs = runs
         self.campaigns = campaigns
-        self._unique_name = f'year_{"".join(self.runs)}_{"_".join(self.campaigns.values())}'
+        self._unique_name = f'{self.module}_year_{"".join(self.runs)}_{"_".join(self.campaigns.values())}'
         if extraName:
             self._unique_name += '_'+extraName
         self.split_files_in = 100

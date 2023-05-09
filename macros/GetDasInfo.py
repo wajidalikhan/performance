@@ -16,6 +16,7 @@ def run_dasgoclient(dataset, output_file):
     output = subprocess.check_output(cmd, shell=True)
     with open(output_file, "w") as f:
         decoded_output = output.decode()
+        decoded_output = decoded_output.rstrip(decoded_output[-1])
         preprocessed_output = "root://cms-xrd-global.cern.ch/" + decoded_output.replace('\n', '\nroot://cms-xrd-global.cern.ch/')
         f.write("# "+dataset+'\n')
         f.write(preprocessed_output)

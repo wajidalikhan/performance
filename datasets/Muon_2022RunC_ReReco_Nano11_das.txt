@@ -84,4 +84,3 @@ root://cms-xrd-global.cern.ch//store/data/Run2022C/Muon/NANOAOD/ReRecoNanoAODv11
 root://cms-xrd-global.cern.ch//store/data/Run2022C/Muon/NANOAOD/ReRecoNanoAODv11-v1/60000/d63791c4-dc09-4959-9fbf-fa88eefbcaf3.root
 root://cms-xrd-global.cern.ch//store/data/Run2022C/Muon/NANOAOD/ReRecoNanoAODv11-v1/60000/02f159a6-e72d-4df9-bbdb-648cc23abda9.root
 root://cms-xrd-global.cern.ch//store/data/Run2022C/Muon/NANOAOD/ReRecoNanoAODv11-v1/60000/ad33d641-9d13-4139-a754-19dc7276692b.root
-root://cms-xrd-global.cern.ch/

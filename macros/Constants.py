@@ -44,11 +44,19 @@ class Constants():
                     'MuonE':    'datasets/Muon_2022RunE_Prompt_Nano10_jme.txt',
                     'MuonF':    'datasets/Muon_2022RunF_Prompt_Nano10_jme.txt',
                     'MuonG':    'datasets/Muon_2022RunG_Prompt_Nano10_das.txt',
+                    'JetHTC':   'datasets/JetHT_2022RunC_Prompt_Nano10_jme.txt',
+                    'JetHTD':   'datasets/JetHT_2022RunD_Prompt_Nano10_jme.txt',
+                    'JetHTE':   'datasets/JetHT_2022RunE_Prompt_Nano10_jme.txt',
+                    'JetHTF':   'datasets/JetHT_2022RunF_Prompt_Nano11_das.txt',
+                    'JetHTG':   'datasets/JetHT_2022RunG_Prompt_Nano11_das.txt',
                 },
                 'ReReco':{
                     'MuonC':    'datasets/Muon_2022RunC_ReReco_Nano11_das.txt',
                     'MuonD':    'datasets/Muon_2022RunD_ReReco_Nano11_das.txt',
                     'MuonE':    'datasets/Muon_2022RunE_ReReco_Nano11_das.txt',
+                    'JetHTC':   'datasets/JetHT_2022RunC_ReReco_Nano11_das.txt',
+                    'JetHTD':   'datasets/JetHT_2022RunD_ReReco_Nano11_das.txt',
+                    'JetHTE':   'datasets/JetHT_2022RunE_ReReco_Nano11_das.txt',
                 }
             },
             '2023': {

@@ -9,16 +9,17 @@ def main():
     runs = ['C','D']
     campaigns = {'mc': 'Winter22',   'data': 'Prompt'}
     
-    runs = ['E','F','G']
-    campaigns = {'mc': 'Winter22',   'data': 'Prompt'}
+    # runs = ['E','F','G']
+    # campaigns = {'mc': 'Winter22',   'data': 'Prompt'}
 
-    runs = ['C','D','E']
-    campaigns = {'mc': 'Summer22',   'data': 'ReReco'}
+    # runs = ['C','D','E']
+    # campaigns = {'mc': 'Summer22',   'data': 'ReReco'}
 
     # runs = ['F','G']
     # campaigns = {'mc': 'Summer22EE', 'data': 'Prompt'}
     
     module = 'DY'
+    module = 'QCD'
     
     # maxFiles=10
     maxFiles=1
@@ -28,7 +29,6 @@ def main():
     MR.Test(maxFiles=maxFiles)
     # MR.RunLocal()
     # MR.Submit()
-    # MR.RunLocal()
 
 
 
