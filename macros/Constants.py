@@ -87,11 +87,11 @@ class Constants():
             },
             'legend': {'position': [0.7, 0.6, 0.91, 0.91]},
             'groups': {
-                'data':  {'legend': 'data'},
-                'DY':    {'legend': 'DY',    'fill-color': "#609e1b",},
-                'TTbar': {'legend': 'TTbar', 'fill-color': "#99ccff",},
-                'QCD':   {'legend': 'QCD',   'fill-color': "#FFC300",},
-                'WJets': {'legend': 'WJets', 'fill-color': "#9c04c4",},
+                'data':     {'legend': 'data'},
+                'DY':       {'legend': 'DY',    'fill-color': "#609e1b",},
+                'TTbar':    {'legend': 'TTbar', 'fill-color': "#99ccff",},
+                'QCD_Flat': {'legend': 'QCD',   'fill-color': "#FFC300",},
+                'WJets':    {'legend': 'WJets', 'fill-color': "#9c04c4",},
             },
             'plotdefaults': {
                 'y-axis': 'Events',
