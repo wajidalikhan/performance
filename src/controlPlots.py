@@ -63,6 +63,8 @@ def AK4jetPlots(jets, sel, sel_tag, maxJets=4):
     neHEF = op.map(jets, lambda j: j.neHEF)
     plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_neHEF",neHEF,sel,EqBin(20,0.,1.), xTitle=f"neHEF"))
 
+    plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_DeltaPhi12",op.deltaPhi(jets[0].p4,jets[1].p4),sel,EqBin(20,0.,4.), xTitle=f"#delta Phi(jet_1,jet_2)"))
+
 
     return plots
 
