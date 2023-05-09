@@ -26,6 +26,7 @@ def main():
     
     MR = ModuleRunner(module=module, years=years, runs=runs, campaigns=campaigns)
     MR.CreateConfigFiles()
+
     MR.Test(maxFiles=maxFiles)
     # MR.RunLocal()
     # MR.Submit()

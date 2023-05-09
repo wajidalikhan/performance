@@ -69,6 +69,23 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
         # DoubleMuon
         addHLTPath('DoubleMuon', 'Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8')
 
+        # JetHT
+        addHLTPath('JetHT', 'DiPFJetAve40')
+        addHLTPath('JetHT', 'DiPFJetAve60')
+        addHLTPath('JetHT', 'DiPFJetAve80')
+        addHLTPath('JetHT', 'DiPFJetAve140')
+        addHLTPath('JetHT', 'DiPFJetAve200')
+        addHLTPath('JetHT', 'DiPFJetAve260')
+        addHLTPath('JetHT', 'DiPFJetAve320')
+        addHLTPath('JetHT', 'DiPFJetAve400')
+        addHLTPath('JetHT', 'DiPFJetAve500')
+        addHLTPath('JetHT', 'DiPFJetAve60_HFJEC')
+        addHLTPath('JetHT', 'DiPFJetAve80_HFJEC')
+        addHLTPath('JetHT', 'DiPFJetAve100_HFJEC')
+        addHLTPath('JetHT', 'DiPFJetAve160_HFJEC')
+        addHLTPath('JetHT', 'DiPFJetAve220_HFJEC')
+        addHLTPath('JetHT', 'DiPFJetAve300_HFJEC')
+
         # Gen Weight and Triggers
         if self.is_MC:
             noSel = noSel.refine('genWeight', weight=tree.genWeight, cut=(
