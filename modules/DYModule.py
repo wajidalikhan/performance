@@ -58,6 +58,15 @@ class DYModule(NanoBaseJME):
         ak4Jetspt40 = op.select(
             ak4JetsID, lambda jet: jet.pt > 40)
 
+        ak4Jetspt100 = op.select(
+            ak4JetsID, lambda jet: jet.pt > 100)
+
+        ak4Jetsetas2p4 = op.select(
+            ak4JetsID, lambda jet: op.abs(jet.eta) < 2.4)
+
+        ak4Jetsetag2p4 = op.select(
+            ak4JetsID, lambda jet: op.abs(jet.eta) > 2.4)
+
         # ak4bJets = op.select(
         #     ak4Jets, lambda jet: jet.btagDeepB > 0.2770)  # 2018 WP
 
@@ -152,6 +161,9 @@ class DYModule(NanoBaseJME):
         plots+=cp.AK4jetPlots(ak4Jets, Zmasscut, "Zmasscut")
         plots+=cp.AK4jetPlots(ak4JetsID, Zmasscut, "ZmasscutJetID")
         plots+=cp.AK4jetPlots(ak4Jetspt40, Zmasscut, "ZmasscutJetpt40")
+        plots+=cp.AK4jetPlots(ak4Jetspt100, Zmasscut, "ZmasscutJetpt100")
+        plots+=cp.AK4jetPlots(ak4Jetsetas2p4, Zmasscut, "ZmasscutJetetas2p4")
+        plots+=cp.AK4jetPlots(ak4Jetsetag2p4, Zmasscut, "ZmasscutJetetag2p4")
 
         if sampleCfg['type'] == 'mc':  
             plots+=cp.effPurityPlots(effjets,Zmasscut,"effPurity_effmatched", tree)
@@ -160,6 +172,10 @@ class DYModule(NanoBaseJME):
             plots+=cp.effPurityPlots(pujets,Zmasscut,"effPurity_pujets",tree)
 
             plots+=cp.responsePlots(matchedjets, Zmasscut, "response",tree)
+
+            plots+=cp.AK4jetPlots(pujets, Zmasscut, "ZmasscutPuJets")
+            plots+=cp.AK4jetPlots(matchedjets, Zmasscut, "ZmasscutMatchedJets")
+            
 
         plots+=cp.eventPlots(tree, Zmasscut, "Zmasscut")
         # Cutflow report

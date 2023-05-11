@@ -40,6 +40,7 @@ def AK4jetPlots(jets, sel, sel_tag, maxJets=4):
         plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_pt", jets[i].pt, sel, EqBin(20, 0., 500.), xTitle=f"jet_{{{i+1}}} p_{{T}} [GeV]"))
         plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_eta", jets[i].eta, sel, EqBin(100, -5., 5.), xTitle=f"jet_{{{i+1}}} #eta"))
         plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_phi", jets[i].phi, sel, EqBin(63, -3.5, 3.5), xTitle=f"jet_{{{i+1}}} #phi"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_nConst", jets[i].nConstituents, sel, EqBin(20, 0, 20), xTitle=f"jet_{{{i+1}}} number of constituents"))
 
 
     chEmEF = op.map(jets, lambda j: j.chEmEF)
