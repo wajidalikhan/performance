@@ -104,7 +104,7 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
         from bamboo.analysisutils import configureJets, configureType1MET
         configureJets(tree._Jet, jet_algo,
                       jec=jec,
-                      mayWriteCache=False,
+                      mayWriteCache=True,
                       # cachedir='/afs/cern.ch/user/a/anmalara/workspace/WorkingArea/JME/jme-validation/JECs_2022/',
                       isMC=self.is_MC, backend = backend)
         # configureType1MET(tree._MET,
