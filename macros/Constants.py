@@ -103,7 +103,7 @@ class Constants():
                 'legend-columns': 2,
                 'ratio-y-axis': '#frac{Data}{MC}',
                 'ratio-y-axis-range': [0.8, 1.2],
-                'normalized': False,
+                'normalized': True,
             },
         }
     
@@ -128,7 +128,5 @@ class Constants():
         if dataset in [d+r for d in self.data_samples for r in self.year_run_map[year]]: return 'data'
         raise ValueError(f'{dataset} is neither mc nor data')
     
-    def get_files(self, year, campaigns, dataset):
-        type_ = self.get_type(dataset=dataset,year=year)
-        campaign = campaigns[type_]
+    def get_files(self, year, campaign, dataset):
         return self.files[year][campaign][dataset]
