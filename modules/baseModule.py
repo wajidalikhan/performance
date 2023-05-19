@@ -30,13 +30,13 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
                     f"The type '{sampleCfg['type']}' of {sample} dataset not understood.")
         
         self.is_MC = isMC()
+        isDriver = (self.args.distributed == "driver")
         era = sampleCfg['era']  # reserved for future use
         campaign = sampleCfg['campaign']
         jec = sampleCfg['jec']
         jet_algo = 'AK4PFPuppi'
         if jec=='':
             jec = 'Winter22Run3_V2_MC' if self.is_MC else 'Winter22Run3_RunD_V2_DATA'
-        print('campaign', campaign, jec)
         self.triggersPerPrimaryDataset = {}
 
         def addHLTPath(PD, HLT):
@@ -104,14 +104,14 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
         from bamboo.analysisutils import configureJets, configureType1MET
         configureJets(tree._Jet, jet_algo,
                       jec=jec,
-                      mayWriteCache=True,
+                      mayWriteCache= False,
                       # cachedir='/afs/cern.ch/user/a/anmalara/workspace/WorkingArea/JME/jme-validation/JECs_2022/',
                       isMC=self.is_MC, backend = backend)
         # configureType1MET(tree._MET,
         #     jec="Summer16_07Aug2017_V20_MC",
         #     smear="Summer16_25nsV1_MC",
         #     jesUncertaintySources=["Total"],
-        #     mayWriteCache=isNotWorker,
+        #     mayWriteCache= not isDriver,
         #     isMC=self.isMC(sample), backend=be)
 
         for calcProd in tree._Jet.calcProds:
