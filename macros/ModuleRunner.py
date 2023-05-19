@@ -25,7 +25,7 @@ class ModuleRunner(GenericPath, Constants):
         self.runs = runs
         self.campaigns = campaigns
         self.jecs = jecs
-        self._unique_name = f'{self.module}_year_{"".join(self.runs)}_{"_".join(self.campaigns.values())}'
+        self._unique_name = f'{self.module}_year_{"".join(self.runs)}_{"_".join(self.campaigns.values())}_{"_".join(self.jecs.values())}'
         if extraName:
             self._unique_name += '_'+extraName
         self.split_files_in = 100
@@ -100,7 +100,14 @@ class ModuleRunner(GenericPath, Constants):
     def Test(self, distributed='sequential', maxFiles=1):
         self.RunLocal(distributed=distributed, maxFiles=maxFiles)
     
-    def Plot(self):
-        self.RunAnalyser(distributed='finalize', maxFiles=None, extra_flags='--onlypost')
+    def Plot(self, pdfextraname=''):
+        from MakePlots import MakePlots
+        # self.RunAnalyser(distributed='finalize', maxFiles=None, extra_flags='--onlypost')
+        samples = list(filter(lambda x: x in self.MC_samples, self.modules[self.module]))
+        for year in self.years:
+            path = os.path.join(self.output_path,self.get_unique_name(year)).replace(self.local_path+'/','')
+            for sample in samples:
+                fname = os.path.join('results',sample)
+                MP = MakePlots(year=year, path=path, fname=fname, pdfextraname=pdfextraname).PlotAll()
 
     
