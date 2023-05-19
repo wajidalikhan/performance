@@ -96,7 +96,7 @@ class QCDModule(NanoBaseJME):
                 op.deltaR(jet.p4,jet.genJet.p4) > 0.4
             )
 
-            matchedjets = op.select(ak4Jets, lambda jet: op.AND( 
+            matchedjets = op.select(tree.Jet, lambda jet: op.AND( 
                 jet.idx < 3,
                 op.deltaR(jet.p4,jet.genJet.p4) < 0.2
             ))
