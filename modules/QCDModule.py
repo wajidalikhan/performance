@@ -99,6 +99,7 @@ class QCDModule(NanoBaseJME):
             plots+=cp.effPurityPlots(pujets,dijet,"effPurity_pujets",tree)
 
             plots+=cp.responsePlots(matchedjets, dijet, "response",tree)
+            plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
 
         plots+=cp.eventPlots(tree, dijet, "Dijet")
         # Cutflow report
