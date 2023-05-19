@@ -86,3 +86,69 @@ def ak8jetDef(jet):
         jet.pt > 200.,
         op.abs(jet.eta) <= 2.4
     )
+
+def effjets(jets):
+    return op.select(jets,lambda jet: op.AND(
+                op.deltaR(jet.p4,jet.genJet.p4) < 0.2,
+                jet.genJet.pt > 30
+            ))
+
+def purityjets(jets):
+    return op.select(jets, lambda jet: op.AND(
+                op.deltaR(jet.p4,jet.genJet.p4) < 0.2,
+                jet.genJet.pt > 20
+            ))
+
+def pujets(jets):
+    return op.select(jets, lambda jet: 
+                op.deltaR(jet.p4,jet.genJet.p4) > 0.4
+            )
+
+def matchedjets(jets):
+    return  op.select(jets, lambda jet: op.AND( 
+                jet.idx < 3,
+                op.deltaR(jet.p4,jet.genJet.p4) < 0.2
+            ))
+
+def defineObjects(tree):
+    # Muons
+    muons = op.sort(
+        op.select(tree.Muon, lambda mu: muonDef(mu)),
+        #lambda mu: -muonConePt(tree.Muon)[mu.idx]
+        lambda mu: -mu.pt
+    )
+    # Electrons
+    electrons = op.sort(
+        op.select(tree.Electron, lambda el: elDef(el)),
+        #lambda el: -elConePt(tree.Electron)[el.idx]
+        lambda el: -el.pt
+    )
+    # Cleaned Electrons
+    clElectrons = cleanElectrons(electrons, muons)
+    
+    # AK4 Jets
+    ak4Jets = op.sort(
+        op.select(tree.Jet, lambda jet: ak4jetDef(jet)), lambda jet: -jet.pt)
+    
+    ## jet - lepton cleaning
+    clak4Jets = cleanJets(ak4Jets, muons, clElectrons)
+    
+    ## jet ID & pT recommendations
+    ak4JetsID = op.select(
+        clak4Jets, lambda jet: jet.jetId & 2)
+    
+    ak4Jetspt40 = op.select(
+        ak4JetsID, lambda jet: jet.pt > 40)
+
+    ak4Jetspt100 = op.select(
+        ak4JetsID, lambda jet: jet.pt > 100)
+    
+    ak4Jetsetas2p4 = op.select(
+        ak4JetsID, lambda jet: op.abs(jet.eta) < 2.4)
+    
+    ak4Jetsetag2p4 = op.select(
+        ak4JetsID, lambda jet: op.abs(jet.eta) > 2.4)
+
+
+    return muons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4
+    

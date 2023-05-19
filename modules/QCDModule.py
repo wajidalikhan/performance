@@ -21,42 +21,16 @@ class QCDModule(NanoBaseJME):
         plots.append(yields)
         yields.add(noSel, 'No Selection')
 
-        # Muons
-        muons = op.sort(
-            op.select(tree.Muon, lambda mu: defs.muonDef(mu)),
-            #lambda mu: -defs.muonConePt(tree.Muon)[mu.idx]
-            lambda mu: -mu.pt
-        )
-        # Electrons
-        electrons = op.sort(
-            op.select(tree.Electron, lambda el: defs.elDef(el)),
-            #lambda el: -defs.elConePt(tree.Electron)[el.idx]
-            lambda el: -el.pt
-        )
-        # Cleaned Electrons
-        clElectrons = defs.cleanElectrons(electrons, muons)
+
+        # # AK8 Jets
+        # ak8Jets = op.sort(
+        #     op.select(tree.FatJet, lambda jet: defs.ak8jetDef(jet)), lambda jet: -jet.pt)
+
+        # ak8JetsID = op.sort(
+        #     ak8Jets, lambda jet: jet.jetId & 2)
 
 
-        # AK8 Jets
-        ak8Jets = op.sort(
-            op.select(tree.FatJet, lambda jet: defs.ak8jetDef(jet)), lambda jet: -jet.pt)
-
-        ak8JetsID = op.sort(
-            ak8Jets, lambda jet: jet.jetId & 2)
-
-        # AK4 Jets
-        ak4Jets = op.sort(
-            op.select(tree.Jet, lambda jet: defs.ak4jetDef(jet)), lambda jet: -jet.pt)
-
-        ## jet - lepton cleaning
-        clak4Jets = defs.cleanJets(ak4Jets, muons, clElectrons)
-
-        ## jet ID & pT recommendations
-        ak4JetsID = op.select(
-            clak4Jets, lambda jet: jet.jetId & 2)
-
-        ak4Jetspt40 = op.select(
-            ak4JetsID, lambda jet: jet.pt > 40)
+        muons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4 = defs.defineObjects(tree)
 
         ### dijet selection
         noLepton = noSel.refine("noLepton", cut=(
@@ -82,24 +56,13 @@ class QCDModule(NanoBaseJME):
             
             # firstgenjet = tree.Jet[0].chHEF
             
-            effjets = op.select(recojetpt20, lambda jet: op.AND(
-                op.deltaR(jet.p4,jet.genJet.p4) < 0.2,
-                jet.genJet.pt > 30
-            ))
+            effjets = defs.effjets(recojetpt20)
 
-            purityjets = op.select(recojetpt30, lambda jet: op.AND(
-                op.deltaR(jet.p4,jet.genJet.p4) < 0.2,
-                jet.genJet.pt > 20
-            ))
+            purityjets = defs.purityjets(recojetpt30)
             
-            pujets = op.select(ak4Jets, lambda jet: 
-                op.deltaR(jet.p4,jet.genJet.p4) > 0.4
-            )
+            pujets = defs.pujets(ak4Jets)
 
-            matchedjets = op.select(tree.Jet, lambda jet: op.AND( 
-                jet.idx < 3,
-                op.deltaR(jet.p4,jet.genJet.p4) < 0.2
-            ))
+            matchedjets = defs.matchedjets(tree.Jet)
 
         #############################################################################
         #                                 Plots                                     #
@@ -125,6 +88,9 @@ class QCDModule(NanoBaseJME):
         plots+=cp.AK4jetPlots(ak4Jets, dijet, "Dijet")
         plots+=cp.AK4jetPlots(ak4JetsID, dijet, "DijetJetID")
         plots+=cp.AK4jetPlots(ak4Jetspt40, dijet, "DijetJetpt40")
+        plots+=cp.AK4jetPlots(ak4Jetspt100, dijet, "DijetJetpt100")
+        plots+=cp.AK4jetPlots(ak4Jetsetas2p4, dijet, "DijetJetetas2p4")
+        plots+=cp.AK4jetPlots(ak4Jetsetag2p4, dijet, "DijetJetetag2p4")
 
         if sampleCfg['type'] == 'mc':  
             plots+=cp.effPurityPlots(effjets,dijet,"effPurity_effmatched", tree)
