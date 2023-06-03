@@ -17,7 +17,9 @@ def oplus(a,b):
     return sqrt(a*a+b*b)
 
 def getMedianError(hist):
-    return 1.253 * hist.GetRMS() / sqrt(hist.GetEffectiveEntries())
+    if hist.GetEffectiveEntries()!=0:
+        return 1.253 * hist.GetRMS() / sqrt(hist.GetEffectiveEntries())
+    else: return 0
 
 def MakeRatioHistograms(h1, h2, name):
     hratio = h1.Clone(name)
@@ -92,21 +94,22 @@ class MakePlots():
         self.quant   = array('d',[0.5])
         self.quant_y   = array('d',[0.5])
         for eta_bin in self.eta_bins:
-            pts, jes, jer, pts_err, jes_err, jer_err = ([],[],[],[],[], [])
-            for pt in self.pt_bins:
-                hname = f'response_eta{eta_bin}_pt{pt}'
-                hist = f_.Get(hname)
-                hist.GetQuantiles(1,self.quant_y,self.quant)
-                pt_min, pt_max = pt.split('to')
-                pt_min, pt_max = int(pt_min), int(pt_max)
-                pts.append((pt_max+pt_min)/2)
-                pts_err.append((pt_max-pt_min)/2)
-                jes.append(self.quant_y[0])
-                jer.append(Confidence(hist, hist.GetMean(), confLevel = 0.87)/(2*1.514))
-                jes_err.append(getMedianError(hist))
-                jer_err.append(hist.GetRMSError())
-            self.graphs[eta_bin+'jes'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jes), array('d',pts_err), array('d',jes_err))
-            self.graphs[eta_bin+'jer'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jer), array('d',pts_err), array('d',jer_err))
+            for response_name in ['dijet','noLepton','noSel']:
+                pts, jes, jer, pts_err, jes_err, jer_err = ([],[],[],[],[], [])
+                for pt in self.pt_bins:
+                    hname = f'{response_name}_response_eta{eta_bin}_pt{pt}'
+                    hist = f_.Get(hname)
+                    hist.GetQuantiles(1,self.quant_y,self.quant)
+                    pt_min, pt_max = pt.split('to')
+                    pt_min, pt_max = int(pt_min), int(pt_max)
+                    pts.append((pt_max+pt_min)/2)
+                    pts_err.append((pt_max-pt_min)/2)
+                    jes.append(self.quant_y[0])
+                    jer.append(Confidence(hist, hist.GetMean(), confLevel = 0.87)/(2*1.514))
+                    jes_err.append(getMedianError(hist))
+                    jer_err.append(hist.GetRMSError())
+                self.graphs[response_name+eta_bin+'jes'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jes), array('d',pts_err), array('d',jes_err))
+                self.graphs[response_name+eta_bin+'jer'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jer), array('d',pts_err), array('d',jer_err))
             
             for mode, types in self.types.items():
                 for type, jets in types:
@@ -133,7 +136,7 @@ class MakePlots():
         if 'canv' in self.__dict__: self.canv.Close()
         XMin, XMax = (15, 7500)
         YMin, YMax = (0.9,1.1) if zoom else (0.0,2)
-        xName, yName = ('p_{T,jet} [GeV]', 'Response' if 'Response' in canvName else 'Eff/Purity')
+        xName, yName = ('p_{T,jet} [GeV]', 'Response' if 'response' in canvName.lower() else 'Eff/Purity')
         TDR.extraText   = 'Simulation'
         TDR.extraText2  = 'Preliminary'
         TDR.cms_lumi = TDR.commonScheme['legend'][self.year]
@@ -150,7 +153,7 @@ class MakePlots():
             tdrDrawLine(self.lines[y], lcolor=rt.kBlack, lstyle=rt.kDashed, lwidth=1)
     
    
-    def PlotResponse(self):
+    def PlotResponse(self, response_name ='response'):
         infos = {
             '0p0to1p3' : {'legend': '0.0 < |#eta| < 1.3', 'color':  rt.kGreen+3,  'marker': rt.kFullSquare,       'msize':  1.0},
             '1p3to2p4' : {'legend': '1.3 < |#eta| < 2.4', 'color':  rt.kBlue-4,   'marker': rt.kFullStar,         'msize':  1.3},
@@ -160,13 +163,14 @@ class MakePlots():
             '0p0to5p2' : {'legend': '0.0 < |#eta| < 5.2', 'color':  rt.kBlack,    'marker': rt.kFullCircle,       'msize':  1.0},
         }
 
-        self.CreateCanvas(canvName="Response", zoom=True)
+        self.CreateCanvas(canvName='response_'+response_name, zoom=True)
         for name, graph in self.graphs.items():
             if not 'jes' in name: continue
-            info = infos[name.replace('jes','')]
+            if not response_name in name: continue
+            info = infos[name.replace('jes','').replace(response_name,'')]
             tdrDraw(graph, 'P', msize=info['msize'], marker=info['marker'], mcolor=info['color'])
             self.leg.AddEntry(graph, info['legend'], 'lp')
-        self.canv.SaveAs(os.path.join(self.outputPath, 'response' + self.pdfextraname + '.pdf'))
+        self.canv.SaveAs(os.path.join(self.outputPath, 'response_'+response_name + self.pdfextraname + '.pdf'))
 
     def PlotEffPurity(self):
         for eta_bin in self.eta_bins:
@@ -193,7 +197,9 @@ class MakePlots():
     
     def PlotAll(self):
         self.LoadInputs()
-        self.PlotResponse()
+        self.PlotResponse(response_name='dijet')
+        self.PlotResponse(response_name='noLepton')
+        self.PlotResponse(response_name='noSel')
         self.PlotEffPurity()
         self.Close()
 

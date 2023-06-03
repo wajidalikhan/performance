@@ -41,24 +41,29 @@ def main():
     # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Winter22Run3_RunF_V0_DATA'} # better
     # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'} # best
     
-    runs = ['C']
-    campaigns = {'mc': 'Summer22_NPVA2p0B0p13'}
-    # Summer22_NPVA2p0B0p3
-    # Summer22_NPVA3p0B0p13
+    # runs = ['C']
+    runs = ['D']
+    # campaigns = {'mc': 'Summer22'}
+    # campaigns = {'mc': 'Summer22_NPVA2p0B0p13'}
+    # campaigns = {'mc': 'Summer22_NPVA2p0B0p3'}
+    campaigns = {'mc': 'Summer22_NPVA3p0B0p13'}
+    
     jecs = {'mc': 'Summer22EERun3_V0_MC'}
+
+    extra_info = {'plot_level': 'partial'}
 
 
     # module = 'DY'
     module = 'QCD'
     
-    # maxFiles=10
+    # maxFiles=20
     maxFiles=1
 
     # extraName="test" # to be used to give extra name to the config and output folder
     args = commandline()
     print(args)
 
-    MR = ModuleRunner(module=module, years=years, runs=runs, campaigns=campaigns, jecs=jecs)
+    MR = ModuleRunner(module=module, years=years, runs=runs, campaigns=campaigns, jecs=jecs, extra_info=extra_info)
     if args.config:
         MR.CreateConfigFiles()
     if args.test:

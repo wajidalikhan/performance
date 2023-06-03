@@ -18,7 +18,7 @@ class GenericPath:
 
 class ModuleRunner(GenericPath, Constants):
     ''' Class container for list of objects for particular year '''
-    def __init__(self, module, years, runs, campaigns, jecs=None, extraName=None):
+    def __init__(self, module, years, runs, campaigns, jecs=None, extraName=None, extra_info={}):
         GenericPath.__init__(self)
         self.module = module
         self.module_name = os.path.join(self.module_path, self.module+'Module.py')
@@ -27,6 +27,7 @@ class ModuleRunner(GenericPath, Constants):
         self.runs = runs
         self.campaigns = campaigns
         self.jecs = jecs
+        self.extra_info = extra_info
         self._unique_name = f'{self.module}_year_{"".join(self.runs)}_{"_".join(self.campaigns.values())}_{"_".join(self.jecs.values())}'
         if extraName:
             self._unique_name += '_'+extraName
@@ -63,6 +64,7 @@ class ModuleRunner(GenericPath, Constants):
                     'campaign': campaign,
                     'jec': jec,
                     }
+                sample_infos[ds].update(self.extra_info)
                 if sample_infos[ds]['type']=='mc':
                     sample_infos[ds]['cross-section'] = self.xsec[ds]
                     sample_infos[ds]['generated-events'] = 'genEventSumw'
