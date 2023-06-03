@@ -39,6 +39,9 @@ def AK4jetPlots(jets, sel, sel_tag, maxJets=4):
     etas = op.map(jets, lambda j: j.eta)
     plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_eta",etas,sel,EqBin(100,-5.,5.), xTitle=f"#eta"))
 
+    pts = op.map(jets, lambda j: j.pt)
+    plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_pt",pts,sel,EqBin(20,0.,500.), xTitle=f"p_{{T}}"))
+
     #### do a for loop through all Jets
     for i in range(maxJets):
         plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_pt", jets[i].pt, sel, EqBin(20, 0., 500.), xTitle=f"jet_{{{i+1}}} p_{{T}} [GeV]"))
@@ -91,6 +94,7 @@ def effPurityPlots(jet, sel, sel_tag, tree):
     genjets = op.select(tree.GenJet, lambda j: j.pt>20)
     
     deltaRs = op.map(jet, lambda j: op.deltaR(j.p4,j.genJet.p4))
+    # deltaRs = op.map(jet, lambda j: op.deltaR(j.p4,tree.GenJet[j.genJetIdx].p4))
     plots.append(Plot.make1D(f"{sel_tag}_deltaR", deltaRs,sel,EqBin(300,0.,3.),xTitle = "#Delta R (recojet, genjet)"))
 
 
