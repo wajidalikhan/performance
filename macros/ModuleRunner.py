@@ -12,6 +12,8 @@ class GenericPath:
         self.local_path = os.environ['PWD']
         self.config_path = os.path.join(self.jme_path, 'config')
         self.module_path = os.path.join(self.jme_path, 'modules')
+        os.system('mkdir -p '+self.config_path)
+        os.system('mkdir -p '+self.module_path)
 
 
 class ModuleRunner(GenericPath, Constants):
