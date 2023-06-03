@@ -42,11 +42,13 @@ class ModuleRunner(GenericPath, Constants):
 
     def CreateConfigFiles(self):
         for year in self.years:
+            print(blue(f'--> Creating config for {year}'))
             era_infos = {year: {'luminosity': self.get_lumi(year,self.runs)}}
             sample_infos = {}
             for ds in self.get_datasets(year,self.runs):
                 if not any([x in ds for x in self.modules[self.module]]): continue
                 type_ = self.get_type(dataset=ds, year=year)
+                if not type_ in self.campaigns: continue
                 campaign = self.campaigns[type_]
                 jec = self.jecs[type_] if self.jecs else ''
                 sample_infos[ds] = {
@@ -92,15 +94,19 @@ class ModuleRunner(GenericPath, Constants):
             print(green(f'--> Finished running for {year}'))
 
     def Submit(self, maxFiles=None):
+        print(blue('--> Running Submit'))
         self.RunAnalyser(distributed='driver', maxFiles=maxFiles)
     
     def RunLocal(self,distributed='sequential', maxFiles=None):
+        print(blue('--> Running RunLocal'))
         self.RunAnalyser(distributed=distributed, maxFiles=maxFiles)
 
     def Test(self, distributed='sequential', maxFiles=1):
+        print(blue('--> Running Test'))
         self.RunLocal(distributed=distributed, maxFiles=maxFiles)
     
     def Plot(self, pdfextraname=''):
+        print(blue('--> Running Plot'))
         from MakePlots import MakePlots
         # self.RunAnalyser(distributed='finalize', maxFiles=None, extra_flags='--onlypost')
         samples = list(filter(lambda x: x in self.MC_samples, self.modules[self.module]))

@@ -38,6 +38,15 @@ class Constants():
                     # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
                     'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_Nano11_das.txt',
                 },
+                'Summer22_NPVA2p0B0p13': {
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat2018_2022_Summer22_Nano11_NPVA2p0B0p13.txt',
+                },
+                'Summer22_NPVA2p0B0p3': {
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat2018_2022_Summer22_Nano11_NPVA2p0B0p3.txt',
+                },
+                'Summer22_NPVA3p0B0p13': {
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat2018_2022_Summer22_Nano11_NPVA3p0B0p13.txt',
+                },
                 'Prompt':{
                     'MuonC':    'datasets/Muon_2022RunC_Prompt_Nano10_jme.txt',
                     'MuonD':    'datasets/Muon_2022RunD_Prompt_Nano10_jme.txt',
