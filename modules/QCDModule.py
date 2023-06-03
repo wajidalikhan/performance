@@ -69,22 +69,25 @@ class QCDModule(NanoBaseJME):
         #############################################################################
         import src.controlPlots as cp
 
-        ### noSel
-        plots+=cp.muonPlots(muons, noSel, "noSel")
-        plots+=cp.electronPlots(electrons, noSel, "noSel")
-        plots+=cp.AK4jetPlots(ak4Jets, noSel, "noSel")
-        plots+=cp.AK4jetPlots(ak4JetsID, noSel, "noSelJetID")
-        plots+=cp.AK4jetPlots(ak4Jetspt40, noSel, "noSelJetpt40")
-        plots+=cp.eventPlots(tree, noSel, "noSel")
+        if "all" in sampleCfg['plot_level']:
+            ### noSel
+            plots+=cp.muonPlots(muons, noSel, "noSel")
+            plots+=cp.electronPlots(electrons, noSel, "noSel")
+            plots+=cp.AK4jetPlots(ak4Jets, noSel, "noSel")
+            plots+=cp.AK4jetPlots(ak4JetsID, noSel, "noSelJetID")
+            plots+=cp.AK4jetPlots(ak4Jetspt40, noSel, "noSelJetpt40")
+            plots+=cp.eventPlots(tree, noSel, "noSel")
+            
+            ### no leptons
+            plots+=cp.muonPlots(muons, noLepton, "noLEpton")
+            plots+=cp.electronPlots(electrons, noLepton, "noLepton")
 
-        ### no leptons
-        plots+=cp.muonPlots(muons, noLepton, "noLEpton")
-        plots+=cp.electronPlots(electrons, noLepton, "noLepton")
 
+            ### dijet
+            plots+=cp.muonPlots(muons, dijet, "Dijet")
+            plots+=cp.electronPlots(electrons, dijet, "Dijet")
 
-        ### zmass cut
-        plots+=cp.muonPlots(muons, dijet, "Dijet")
-        plots+=cp.electronPlots(electrons, dijet, "Dijet")
+        ### dijet
         plots+=cp.AK4jetPlots(ak4Jets, dijet, "Dijet")
         plots+=cp.AK4jetPlots(ak4JetsID, dijet, "DijetJetID")
         plots+=cp.AK4jetPlots(ak4Jetspt40, dijet, "DijetJetpt40")
@@ -98,9 +101,10 @@ class QCDModule(NanoBaseJME):
             plots+=cp.effPurityPlots(purityjets,dijet,"effPurity_puritymatched",tree)
             plots+=cp.effPurityPlots(pujets,dijet,"effPurity_pujets",tree)
 
-            plots+=cp.responsePlots(matchedjets, dijet, "dijet_response",tree)
-            plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
-            plots+=cp.responsePlots(matchedjets, noSel, "noSel_response",tree)
+            if any([x in sampleCfg['plot_level'] for x in ["all","response"]]):
+                plots+=cp.responsePlots(matchedjets, dijet, "dijet_response",tree)
+                plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
+                plots+=cp.responsePlots(matchedjets, noSel, "noSel_response",tree)
 
         plots+=cp.eventPlots(tree, dijet, "Dijet")
         # Cutflow report

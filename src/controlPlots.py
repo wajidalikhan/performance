@@ -35,6 +35,10 @@ def AK4jetPlots(jets, sel, sel_tag, maxJets=4):
     plots = []
 
     plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_nJets",op.rng_len(jets),sel,EqBin(15,0.,15.), xTitle=f"Number of Jets"))
+
+    etas = op.map(jets, lambda j: j.eta)
+    plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_eta",etas,sel,EqBin(100,-5.,5.), xTitle=f"#eta"))
+
     #### do a for loop through all Jets
     for i in range(maxJets):
         plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_pt", jets[i].pt, sel, EqBin(20, 0., 500.), xTitle=f"jet_{{{i+1}}} p_{{T}} [GeV]"))
