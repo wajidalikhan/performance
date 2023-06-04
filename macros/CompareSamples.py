@@ -11,6 +11,7 @@ class CompareSamples():
             self.refsample = list(self.samples.keys())[0]
         self.year = year
         if outputPath is None:
+            from ModuleRunner import GenericPath
             outputPath = GenericPath().jme_path
         self.outputPath = os.path.join(outputPath,'pdfs/CompareSamples')
         os.system('mkdir -p '+os.path.join(self.outputPath))

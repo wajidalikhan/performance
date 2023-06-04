@@ -93,17 +93,18 @@ class ModuleRunner(GenericPath, Constants):
             subprocess.run(cmd, shell=True)
             print(green(f'--> Finished running for {year}'))
 
-    def Submit(self, maxFiles=None):
+    def Submit(self, maxFiles=None, **kargs):
         print(blue('--> Running Submit'))
-        self.RunAnalyser(distributed='driver', maxFiles=maxFiles)
+        self.RunAnalyser(distributed='driver', maxFiles=maxFiles, **kargs)
     
-    def RunLocal(self,distributed='sequential', maxFiles=None):
+    def RunLocal(self,distributed='sequential', maxFiles=None, **kargs):
         print(blue('--> Running RunLocal'))
-        self.RunAnalyser(distributed=distributed, maxFiles=maxFiles)
+        self.RunAnalyser(distributed=distributed, maxFiles=maxFiles, **kargs)
 
-    def Test(self, distributed='sequential', maxFiles=1):
+    def Test(self, distributed='sequential', maxFiles=1, **kargs):
         print(blue('--> Running Test'))
         self.RunLocal(distributed=distributed, maxFiles=maxFiles)
+        self.RunLocal(distributed=distributed, maxFiles=maxFiles, **kargs)
     
     def RunMissingLocal(self, ncores=10, remove_temp_files=True):
         from parallelize import parallelize
@@ -124,7 +125,7 @@ class ModuleRunner(GenericPath, Constants):
         else:
             print(blue('--> Nothing to run local'))
     
-    def Merge(self, distributed='finalize', maxFiles=None, allow_incomplete=True):
+    def Merge(self, distributed='finalize', maxFiles=None, allow_incomplete=True, **kargs):
         if allow_incomplete:
             for year in self.years:
                 outpath = os.path.join(self.output_path,self.get_unique_name(year)).replace(self.local_path+'/','')
@@ -135,10 +136,10 @@ class ModuleRunner(GenericPath, Constants):
                     cmd = f'hadd -f {outpath}/results/{type} '
                     cmd += ' '.join(list(filter(lambda x: type in x, inputs)))
                     os.system(cmd)
-            self.RunAnalyser(distributed='finalize', maxFiles=None, extra_flags='--onlypost')
+            self.RunAnalyser(distributed='finalize', maxFiles=None, extra_flags='--onlypost', **kargs)
                 
         else:
-            self.RunAnalyser(distributed=distributed, maxFiles=maxFiles)
+            self.RunAnalyser(distributed=distributed, maxFiles=maxFiles, **kargs)
     
     def Plot(self, pdfextraname=''):
         print(blue('--> Running Plot'))

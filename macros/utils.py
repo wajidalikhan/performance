@@ -2,7 +2,6 @@ import os, subprocess, yaml, glob
 from math import sqrt
 from collections import OrderedDict
 from Constants import Constants
-from ModuleRunner import GenericPath
 from printing_utils import *
 from tdrstyle_JME import *
 import tdrstyle_JME as TDR
