@@ -71,7 +71,8 @@ def AK4jetPlots(jets, sel, sel_tag, maxJets=4):
     neHEF = op.map(jets, lambda j: j.neHEF)
     plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_neHEF",neHEF,sel,EqBin(20,0.,1.), xTitle=f"neHEF"))
 
-    plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_DeltaPhi12",op.deltaPhi(jets[0].p4,jets[1].p4),sel,EqBin(20,0.,4.), xTitle=f"#delta Phi(jet_1,jet_2)"))
+    if op.rng_len(jets)>1:
+        plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_DeltaPhi12",op.deltaPhi(jets[0].p4,jets[1].p4),sel,EqBin(20,0.,4.), xTitle=f"#delta Phi(jet_1,jet_2)"))
 
 
     return plots
@@ -93,7 +94,11 @@ def effPurityPlots(jet, sel, sel_tag, tree):
     
     genjets = op.select(tree.GenJet, lambda j: j.pt>20)
     
-    deltaRs = op.map(jet, lambda j: op.deltaR(j.p4,j.genJet.p4))
+    jetgenrecopairs = op.combine((tree.Jet, tree.GenJet), pred=lambda j,gj : op.deltaR(j.p4,gj.p4)<0.2)
+    jetgenrecoMinDRPair = op.rng_min_element_by(jetgenrecopairs, lambda pair: op.deltaR(pair[0].p4, pair[1].p4))    
+
+    deltaRs = op.map(jetgenrecoMinDRPair, lambda j: op.deltaR(j[0].p4,j[1].p4))
+    # deltaRs = op.map(jet, lambda j: op.deltaR(j.p4,j.genJet.p4))
     # deltaRs = op.map(jet, lambda j: op.deltaR(j.p4,tree.GenJet[j.genJetIdx].p4))
     plots.append(Plot.make1D(f"{sel_tag}_deltaR", deltaRs,sel,EqBin(300,0.,3.),xTitle = "#Delta R (recojet, genjet)"))
 
