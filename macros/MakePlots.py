@@ -180,7 +180,7 @@ class MakePlots():
                     if type == 'allrecojets': continue
                     isEff = 'effmatched' in type
                     hname = f'{mode}_{type}_eta{eta_bin}'
-                    self.CreateCanvas(canvName=hname, zoom=isEff)
+                    self.CreateCanvas(canvName=hname, zoom=False)
                     hist = self.hists[hname]
                     tdrDraw(hist, 'P', fstyle=0)
                     # tdrDraw(h, opt, marker=rt.kFullCircle, msize=1.0, mcolor=rt.kBlack, lstyle=rt.kSolid, lcolor=-1, fstyle=1001, fcolor=rt.kYellow+1, alpha=-1):

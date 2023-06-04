@@ -1,8 +1,4 @@
-import os, subprocess, yaml
-from collections import OrderedDict
-from printing_utils import green, blue, prettydict
-
-from Constants import Constants
+from utils import *
 
 class GenericPath:
     ''' Class container for paths '''
@@ -109,10 +105,44 @@ class ModuleRunner(GenericPath, Constants):
         print(blue('--> Running Test'))
         self.RunLocal(distributed=distributed, maxFiles=maxFiles)
     
+    def RunMissingLocal(self, ncores=10, remove_temp_files=True):
+        from parallelize import parallelize
+        print(blue('--> Running RunMissingLocal'))
+        commands = []
+        for year in self.years:
+            outpath = os.path.join(self.output_path,self.get_unique_name(year)).replace(self.local_path+'/','')
+            inputs = glob.glob(os.path.join(outpath, 'batch/input/condor_*.sh'))
+            for input in inputs:
+                output = input.replace('input/condor_','output/').replace('.sh','/')
+                if len(glob.glob(output+'*root'))==0:
+                    cmd = open(input).readlines()[-1]
+                    cmd = cmd.replace(' && move_files','')
+                    cmd = cmd.replace('--output=',f'--output={output}')
+                    commands.append(cmd)
+        if len(commands)!=0:
+            parallelize(commands, ncores=ncores, remove_temp_files=remove_temp_files)
+        else:
+            print(blue('--> Nothing to run local'))
+    
+    def Merge(self, distributed='finalize', maxFiles=None, allow_incomplete=True):
+        if allow_incomplete:
+            for year in self.years:
+                outpath = os.path.join(self.output_path,self.get_unique_name(year)).replace(self.local_path+'/','')
+                inputs = glob.glob(os.path.join(outpath, 'batch/output/*/*.root'))
+                types = list(set([x.split('/')[-1] for x in inputs]))
+                print(outpath, types)
+                for type in types:
+                    cmd = f'hadd -f {outpath}/results/{type} '
+                    cmd += ' '.join(list(filter(lambda x: type in x, inputs)))
+                    os.system(cmd)
+            self.RunAnalyser(distributed='finalize', maxFiles=None, extra_flags='--onlypost')
+                
+        else:
+            self.RunAnalyser(distributed=distributed, maxFiles=maxFiles)
+    
     def Plot(self, pdfextraname=''):
         print(blue('--> Running Plot'))
         from MakePlots import MakePlots
-        # self.RunAnalyser(distributed='finalize', maxFiles=None, extra_flags='--onlypost')
         samples = list(filter(lambda x: x in self.MC_samples, self.modules[self.module]))
         for year in self.years:
             path = os.path.join(self.output_path,self.get_unique_name(year)).replace(self.local_path+'/','')

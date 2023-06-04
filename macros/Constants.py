@@ -38,7 +38,11 @@ class Constants():
                     # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
                     'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_Nano11_das.txt',
                 },
+                'Summer22_Nominal': {
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat2018_2022_Summer22_Nano11_Nominal.txt',
+                },
                 'Summer22_NPVA2p0B0p13': {
+                    'DY':       'datasets/DY_2022_Winter22_Nano11_NPVA2p0B0p13.txt',
                     'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat2018_2022_Summer22_Nano11_NPVA2p0B0p13.txt',
                 },
                 'Summer22_NPVA2p0B0p3': {
@@ -66,7 +70,11 @@ class Constants():
                     'JetHTC':   'datasets/JetHT_2022RunC_ReReco_Nano11_das.txt',
                     'JetHTD':   'datasets/JetHT_2022RunD_ReReco_Nano11_das.txt',
                     'JetHTE':   'datasets/JetHT_2022RunE_ReReco_Nano11_das.txt',
-                }
+                },
+                'PuppiTune':{
+                    'MuonG':    'datasets/Muon_2022RunG_Prompt_Nano11_NPVA2p0B0p13.txt',
+                    'JetHTG':   'datasets/JetMET_2022RunG_Prompt_Nano11_NPVA2p0B0p13.txt',
+                },
             },
             '2023': {
                 'Winter23': {
