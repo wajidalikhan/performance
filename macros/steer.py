@@ -51,7 +51,7 @@ def main():
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
     # campaigns = {'mc': 'Summer22_NPVA3p0B0p13', 'data': 'PuppiTune'}
 
-    # campaigns = {'mc': 'Winter22',              'data': 'Prompt'}
+    campaigns = {'mc': 'Winter22',              'data': 'Prompt'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p13', 'data': 'PuppiTune'}
     
     jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
@@ -59,8 +59,8 @@ def main():
     extra_info = {'plot_level': 'response'}
 
 
-    # module = 'DY'
-    module = 'QCD'
+    module = 'DY'
+    # module = 'QCD'
     
     # maxFiles=10
     maxFiles=1
@@ -73,7 +73,8 @@ def main():
     if args.config:
         MR.CreateConfigFiles()
     if args.test:
-        MR.Test(maxFiles=maxFiles)
+        
+        MR.Test(maxFiles=maxFiles, extra_flags='--onlypost')
     if args.local:
         MR.RunLocal()
         # MR.RunLocal(distributed="parallel")

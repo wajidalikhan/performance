@@ -75,6 +75,8 @@ class MakePlots():
         self.types = {
             'effPurity': [('allrecojets',  ['reco','gen', 'unmatchedgen' ]), ('puritymatched', ['reco']), ('effmatched', ['gen'])]
         }
+        self.response_names = ['dijet','noLepton','noSel']
+        # self.response_names = ['']
         
         self.year = year
         self.fname = fname
@@ -94,10 +96,11 @@ class MakePlots():
         self.quant   = array('d',[0.5])
         self.quant_y   = array('d',[0.5])
         for eta_bin in self.eta_bins:
-            for response_name in ['dijet','noLepton','noSel']:
+            for response_name in self.response_names:
                 pts, jes, jer, pts_err, jes_err, jer_err = ([],[],[],[],[], [])
                 for pt in self.pt_bins:
                     hname = f'{response_name}_response_eta{eta_bin}_pt{pt}'
+                    # hname = f'response_eta{eta_bin}_pt{pt}'
                     hist = f_.Get(hname)
                     hist.GetQuantiles(1,self.quant_y,self.quant)
                     pt_min, pt_max = pt.split('to')
@@ -129,6 +132,11 @@ class MakePlots():
     
                 
     def Close(self):
+        self.files['save'] = rt.TFile(os.path.join(self.outputPath, 'resp_eff_pur_plots.root'), 'Recreate')
+        for name, graph in self.graphs.items():
+            graph.Write(name)
+        for name, hist in self.hists.items():
+            hist.Write(name)
         for f_ in self.files.values():
             f_.Close()
 
@@ -197,9 +205,8 @@ class MakePlots():
     
     def PlotAll(self):
         self.LoadInputs()
-        self.PlotResponse(response_name='dijet')
-        self.PlotResponse(response_name='noLepton')
-        self.PlotResponse(response_name='noSel')
+        for response_name in self.response_names:
+            self.PlotResponse(response_name=response_name)
         self.PlotEffPurity()
         self.Close()
 
