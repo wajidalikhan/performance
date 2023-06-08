@@ -62,7 +62,7 @@ class CompareSamples():
         x_min = h_ref.GetBinLowEdge(1)
         y_max = h_ref.GetBinLowEdge(h_ref.GetNbinsX())
         self.canv = tdrDiCanvas(histname, x_min, y_max, 1e-04, 0.1, 0.4, 1.6, histname, 'A.U.', 'Ratio')
-        # self.canv = tdrDiCanvas(histname, x_min, y_max, 1e-04, 1, 0.5, 1.5, histname, 'A.U.', 'Ratio')
+        # self.canv = tdrDiCanvas(histname, x_min, y_max, 1, 1.6*h_ref.GetMaximum(), 0.5, 1.5, histname, 'A.U.', 'Ratio')
         # self.canv.cd(1).SetLogy(True)
         self.leg  = tdrLeg(0.40,0.90-(len(self.samples)+1)*0.040,0.90,0.90)
         for s_ind, sname in enumerate(self.samples.keys()):
@@ -120,13 +120,18 @@ class CompareSamples():
 
 
 def main():
-    selections = ['noSel', 'noSelJetID', 'noSelJetpt40', 'Zmasscut', 'ZmasscutJetID', 'ZmasscutJetpt40', 'ZmasscutJetpt100', 'ZmasscutJetetag2p4']
-    types = ['AK4Jets_eta', 'Jet1_eta']
+
+    types = ['AK4Jets_eta', 'Jet1_eta', 'Jet2_eta', 'Jet3_eta', 'Jet4_eta']
+
+
+    # selections = ['noSel', 'noSelJetID', 'noSelJetpt40', 'Zmasscut', 'ZmasscutJetID', 'ZmasscutJetpt40', 'ZmasscutJetpt100', 'ZmasscutJetetag2p4']
+    selections = ['ZmasscutJetpt40', 'ZmasscutJetpt100']
     histsname = [f'{sel}_{type}' for sel in selections for type in types]
 
     samples = {}
     samples['Nominal'] = 'outputs/DYModule/DY_2022_G_Winter22_Prompt_Summer22EERun3_V0_MC_Summer22EERun3_RunF_V0_DATA/results/MuonG.root'
     samples['NPVA2p0B0p13'] = 'outputs/DYModule/DY_2022_G_Summer22_NPVA2p0B0p13_PuppiTune_Summer22EERun3_V0_MC_Summer22EERun3_RunF_V0_DATA/results/MuonG.root'
+    samples['NPVA2p0B0p3'] = 'outputs/DYModule/DY_2022_G_Summer22_NPVA2p0B0p3_PuppiTune_Summer22EERun3_V0_MC_Summer22EERun3_RunF_V0_DATA/results/MuonG.root'
 
     pdfextraname = '_Muon'
     MP = CompareSamples(samples=samples, histsname=histsname, pdfextraname=pdfextraname).PlotAll()
@@ -134,14 +139,14 @@ def main():
     samples = {}
     samples['Nominal'] = 'outputs/DYModule/DY_2022_G_Winter22_Prompt_Summer22EERun3_V0_MC_Summer22EERun3_RunF_V0_DATA/results/DY.root'
     samples['NPVA2p0B0p13'] = 'outputs/DYModule/DY_2022_G_Summer22_NPVA2p0B0p13_PuppiTune_Summer22EERun3_V0_MC_Summer22EERun3_RunF_V0_DATA/results/DY.root'
+    samples['NPVA2p0B0p3'] = 'outputs/DYModule/DY_2022_G_Summer22_NPVA2p0B0p3_PuppiTune_Summer22EERun3_V0_MC_Summer22EERun3_RunF_V0_DATA/results/DY.root'
     
 
     pdfextraname = '_DY'
     MP = CompareSamples(samples=samples, histsname=histsname, pdfextraname=pdfextraname).PlotAll()
 
-    histsname = ['DijetJetpt40_Jet1_eta']
-    selections = ['Dijet','DijetJetID','DijetJetpt40','DijetJetpt100','DijetJetetas2p4','DijetJetetag2p4']
-    types = ['AK4Jets_eta', 'Jet1_eta']
+    # selections = ['Dijet','DijetJetID','DijetJetpt40','DijetJetpt100','DijetJetetas2p4','DijetJetetag2p4']
+    selections = ['DijetJetpt40','DijetJetpt100']
     histsname = [f'{sel}_{type}' for sel in selections for type in types]
 
     samples = {}

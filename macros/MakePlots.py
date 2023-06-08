@@ -76,7 +76,7 @@ class MakePlots():
             'effPurity': [('allrecojets',  ['reco','gen', 'unmatchedgen' ]), ('puritymatched', ['reco']), ('effmatched', ['gen'])]
         }
         self.response_names = ['dijet','noLepton','noSel']
-        # self.response_names = ['']
+        self.response_names = ['Zmasscut']
         
         self.year = year
         self.fname = fname
