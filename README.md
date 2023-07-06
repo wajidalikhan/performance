@@ -2,7 +2,7 @@
 
 Setup based on Bamboo (https://gitlab.cern.ch/cp3-cms/bamboo) to validate JME diliverables
 
-you need to create the file `bamboo.ini`
+you need to create the file `bamboo.init`
 with the folling information:
 ```sh
 [batch]
