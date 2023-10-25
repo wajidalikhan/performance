@@ -75,8 +75,7 @@ class MakePlots():
         self.types = {
             'effPurity': [('allrecojets',  ['reco','gen','unmatchedgen','unmatchedreco' ]), ('puritymatched', ['reco']), ('effmatched', ['gen'])]
         }
-        self.response_names = ['dijet','noLepton','noSel']
-        self.response_names = ['Zmasscut']
+        self.response_names = ['dijet','noLepton','noSel','Zmasscut']
         
         self.year = year
         self.fname = fname
@@ -93,6 +92,10 @@ class MakePlots():
         self.graphs = OrderedDict()
         self.files[self.fname] = rt.TFile(os.path.join(self.inputPath,f'{self.fname}.root'))
         f_ = self.files[self.fname]
+        # remove response names, that do not exist
+        lista = [ el.GetName().split("_")[0] for el in f_.GetListOfKeys() if "response" in el.GetName()]
+        self.response_names = [el for el in self.response_names if el in lista]
+
         self.quant   = array('d',[0.5])
         self.quant_y   = array('d',[0.5])
         for eta_bin in self.eta_bins:
