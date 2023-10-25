@@ -73,7 +73,7 @@ class MakePlots():
         # self.pt_bins = ['150to200']
 
         self.types = {
-            'effPurity': [('allrecojets',  ['reco','gen', 'unmatchedgen' ]), ('puritymatched', ['reco']), ('effmatched', ['gen'])]
+            'effPurity': [('allrecojets',  ['reco','gen','unmatchedgen','unmatchedreco' ]), ('puritymatched', ['reco']), ('effmatched', ['gen'])]
         }
         self.response_names = ['dijet','noLepton','noSel']
         self.response_names = ['Zmasscut']
@@ -125,7 +125,10 @@ class MakePlots():
                             self.hists[hname_new] = self.hists[hname].Clone(hname_new)
                             # print("Dividing", hname, 'by', hname.replace(type,'allrecojets').replace(jet+'pt','unmatchedgenpt'), 'into', hname_new )
                             num = self.hists[hname]
-                            den = self.hists[hname.replace(type,'allrecojets').replace(jet+'pt','unmatchedgenpt')]
+                            if 'eff' in type:
+                                den = self.hists[hname.replace(type,'allrecojets').replace(jet+'pt','unmatchedgenpt')]
+                            if 'purity' in type:
+                                den = self.hists[hname.replace(type,'allrecojets').replace(jet+'pt','unmatchedrecopt')]
                             self.hists[hname_new].Divide(num, den, 1, 1, 'B')
                             # self.hists[hname_new] = MakeRatioHistograms(self.hists[hname], self.hists[hname.replace(type,'allrecojets')], hname_new)
                             self.hists[hname_new].SetDirectory(0)
@@ -144,7 +147,10 @@ class MakePlots():
         if 'canv' in self.__dict__: self.canv.Close()
         XMin, XMax = (15, 7500)
         YMin, YMax = (0.9,1.1) if zoom else (0.0,2)
-        xName, yName = ('p_{T,jet} [GeV]', 'Response' if 'response' in canvName.lower() else 'Eff/Purity')
+        if 'response' in canvName.lower(): xName, yName = ('Gen jet p_{T} [GeV]', 'Response')
+        elif 'effmatched' in canvName.lower(): xName, yName = ('Gen jet p_{T} [GeV]', 'Efficiency')
+        elif 'puritymatched' in canvName.lower(): xName, yName = ('Reco jet p_{T} [GeV]', 'Purity')
+        else: xName, yName = ('', '')
         TDR.extraText   = 'Simulation'
         TDR.extraText2  = 'Preliminary'
         TDR.cms_lumi = TDR.commonScheme['legend'][self.year]
