@@ -97,7 +97,7 @@ class QCDModule(NanoBaseJME):
 
         if sampleCfg['type'] == 'mc':  
             plots+=cp.effPurityPlots(effjets,dijet,"effPurity_effmatched", tree)
-            plots+=cp.effPurityPlots(ak4Jets,dijet,"effPurity_allrecojets",tree)
+            plots+=cp.effPurityPlots(recojetpt30,dijet,"effPurity_allrecojets",tree)
             plots+=cp.effPurityPlots(purityjets,dijet,"effPurity_puritymatched",tree)
             plots+=cp.effPurityPlots(pujets,dijet,"effPurity_pujets",tree)
 

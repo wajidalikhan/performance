@@ -92,7 +92,7 @@ def ZbosonPlots(Zboson, sel, sel_tag):
 def effPurityPlots(jet, sel, sel_tag, tree):
     plots = []
     
-    genjets = op.select(tree.GenJet, lambda j: j.pt>20)
+    genjets = op.select(tree.GenJet, lambda j: j.pt>30)
     
     # jetgenrecopairs = op.combine((tree.Jet, tree.GenJet), pred=lambda j,gj : op.deltaR(j.p4,gj.p4)<0.2)
     # jetgenrecoMinDRPair = op.rng_min_element_by(jetgenrecopairs, lambda pair: op.deltaR(pair[0].p4, pair[1].p4))    
@@ -105,10 +105,16 @@ def effPurityPlots(jet, sel, sel_tag, tree):
 
     ### eff and purity bins of eta vs pt
     for etatag,etabin in eta_binning.items():
-        etajets = op.select(jet, lambda j: op.AND(
-            op.abs(j.genJet.eta) > etabin[0],
-            op.abs(j.genJet.eta) < etabin[1]
-        ))
+        if "effmatched" in sel_tag:
+            etajets = op.select(jet, lambda j: op.AND(
+                op.abs(j.genJet.eta) > etabin[0],
+                op.abs(j.genJet.eta) < etabin[1]
+            ))
+        else: #for 'puritymatched' and 'allrecojets' sel_tags, used in purities
+            etajets = op.select(jet, lambda j: op.AND(
+                op.abs(j.eta) > etabin[0],
+                op.abs(j.eta) < etabin[1]
+            ))
 
         etagenjets = op.select(genjets, lambda j:op.AND(
             op.abs(j.eta) > etabin[0],

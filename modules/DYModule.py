@@ -121,7 +121,7 @@ class DYModule(NanoBaseJME):
 
         if sampleCfg['type'] == 'mc':  
             plots+=cp.effPurityPlots(effjets,Zmasscut,"effPurity_effmatched", tree)
-            plots+=cp.effPurityPlots(ak4Jets,Zmasscut,"effPurity_allrecojets",tree)
+            plots+=cp.effPurityPlots(recojetpt30,Zmasscut,"effPurity_allrecojets",tree)
             plots+=cp.effPurityPlots(purityjets,Zmasscut,"effPurity_puritymatched",tree)
             plots+=cp.effPurityPlots(pujets,Zmasscut,"effPurity_pujets",tree)
 
