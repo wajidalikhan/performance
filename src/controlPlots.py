@@ -119,10 +119,11 @@ def effPurityPlots(jet, sel, sel_tag, tree):
         plots.append(Plot.make1D(f"{sel_tag}_{etatag}_genpt", genjetpt,sel,EqBin(200,0.,1000.),xTitle = "genjet p_{T} [GeV] "))
         recojetpt = op.map(etajets, lambda j: j.pt)
         plots.append(Plot.make1D(f"{sel_tag}_{etatag}_recopt", recojetpt,sel,EqBin(200,0.,1000.),xTitle = "recojet p_{T} [GeV] "))
-
         unmatchedgenjetpt = op.map(etagenjets, lambda j: j.pt)
         plots.append(Plot.make1D(f"{sel_tag}_{etatag}_unmatchedgenpt", unmatchedgenjetpt,sel,EqBin(200,0.,1000.),xTitle = "all genjet p_{T} [GeV] "))
-
+        unmatchedrecojetpt = op.map(etajets, lambda j: j.pt)
+        plots.append(Plot.make1D(f"{sel_tag}_{etatag}_unmatchedrecopt", unmatchedrecojetpt,sel,EqBin(200,0.,1000.),xTitle = "all recojet p_{T} [GeV] "))
+        
         ####### vs NPU for the leading jet in bins of pT
         for pttag, ptbin in pt_binning.items():
             npujets = op.select(etajets, lambda j: op.AND(
