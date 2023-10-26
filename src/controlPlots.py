@@ -146,7 +146,7 @@ def effPurityPlots(jet, sel, sel_tag, tree):
 
 
 
-def responsePlots(jets, sel, sel_tag, tree):
+def responsePlots(jets, sel, sel_tag, tree, rawpt = False):
     plots = []
 
     deltaRs = op.map(jets, lambda j: op.deltaR(j.p4,j.genJet.p4))
@@ -162,7 +162,9 @@ def responsePlots(jets, sel, sel_tag, tree):
                 j.genJet.pt > ptbin[0],
                 j.genJet.pt < ptbin[1]
             ))
-            response = op.map(etaptjets, lambda j: j.pt/j.genJet.pt)
+            if rawpt: response = op.map(etaptjets, lambda j: (tree._Jet.orig[j.idx].pt*(1-j.rawFactor))/j.genJet.pt)
+            else: response = op.map(etaptjets, lambda j: j.pt/j.genJet.pt)
+
             plots.append(Plot.make1D(f"{sel_tag}_{etatag}_{pttag}", response,sel,EqBin(100,0.,3.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
 
     return plots
