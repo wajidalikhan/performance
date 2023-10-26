@@ -129,6 +129,10 @@ class DYModule(NanoBaseJME):
             # plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
             plots+=cp.responsePlots(matchedjets, noSel, "hasTwoSFLeptons_response",tree)
 
+            plots+=cp.responsePlots(matchedjets, Zmasscut, "Zmasscut_rawresponse",tree, rawpt = True)
+            # plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_rawresponse",tree, rawpt = True)
+            plots+=cp.responsePlots(matchedjets, noSel, "hasTwoSFLeptons_rawresponse",tree, rawpt = True)
+
 
             plots+=cp.AK4jetPlots(pujets, Zmasscut, "ZmasscutPuJets")
             plots+=cp.AK4jetPlots(matchedjets, Zmasscut, "ZmasscutMatchedJets")

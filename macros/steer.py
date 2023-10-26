@@ -46,22 +46,23 @@ def main():
     
 
     runs = ['G']
-    campaigns = {'mc': 'Summer22_Nominal',      'data': 'Prompt'}
+    # campaigns = {'mc': 'Summer22',      'data': 'Prompt'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p13', 'data': 'PuppiTune'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
     # campaigns = {'mc': 'Summer22_NPVA3p0B0p13', 'data': 'PuppiTune'}
 
-    # campaigns = {'mc': 'Winter22',              'data': 'Prompt'}
+    campaigns = {'mc': 'Winter22',              'data': 'Prompt'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p13', 'data': 'PuppiTune'}
-    campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
+    # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
     
     jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
 
-    extra_info = {'plot_level': 'response'}
+    # possible plot_level: 'all', 'rawresponse', 'response', 'default'
+    extra_info = {'plot_level': 'rawresponse'}
 
 
-    module = 'DY'
-    # module = 'QCD'
+    # module = 'DY'
+    module = 'QCD'
     
     # maxFiles=10
     maxFiles=1

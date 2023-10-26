@@ -106,6 +106,12 @@ class QCDModule(NanoBaseJME):
                 plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
                 plots+=cp.responsePlots(matchedjets, noSel, "noSel_response",tree)
 
+            if any([x in sampleCfg['plot_level'] for x in ["all","rawresponse"]]):
+                plots+=cp.responsePlots(matchedjets, dijet, "dijet_rawresponse",tree, rawpt = True)
+                plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_rawresponse",tree, rawpt = True)
+                plots+=cp.responsePlots(matchedjets, noSel, "noSel_rawresponse",tree, rawpt = True)
+
+
         plots+=cp.eventPlots(tree, dijet, "Dijet")
         # Cutflow report
         yields.add(noLepton, 'no lepton')
