@@ -106,6 +106,7 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
         configureJets(tree._Jet, jet_algo,
                       jec=jec,
                       mayWriteCache= isNotWorker,
+                      jecLevels = sampleCfg['jec_level'],
                       # cachedir='/afs/cern.ch/user/a/anmalara/workspace/WorkingArea/JME/jme-validation/JECs_2022/',
                       isMC=self.is_MC, backend = backend)
         # configureType1MET(tree._MET,

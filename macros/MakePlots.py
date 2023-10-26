@@ -66,7 +66,7 @@ def Confidence(h1, median, confLevel = 0.95):
 
 
 class MakePlots():
-    def __init__(self, year, path, fname, pdfextraname=''):
+    def __init__(self, year, path, fname, pdfextraname='', campaign = ''):
         self.eta_bins = ['0p0to5p2', '0p0to1p3','1p3to2p4','2p4to2p7','2p7to3p0','3p0to5p2']
         # self.eta_bins = ['0p0to1p3']
         self.pt_bins = ['15to17','17to20','20to23','23to27','27to30','30to35','35to40','40to45','45to57','57to72','72to90','90to120','120to150','150to200','200to300','300to400','400to550','550to750','750to1000','1000to1500','1500to2000','2000to2500','2500to3000','3000to3500','3500to4000','4000to4500','4500to5000']
@@ -79,6 +79,7 @@ class MakePlots():
         self.rawresponse_names = ['dijet','Zmasscut']
         
         self.year = year
+        self.campaign = campaign
         self.fname = fname
         self.inputPath = path
         self.outputPath = os.path.join(self.inputPath,'pdfs')
@@ -163,6 +164,13 @@ class MakePlots():
    
     def GetResponse(self, f_, eta_bin, selection_name="dijet",response_name = "response"):
         pts, jes, jer, pts_err, jes_err, jer_err = ([],[],[],[],[], [])
+        if "raw" in response_name:
+            fdirectory = "textFiles/"+self.campaign + self.year+"_USER_"+"MC/"
+            os.system('mkdir -p '+fdirectory)
+            print("Creating MCtruth form the raw response in folder: ",fdirectory)
+            f = open(fdirectory+self.campaign + self.year+"_USER_"+"MC_L2Relative_AK4PFPuppi.txt","w")
+            f.write("{2 JetEta JetPt 1 Rho [0] Correction L2Relative}\n")
+
         for pt in self.pt_bins:
             hname = f'{selection_name}_{response_name}_eta{eta_bin}_pt{pt}'
             hist = f_.Get(hname)
@@ -175,8 +183,17 @@ class MakePlots():
             jer.append(Confidence(hist, hist.GetMean(), confLevel = 0.87)/(2*1.514))
             jes_err.append(getMedianError(hist))
             jer_err.append(hist.GetRMSError())
+            if "raw" in response_name: 
+                eta_min, eta_max = eta_bin.replace("p",".").split("to")
+                line_plus = f"%s \t %s \t %i \t %i \t %i \t %.2f \n"%(eta_min, eta_max, pt_min, pt_max, 1, 1./self.quant_y[0])
+                line_minus = f"%s \t %s \t %i \t %i \t %i \t %.2f \n"%("-"+eta_min,"-" + eta_max, pt_min, pt_max, 1, 1./self.quant_y[0])
+                f.write(line_plus)
+                f.write(line_minus)
+                
         self.graphs[selection_name+response_name+eta_bin+'jes'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jes), array('d',pts_err), array('d',jes_err))
         self.graphs[selection_name+response_name+eta_bin+'jer'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jer), array('d',pts_err), array('d',jer_err))
+        if "raw" in response_name: f.close()
+        
 
 
     def PlotResponse(self, selection_name = "dijet", response_name ='response'):

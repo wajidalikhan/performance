@@ -56,6 +56,11 @@ def main():
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
     
     jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
+    # jecs = {'mc': 'Winter222022_USER_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
+
+    # all jecs: "default" ; User MC truth: ['L2Relative']
+    # jec_level ='default'
+    jec_level = ['L2Relative']
 
     # possible plot_level: 'all', 'rawresponse', 'response', 'default'
     extra_info = {'plot_level': 'rawresponse'}
@@ -71,7 +76,7 @@ def main():
     args = commandline()
     print(green(args))
 
-    MR = ModuleRunner(module=module, years=years, runs=runs, campaigns=campaigns, jecs=jecs, extra_info=extra_info)
+    MR = ModuleRunner(module=module, years=years, runs=runs, campaigns=campaigns, jecs=jecs, extra_info=extra_info, jec_level = jec_level)
     if args.config:
         MR.CreateConfigFiles()
     if args.test:
