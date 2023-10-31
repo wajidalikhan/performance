@@ -95,29 +95,30 @@ class DYModule(NanoBaseJME):
         #############################################################################
         import src.controlPlots as cp
 
-        ### noSel
-        plots+=cp.muonPlots(muons, noSel, "noSel")
-        plots+=cp.electronPlots(electrons, noSel, "noSel")
-        plots+=cp.AK4jetPlots(ak4Jets, noSel, "noSel")
-        plots+=cp.AK4jetPlots(ak4JetsID, noSel, "noSelJetID")
-        plots+=cp.AK4jetPlots(ak4Jetspt40, noSel, "noSelJetpt40")
-        plots+=cp.eventPlots(tree, noSel, "noSel")
+        if "all" in sampleCfg['plot_level']:  
+            ### noSel
+            plots+=cp.muonPlots(muons, noSel, "noSel")
+            plots+=cp.electronPlots(electrons, noSel, "noSel")
+            plots+=cp.AK4jetPlots(ak4Jets, noSel, "noSel")
+            plots+=cp.AK4jetPlots(ak4JetsID, noSel, "noSelJetID")
+            plots+=cp.AK4jetPlots(ak4Jetspt40, noSel, "noSelJetpt40")
+            plots+=cp.eventPlots(tree, noSel, "noSel")
 
-        ### two leptons
-        plots+=cp.muonPlots(muons, hasTwoSFLeptons, "hasTwoSFLeptons")
-        plots+=cp.electronPlots(electrons, hasTwoSFLeptons, "hasTwoSFLeptons")
-        plots+=cp.ZbosonPlots(Zboson, hasTwoSFLeptons, "hasTwoSFLeptons")
-
-        ### zmass cut
-        plots+=cp.muonPlots(muons, Zmasscut, "Zmasscut")
-        plots+=cp.electronPlots(electrons, Zmasscut, "Zmasscut")
-        plots+=cp.ZbosonPlots(Zboson, Zmasscut, "Zmasscut")
-        plots+=cp.AK4jetPlots(ak4Jets, Zmasscut, "Zmasscut")
-        plots+=cp.AK4jetPlots(ak4JetsID, Zmasscut, "ZmasscutJetID")
-        plots+=cp.AK4jetPlots(ak4Jetspt40, Zmasscut, "ZmasscutJetpt40")
-        plots+=cp.AK4jetPlots(ak4Jetspt100, Zmasscut, "ZmasscutJetpt100")
-        plots+=cp.AK4jetPlots(ak4Jetsetas2p4, Zmasscut, "ZmasscutJetetas2p4")
-        plots+=cp.AK4jetPlots(ak4Jetsetag2p4, Zmasscut, "ZmasscutJetetag2p4")
+            ### two leptons
+            plots+=cp.muonPlots(muons, hasTwoSFLeptons, "hasTwoSFLeptons")
+            plots+=cp.electronPlots(electrons, hasTwoSFLeptons, "hasTwoSFLeptons")
+            plots+=cp.ZbosonPlots(Zboson, hasTwoSFLeptons, "hasTwoSFLeptons")
+            
+            ### zmass cut
+            plots+=cp.muonPlots(muons, Zmasscut, "Zmasscut")
+            plots+=cp.electronPlots(electrons, Zmasscut, "Zmasscut")
+            plots+=cp.ZbosonPlots(Zboson, Zmasscut, "Zmasscut")
+            plots+=cp.AK4jetPlots(ak4Jets, Zmasscut, "Zmasscut")
+            plots+=cp.AK4jetPlots(ak4JetsID, Zmasscut, "ZmasscutJetID")
+            plots+=cp.AK4jetPlots(ak4Jetspt40, Zmasscut, "ZmasscutJetpt40")
+            plots+=cp.AK4jetPlots(ak4Jetspt100, Zmasscut, "ZmasscutJetpt100")
+            plots+=cp.AK4jetPlots(ak4Jetsetas2p4, Zmasscut, "ZmasscutJetetas2p4")
+            plots+=cp.AK4jetPlots(ak4Jetsetag2p4, Zmasscut, "ZmasscutJetetag2p4")
 
         if sampleCfg['type'] == 'mc':  
             plots+=cp.effPurityPlots(effjets,Zmasscut,"effPurity_effmatched", tree)
@@ -125,9 +126,15 @@ class DYModule(NanoBaseJME):
             plots+=cp.effPurityPlots(purityjets,Zmasscut,"effPurity_puritymatched",tree)
             plots+=cp.effPurityPlots(pujets,Zmasscut,"effPurity_pujets",tree)
 
-            plots+=cp.responsePlots(matchedjets, Zmasscut, "Zmasscut_response",tree)
-            # plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
-            plots+=cp.responsePlots(matchedjets, noSel, "hasTwoSFLeptons_response",tree)
+            if any([x in sampleCfg['plot_level'] for x in ["all","response"]]): 
+                plots+=cp.responsePlots(matchedjets, Zmasscut, "Zmasscut_response",tree)
+                # plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
+                plots+=cp.responsePlots(matchedjets, noSel, "hasTwoSFLeptons_response",tree)
+
+            if any([x in sampleCfg['plot_level'] for x in ["all","rawresponse"]]):
+                plots+=cp.responsePlots(matchedjets, Zmasscut, "Zmasscut_rawresponse",tree, rawpt = True)
+                # plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_rawresponse",tree, rawpt = True)
+                plots+=cp.responsePlots(matchedjets, noSel, "hasTwoSFLeptons_rawresponse",tree, rawpt = True)
 
 
             plots+=cp.AK4jetPlots(pujets, Zmasscut, "ZmasscutPuJets")
