@@ -51,6 +51,7 @@ class ModuleRunner(GenericPath, Constants):
                 if not type_ in self.campaigns: continue
                 campaign = self.campaigns[type_]
                 jec = self.jecs[type_] if self.jecs else ''
+                jec_level = self.jec_level if "default" in self.jec_level else [el for el in self.jec_level]
                 sample_infos[ds] = {
                     'era': year,
                     'group': ds,
@@ -60,7 +61,7 @@ class ModuleRunner(GenericPath, Constants):
                     'split': self.split_files_in,
                     'campaign': campaign,
                     'jec': jec,
-                    'jec_level':self.jec_level,
+                    'jec_level': jec_level,
                     }
                 sample_infos[ds].update(self.extra_info)
                 if sample_infos[ds]['type']=='mc':

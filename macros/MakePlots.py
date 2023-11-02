@@ -103,11 +103,24 @@ class MakePlots():
 
         self.quant   = array('d',[0.5])
         self.quant_y   = array('d',[0.5])
+        if len(self.rawresponse_names):
+            fdirectory = "textFiles/"+self.campaign + self.year+"_USER_"+"MC/"
+            os.system('mkdir -p '+fdirectory)
+            print("Creating MCtruth form the raw response in folder: ",fdirectory)
+            f = open(fdirectory+self.campaign + self.year+"_USER_"+"MC_L2Relative_AK4PFPuppi.txt","w")
+            f.write("{2 JetEta JetPt 1 Rho [0] Correction L2Relative}\n")
+
         for eta_bin in self.eta_bins:
             for response_name in self.response_names:
-                self.GetResponse(f_, eta_bin,response_name)
+                self.GetResponse(f_, eta_bin,f, response_name)
             for response_name in self.rawresponse_names:
-                self.GetResponse(f_, eta_bin,response_name, "rawresponse")
+                if(len(self.rawresponse_names)>1):
+                    print("You can not put multiple corrections in one file")
+                    break
+                elif "0p0to5p2" in eta_bin: 
+                    break
+                else:
+                    self.GetResponse(f_, eta_bin,f, response_name, "rawresponse")
             
             for mode, types in self.types.items():
                 for type, jets in types:
@@ -127,7 +140,7 @@ class MakePlots():
                             self.hists[hname_new].Divide(num, den, 1, 1, 'B')
                             # self.hists[hname_new] = MakeRatioHistograms(self.hists[hname], self.hists[hname.replace(type,'allrecojets')], hname_new)
                             self.hists[hname_new].SetDirectory(0)
-    
+        if "raw" in response_name: f.close()    
                 
     def Close(self):
         self.files['save'] = rt.TFile(os.path.join(self.outputPath, 'resp_eff_pur_plots.root'), 'Recreate')
@@ -137,6 +150,7 @@ class MakePlots():
             hist.Write(name)
         for f_ in self.files.values():
             f_.Close()
+
 
     def CreateCanvas(self, canvName='', zoom=True, nEntries=7):
         if 'canv' in self.__dict__: self.canv.Close()
@@ -162,14 +176,8 @@ class MakePlots():
             tdrDrawLine(self.lines[y], lcolor=rt.kBlack, lstyle=rt.kDashed, lwidth=1)
     
    
-    def GetResponse(self, f_, eta_bin, selection_name="dijet",response_name = "response"):
+    def GetResponse(self, f_, eta_bin, f, selection_name="dijet",response_name = "response"):
         pts, jes, jer, pts_err, jes_err, jer_err = ([],[],[],[],[], [])
-        if "raw" in response_name:
-            fdirectory = "textFiles/"+self.campaign + self.year+"_USER_"+"MC/"
-            os.system('mkdir -p '+fdirectory)
-            print("Creating MCtruth form the raw response in folder: ",fdirectory)
-            f = open(fdirectory+self.campaign + self.year+"_USER_"+"MC_L2Relative_AK4PFPuppi.txt","w")
-            f.write("{2 JetEta JetPt 1 Rho [0] Correction L2Relative}\n")
 
         for pt in self.pt_bins:
             hname = f'{selection_name}_{response_name}_eta{eta_bin}_pt{pt}'
@@ -185,14 +193,14 @@ class MakePlots():
             jer_err.append(hist.GetRMSError())
             if "raw" in response_name: 
                 eta_min, eta_max = eta_bin.replace("p",".").split("to")
-                line_plus = f"%s \t %s \t %i \t %i \t %i \t %.2f \n"%(eta_min, eta_max, pt_min, pt_max, 1, 1./self.quant_y[0])
-                line_minus = f"%s \t %s \t %i \t %i \t %i \t %.2f \n"%("-"+eta_min,"-" + eta_max, pt_min, pt_max, 1, 1./self.quant_y[0])
+                line_plus = f"%s    %s    %i    %i    %i   %i  %i    %.2f \n"%(eta_min, eta_max, pt_min, pt_max, 3,0,200, 1./self.quant_y[0])
+                line_minus = f"%s    %s    %i    %i    %i   %i  %i    %.2f \n"%("-"+eta_min,"-" + eta_max, pt_min, pt_max, 3,0,200, 1./self.quant_y[0])
                 f.write(line_plus)
                 f.write(line_minus)
                 
         self.graphs[selection_name+response_name+eta_bin+'jes'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jes), array('d',pts_err), array('d',jes_err))
         self.graphs[selection_name+response_name+eta_bin+'jer'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jer), array('d',pts_err), array('d',jer_err))
-        if "raw" in response_name: f.close()
+
         
 
 
