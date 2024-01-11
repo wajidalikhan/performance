@@ -51,7 +51,8 @@ def main():
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
     # campaigns = {'mc': 'Summer22_NPVA3p0B0p13', 'data': 'PuppiTune'}
 
-    campaigns = {'mc': 'Winter22',              'data': 'Prompt'}
+    # campaigns = {'mc': 'Winter22',              'data': 'Prompt'}
+    campaigns = {'mc': 'Winter22'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p13', 'data': 'PuppiTune'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
     
@@ -59,8 +60,8 @@ def main():
     # jecs = {'mc': 'Winter222022_USER_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
 
     # all jecs: "default" ; User MC truth: ['L2Relative']
-    # jec_level ='default'
-    jec_level = ['L2Relative']
+    jec_level ='default'
+    # jec_level = ['L2Relative']
 
     # possible plot_level: 'all', 'rawresponse', 'response', 'default'
     extra_info = {'plot_level': 'rawresponse'}
@@ -68,7 +69,8 @@ def main():
 
     # module = 'DY'
     module = 'QCD'
-    
+    # module = 'test'
+
     # maxFiles=10
     maxFiles=1
 

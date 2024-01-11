@@ -18,6 +18,7 @@ class Constants():
             'DY':    ['Muon',  'DY'],
             'TTbar': ['Muon',  'TTbar'],
             'QCD':   ['JetHT', 'QCD_Flat'],
+            'test':   ['JetHT', 'QCD_Flat'],
         }
         self.xsec = {
             'TTbar':  831.76,
