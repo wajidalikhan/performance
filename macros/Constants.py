@@ -2,15 +2,19 @@ class Constants():
     def __init__(self):
         self.lumi = {
             '2022': {'C': 4.96,'D': 2.94,'E': 5.84,'F': 17.80, 'G': 2},
+            'UL18': {'A': 4.96,'B': 2.94,'C': 5.84,'D': 17.80},
         }
         self.energy = {
             '2022': '13.6',
+            'UL18': '13.6',
         }
         self.pileup = {
             '2022': 43,
+            'UL18': 32,
         }
         self.year_run_map = {
             '2022': ['C','D','E','F','G'],
+            'UL18': ['A','B','C','D'],
         }
         self.MC_samples = ['DY','TTbar','QCD_Flat']
         self.data_samples = ['Muon', 'JetHT']
@@ -26,6 +30,11 @@ class Constants():
             'QCD_Flat':   185900000*10, #from QCD_HT100to200 * 10
         }
         self.files = {
+            'UL18':{
+                'Summer20UL':{
+                    'QCD_Flat' : 'datasets/QCD_Pt_15to7000_Flat_2018_Summer20_JMENano.txt',
+                },
+            },
             '2022': {
                 'Winter22': {
                     'DY':       'datasets/DY_2022_Winter22_Nano10_jme.txt',

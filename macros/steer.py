@@ -21,7 +21,8 @@ def commandline():
 
 def main():
     extra_info = {}
-    years = ['2022']
+    # years = ['2022']
+    years = ['UL18']
     
     # runs = ['C','D']
     # campaigns = {'mc': 'Winter22',   'data': 'Prompt'}
@@ -45,18 +46,20 @@ def main():
     # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'} # best
     
 
-    runs = ['G']
+    runs = ['D']
     # campaigns = {'mc': 'Summer22',      'data': 'Prompt'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p13', 'data': 'PuppiTune'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
     # campaigns = {'mc': 'Summer22_NPVA3p0B0p13', 'data': 'PuppiTune'}
 
     # campaigns = {'mc': 'Winter22',              'data': 'Prompt'}
-    campaigns = {'mc': 'Winter22'}
+    # campaigns = {'mc': 'Winter22'}
+    campaigns = {'mc': 'Summer20UL'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p13', 'data': 'PuppiTune'}
     # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
     
-    jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
+    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
+    jecs = {'mc': 'Summer19UL18_V5_MC', 'data': 'Summer19UL18_V5_DATA'}
     # jecs = {'mc': 'Winter222022_USER_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
 
     # all jecs: "default" ; User MC truth: ['L2Relative']
