@@ -21,46 +21,36 @@ def commandline():
 
 def main():
     extra_info = {}
-    # years = ['2022']
+
+    #### UL18 configs
     years = ['UL18']
+    runs = ['D']
+    campaigns = {'mc': 'Summer20UL'}
+    jecs = {'mc': 'Summer19UL18_V5_MC', 'data': 'Summer19UL18_V5_DATA'}
+
+    #### Run3 22 configs
+    # years = ['2022']
     
+    ###### prompt data taking
     # runs = ['C','D']
     # campaigns = {'mc': 'Winter22',   'data': 'Prompt'}
     # jecs = {'mc': 'Winter22Run3_V2_MC',   'data': 'Winter22Run3_RunD_V2_DATA'} #default
-    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Winter22Run3_RunF_V0_DATA'} # shoulnd't work
 
     # runs = ['E','F','G']
     # campaigns = {'mc': 'Winter22',   'data': 'Prompt'}
-    # jecs = {'mc': 'Winter22Run3_V2_MC',   'data': 'Winter22Run3_RunD_V2_DATA'} # shouldn't work
+    # jecs = {'mc': 'Winter22Run3_V2_MC',   'data': 'Winter22Run3_RunD_V2_DATA'} # default
     # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Winter22Run3_RunF_V0_DATA'} # should be better
 
-    # runs = ['C','D','E']
-    # campaigns = {'mc': 'Summer22',   'data': 'ReReco'}
-    # jecs = {'mc': 'Winter22Run3_V2_MC',   'data': 'Winter22Run3_RunD_V2_DATA'} # shouldn't work
-    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Winter22Run3_RunF_V0_DATA'} # better
-
+    #### -- new MC: Summer22
     # runs = ['F','G']
     # campaigns = {'mc': 'Summer22EE', 'data': 'Prompt'}
-    # jecs = {'mc': 'Winter22Run3_V2_MC',   'data': 'Winter22Run3_RunD_V2_DATA'} # shouldn't work
-    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Winter22Run3_RunF_V0_DATA'} # better
-    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'} # best
-    
+    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'} # default
 
-    runs = ['D']
-    # campaigns = {'mc': 'Summer22',      'data': 'Prompt'}
-    # campaigns = {'mc': 'Summer22_NPVA2p0B0p13', 'data': 'PuppiTune'}
-    # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
-    # campaigns = {'mc': 'Summer22_NPVA3p0B0p13', 'data': 'PuppiTune'}
+    ###### Re-reco data taking
+    # runs = ['C','D','E']
+    # campaigns = {'mc': 'Summer22',   'data': 'ReReco'}
+    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Winter22Run3_RunF_V0_DATA'}
 
-    # campaigns = {'mc': 'Winter22',              'data': 'Prompt'}
-    # campaigns = {'mc': 'Winter22'}
-    campaigns = {'mc': 'Summer20UL'}
-    # campaigns = {'mc': 'Summer22_NPVA2p0B0p13', 'data': 'PuppiTune'}
-    # campaigns = {'mc': 'Summer22_NPVA2p0B0p3',  'data': 'PuppiTune'}
-    
-    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
-    jecs = {'mc': 'Summer19UL18_V5_MC', 'data': 'Summer19UL18_V5_DATA'}
-    # jecs = {'mc': 'Winter222022_USER_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'}
 
     # all jecs: "default" ; User MC truth: ['L2Relative']
     jec_level ='default'
