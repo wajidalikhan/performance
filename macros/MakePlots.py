@@ -103,6 +103,7 @@ class MakePlots():
 
         self.quant   = array('d',[0.5])
         self.quant_y   = array('d',[0.5])
+        f = open("dummy.txt",'w')
         if len(self.rawresponse_names):
             fdirectory = "textFiles/"+self.campaign + self.year+"_USER_"+"MC/"
             os.system('mkdir -p '+fdirectory)
