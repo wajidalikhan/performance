@@ -192,6 +192,7 @@ class MakePlots():
             jes_err.append(getMedianError(hist))
             jer_err.append(hist.GetRMSError())
             if "raw" in response_name: 
+                if pt_min == 15: pt_min = 0
                 eta_min, eta_max = eta_bin.replace("p",".").split("to")
                 line_plus = f"%s    %s    %i    %i    %i   %i  %i    %.2f \n"%(eta_min, eta_max, pt_min, pt_max, 3,0,200, 1./self.quant_y[0])
                 line_minus = f"%s    %s    %i    %i    %i   %i  %i    %.2f \n"%("-"+eta_min,"-" + eta_max, pt_min, pt_max, 3,0,200, 1./self.quant_y[0])
