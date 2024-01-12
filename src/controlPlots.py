@@ -169,6 +169,8 @@ def responsePlots(jets, sel, sel_tag, tree, rawpt = False, debug_hists = False):
 
             plots.append(Plot.make1D(f"{sel_tag}_{etatag}_{pttag}", response,etaptsel,EqBin(100,0.,3.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
 
+            rawfactor = op.map(etaptjets, lambda j: j[1].rawFactor)
+            plots.append(Plot.make1D(f"rawfactor_{sel_tag}_{etatag}_{pttag}", rawfactor,etaptsel,EqBin(100,-1.,1.),xTitle = "rawfactor"))
 
             if debug_hists:
                 genjetpt = op.map(etaptjets, lambda j: j[0].pt)

@@ -31,6 +31,12 @@ def main():
     #### Run3 22 configs
     # years = ['2022']
     
+    # #####test case
+    # runs = ['G']
+    # campaigns = {'mc': 'Summer22EE'}
+    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'} # default
+
+
     ###### prompt data taking
     # runs = ['C','D']
     # campaigns = {'mc': 'Winter22',   'data': 'Prompt'}
