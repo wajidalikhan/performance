@@ -1,4 +1,5 @@
 from bamboo import treefunctions as op
+from bamboo import treedecorators as btd
 
 # Object definitions
 
@@ -104,11 +105,26 @@ def pujets(jets):
                 op.deltaR(jet.p4,jet.genJet.p4) > 0.4
             )
 
-def matchedjets(jets):
-    return  op.select(jets, lambda jet: op.AND( 
-                jet.idx < 3,
-                op.deltaR(jet.p4,jet.genJet.p4) < 0.2
-            ))
+def matchedjets(tree, electrons, muons, redo_match = False):
+    
+    if redo_match:
+        index = op.map(tree.GenJet,lambda gj: op.rng_min_element_index(tree.Jet, lambda rj: op.deltaR(gj.p4,rj.p4)))
+        tree.GenJet.valueType.MyRJ = btd.itemProxy(index)
+        
+        gjrj_pairs = op.combine((tree.GenJet, tree.Jet),pred=lambda gj,rj: gj.MyRJ == rj.idx)
+    else:
+        gjrj_pairs = op.combine((tree.GenJet, tree.Jet),pred=lambda gj,rj: rj.genJet.idx == gj.idx)
+    
+    sort_jets = op.sort(tree.GenJet, lambda gjet: -gjet.pt)
+    return  op.select(gjrj_pairs, lambda pair: op.AND( 
+        pair[0].pt >= sort_jets[2].pt,
+        op.deltaR(pair[0].p4,pair[1].p4) < 0.2,
+        op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(pair[1].p4, ele.p4) < 0.4)),
+        op.NOT(op.rng_any(muons, lambda mu: op.deltaR(pair[1].p4, mu.p4) < 0.4))
+    ))
+
+    
+
 
 def defineObjects(tree):
     # Muons

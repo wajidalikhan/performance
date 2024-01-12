@@ -62,7 +62,8 @@ class QCDModule(NanoBaseJME):
             
             pujets = defs.pujets(ak4Jets)
 
-            matchedjets = defs.matchedjets(tree.Jet)
+            matchedjets = defs.matchedjets(tree,clElectrons, muons, redo_match = True)
+            #matchedjets = defs.matchedjets(tree,clElectrons, muons, redo_match = False)
 
         #############################################################################
         #                                 Plots                                     #
@@ -102,7 +103,7 @@ class QCDModule(NanoBaseJME):
             plots+=cp.effPurityPlots(pujets,dijet,"effPurity_pujets",tree)
 
             if any([x in sampleCfg['plot_level'] for x in ["all","response"]]):
-                plots+=cp.responsePlots(matchedjets, dijet, "dijet_response",tree)
+                plots+=cp.responsePlots(matchedjets, dijet, "dijet_response",tree, debug_hists= False)
                 plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
                 plots+=cp.responsePlots(matchedjets, noSel, "noSel_response",tree)
 

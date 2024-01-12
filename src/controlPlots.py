@@ -145,11 +145,10 @@ def effPurityPlots(jet, sel, sel_tag, tree):
     return plots
 
 
-
-def responsePlots(jets, sel, sel_tag, tree, rawpt = False):
+def responsePlots(jets, sel, sel_tag, tree, rawpt = False, debug_hists = False):
     plots = []
 
-    deltaRs = op.map(jets, lambda j: op.deltaR(j.p4,j.genJet.p4))
+    deltaRs = op.map(jets, lambda j: op.deltaR(j[1].p4,j[0].p4))
     plots.append(Plot.make1D(f"{sel_tag}_deltaR", deltaRs,sel,EqBin(300,0.,3.),xTitle = "#Delta R (recojet, genjet)"))
 
     plots.append(Plot.make1D(f"{sel_tag}_njets", op.rng_len(jets),sel,EqBin(10,0.,10.),xTitle = "Number of jets"))
@@ -157,15 +156,30 @@ def responsePlots(jets, sel, sel_tag, tree, rawpt = False):
     for etatag,etabin in eta_binning.items():
         for pttag,ptbin in response_pt_binning.items():
             etaptjets = op.select(jets, lambda j: op.AND(
-                op.abs(j.eta) > etabin[0],
-                op.abs(j.eta) < etabin[1],
-                j.genJet.pt > ptbin[0],
-                j.genJet.pt < ptbin[1]
+                op.abs(j[0].eta) > etabin[0],
+                op.abs(j[0].eta) < etabin[1],
+                j[0].pt > ptbin[0],
+                j[0].pt < ptbin[1]
             ))
-            if rawpt: response = op.map(etaptjets, lambda j: (tree._Jet.orig[j.idx].pt*(1-j.rawFactor))/j.genJet.pt)
-            else: response = op.map(etaptjets, lambda j: j.pt/j.genJet.pt)
 
-            plots.append(Plot.make1D(f"{sel_tag}_{etatag}_{pttag}", response,sel,EqBin(100,0.,3.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
+            etaptsel = sel.refine(f"etaptsel_{sel_tag}_{etatag}_{pttag}", cut=(op.rng_len(etaptjets)))
+
+            if rawpt: response = op.map(etaptjets, lambda j: (tree._Jet.orig[j[1].idx].pt*(1-j[1].rawFactor))/j[0].pt)
+            else: response = op.map(etaptjets, lambda j: j[1].pt/j[0].pt)
+
+            plots.append(Plot.make1D(f"{sel_tag}_{etatag}_{pttag}", response,etaptsel,EqBin(100,0.,3.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
+
+
+            if debug_hists:
+                genjetpt = op.map(etaptjets, lambda j: j[0].pt)
+                plots.append(Plot.make1D(f"{sel_tag}_genjet_pt_{etatag}_{pttag}", genjetpt,etaptsel,EqBin(1000,0.,2000.),xTitle = "p_{T}^{gen}"))
+                jetpt = op.map(etaptjets, lambda j: j[1].pt)
+                plots.append(Plot.make1D(f"{sel_tag}_recojet_pt_{etatag}_{pttag}", jetpt,etaptsel,EqBin(1000,0.,2000.),xTitle = "p_{T}^{reco}"))
+                
+                genjeteta = op.map(etaptjets, lambda j: j[0].eta)
+                plots.append(Plot.make1D(f"{sel_tag}_genjet_eta_{etatag}_{pttag}", genjeteta,etaptsel,EqBin(100,-5.,5.),xTitle = "#eta^{gen}"))
+                jeteta = op.map(etaptjets, lambda j: j[1].eta)
+                plots.append(Plot.make1D(f"{sel_tag}_recojet_eta_{etatag}_{pttag}", jeteta,etaptsel,EqBin(100,-5.,5.),xTitle = "#eta^{reco}"))
 
     return plots
 
