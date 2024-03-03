@@ -23,18 +23,27 @@ def main():
     extra_info = {}
 
     #### UL18 configs
-    years = ['UL18']
-    runs = ['D']
-    campaigns = {'mc': 'Summer20UL'}
-    jecs = {'mc': 'Summer19UL18_V5_MC', 'data': 'Summer19UL18_V5_DATA'}
+    # years = ['UL18']
+    # runs = ['D']
+    # campaigns = {'mc': 'Summer20UL'}
+    # jecs = {'mc': 'Summer19UL18_V5_MC', 'data': 'Summer19UL18_V5_DATA'}
 
-    #### Run3 22 configs
-    # years = ['2022']
+    # Run3 22 configs
+    years = ['2022']
     
-    # #####test case
-    # runs = ['G']
+    #####test case
+    runs = ['G']
     # campaigns = {'mc': 'Summer22EE'}
-    # jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'} # default
+    # campaigns = { 'mc':'Summer22EETau4GeV'}
+    # campaigns = { 'mc':'Summer22EETau10GeV'}
+    # campaigns = { 'mc':'Summer22EEnoCandRemoval'}
+    # campaigns = { 'mc':'Summer22EEFromPV2Tau0GeV'}
+    # extra_info = {'withCHS': False}
+    campaigns = { 'mc':'Summer22EEFromPV2Tau4GeV'}
+    extra_info = {'withCHS': False}
+    # campaigns = { 'mc':'Summer22EENOMINAL'}
+    # extra_info = {'withCHS': True}
+    jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'} # default
 
 
     ###### prompt data taking
@@ -61,9 +70,13 @@ def main():
     # all jecs: "default" ; User MC truth: ['L2Relative']
     jec_level ='default'
     # jec_level = ['L2Relative']
+    jec_algo_AK4 = 'Puppi' # 'chs' or 'Puppi'
+    jec_algo_AK8 = 'Puppi' # 'chs'
+
 
     # possible plot_level: 'all', 'rawresponse', 'response', 'default'
-    extra_info = {'plot_level': 'rawresponse'}
+    extra_info['plot_level']= 'all'
+
 
 
     # module = 'DY'
@@ -77,7 +90,7 @@ def main():
     args = commandline()
     print(green(args))
 
-    MR = ModuleRunner(module=module, years=years, runs=runs, campaigns=campaigns, jecs=jecs, extra_info=extra_info, jec_level = jec_level)
+    MR = ModuleRunner(module=module, years=years, runs=runs, campaigns=campaigns, jecs=jecs, extra_info=extra_info, jec_level = jec_level, jec_algo = (jec_algo_AK4,jec_algo_AK8))
     if args.config:
         MR.CreateConfigFiles()
     if args.test:
