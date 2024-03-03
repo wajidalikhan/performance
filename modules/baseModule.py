@@ -34,7 +34,7 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
         era = sampleCfg['era']  # reserved for future use
         campaign = sampleCfg['campaign']
         jec = sampleCfg['jec']
-        jet_algo = 'AK4PFPuppi'
+        jet_algo = 'AK4PF'+sampleCfg['jec_algo_AK4']
         if jec=='':
             jec = 'Winter22Run3_V2_MC' if self.is_MC else 'Winter22Run3_RunD_V2_DATA'
         self.triggersPerPrimaryDataset = {}
@@ -50,7 +50,7 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
 
         def getNanoAODDescription():
             groups = ["HLT_", "MET_","PV_","Pileup_","Rho_"]
-            collections = ["nElectron", "nJet", "nMuon", "nFatJet", "nSubJet","nGenJet"]
+            collections = ["nElectron", "nJet", "nMuon", "nFatJet", "nSubJet","nGenJet","nGenVisTau","nJetCHS", "nTau"]
             varReaders = [CalcCollectionsGroups(Jet=("pt", "mass"))]
             return NanoAODDescription(groups=groups, collections=collections, systVariations=varReaders)
 
@@ -94,8 +94,9 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
 
         # Gen Weight and Triggers
         if self.is_MC:
-            noSel = noSel.refine('genWeight', weight=tree.genWeight, cut=(
-                op.OR(*chain.from_iterable(self.triggersPerPrimaryDataset.values()))))
+            # noSel = noSel.refine('genWeight', weight=tree.genWeight, cut=(
+            #     op.OR(*chain.from_iterable(self.triggersPerPrimaryDataset.values()))))
+            pass
         else:
             noSel = noSel.refine('trigger', cut=[makeMultiPrimaryDatasetTriggerSelection(
                 sample, self.triggersPerPrimaryDataset)])
