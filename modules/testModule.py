@@ -7,8 +7,9 @@ from bamboo.analysisutils import forceDefine
 from itertools import chain
 
 from src.binnings import eta_binning, pt_binning, response_pt_binning
-from bamboo.plots import Plot, CutFlowReport
-from bamboo.plots import EquidistantBinning as EqBin
+from bamboo.plots import Plot, CutFlowReport,  SummedPlot
+from bamboo.plots import EquidistantBinning as EqB
+from bamboo.plots import VariableBinning as VarBin
 import src.definitions as defs
 import src.controlPlots as cp
 
@@ -57,7 +58,7 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
         def getNanoAODDescription():
             groups = ["HLT_", "MET_","PV_","Pileup_","Rho_"]
             collections = ["nElectron", "nJet", "nMuon", "nFatJet", "nSubJet","nGenJet"]
-            varReaders = [CalcCollectionsGroups(Jet=("pt", "mass"))]
+            varReaders = [CalcCollectionsGroups(Jet=("pt", "mass")),CalcCollectionsGroups(FatJet=("pt", "mass","msoftdrop"))]
             return NanoAODDescription(groups=groups, collections=collections, systVariations=varReaders)
 
         tree, noSel, backend, lumiArgs = super(NanoBaseJME, self).prepareTree(tree=tree,
@@ -100,31 +101,14 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
 
         # Gen Weight and Triggers
         if self.is_MC:
-            noSel = noSel.refine('genWeight', weight=tree.genWeight, cut=(
-                op.OR(*chain.from_iterable(self.triggersPerPrimaryDataset.values()))))
+            # noSel = noSel.refine('genWeight', weight=tree.genWeight, cut=(
+            #     op.OR(*chain.from_iterable(self.triggersPerPrimaryDataset.values()))))
+            noSel = noSel.refine('genWeight', weight=tree.genWeight)
+          
+          
         else:
             noSel = noSel.refine('trigger', cut=[makeMultiPrimaryDatasetTriggerSelection(
                 sample, self.triggersPerPrimaryDataset)])
-
-        # #### reapply JECs ###
-        # from bamboo.analysisutils import configureJets, configureType1MET
-        # isNotWorker = (self.args.distributed != "worker") 
-        # configureJets(tree._Jet, jet_algo,
-        #               jec=jec,
-        #               mayWriteCache= isNotWorker,
-        #               jecLevels = sampleCfg['jec_level'],
-        #               # cachedir='/afs/cern.ch/user/a/anmalara/workspace/WorkingArea/JME/jme-validation/JECs_2022/',
-        #               isMC=self.is_MC, backend = backend)
-
-        # configureType1MET(tree._MET,
-        #     jec="Summer16_07Aug2017_V20_MC",
-        #     smear="Summer16_25nsV1_MC",
-        #     jesUncertaintySources=["Total"],
-        #     mayWriteCache= not isDriver,
-        #     isMC=self.isMC(sample), backend=be)
-
-        # for calcProd in tree._Jet.calcProds:
-        #     forceDefine(calcProd,noSel)
 
         return tree, noSel, backend, lumiArgs
 
@@ -140,56 +124,43 @@ class testModule(NanoBaseJME):
         plots.append(yields)
         yields.add(noSel, 'No Selection')
 
-        jets = op.sort(tree.Jet, lambda jet: -jet.genJet.pt)
-        # plots.append(Plot.make1D(f"allfirstptjet", jets[0].pt,noSel,EqBin(100,0.,1000.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
-        jet = op.select(jets, lambda j:j.genJet.pt >= jets[3].genJet.pt)
-        # plots.append(Plot.make1D(f"number", op.rng_len(jet),noSel,EqBin(5,0.,5.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
-        # plots.append(Plot.make1D(f"firstptjet", jet[0].pt,noSel,EqBin(100,0.,1000.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
-        jet_step2 = op.select(jet, lambda j:op.deltaR(j.p4,j.genJet.p4)<0.2)
-        # plots.append(Plot.make1D(f"deltaR_firstptjet", jet_step2[0].pt,noSel,EqBin(100,0.,1000.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
-        # jet_step3 = op.select(jet_step2, lambda j:j.pt>30)
-        # plots.append(Plot.make1D(f"pt30_firstptjet", jet_step3[0].pt,noSel,EqBin(100,0.,1000.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
 
+        plots.append(Plot.make1D(f"noSel_AK8Jets_nJets",op.rng_len(tree.FatJet),noSel,EqB(15,0.,15.), xTitle=f"Number of Jets"))
 
-        #### selection einbauen
-        #### mehr Stat laufen lassen
-        #### in anderes Modul einbauen 
-        #### JMENano fuer niedrigen PT cut
+        muons = op.select(tree.Muon, lambda mu: op.AND(mu.pt > 20., op.abs(mu.eta) < 2.4))
+        electrons = op.select(tree.Electron, lambda el: op.AND(el.pt > 20, op.abs(el.eta) < 2.5))
+        jets_noclean = op.select(tree.Jet, lambda j: op.AND(j.jetId & 0x2, op.abs(j.eta) < 5.2, j.pt > 5.))
+        jets = op.sort(
+            op.select(jets_noclean, lambda j: op.AND(
+                op.NOT(op.rng_any(muons, lambda l: op.deltaR(l.p4, j.p4) < 0.4)),
+                op.NOT(op.rng_any(electrons, lambda l: op.deltaR(l.p4, j.p4) < 0.4))
+            )), lambda j: -j.pt)
 
-        for etatag,etabin in eta_binning.items():
-            for pttag,ptbin in response_pt_binning.items():
-                etaptjets = op.select(jet_step2, lambda j: op.AND(
-                    op.abs(j.genJet.eta) > etabin[0],
-                    op.abs(j.genJet.eta) < etabin[1],
-                    j.genJet.pt > ptbin[0],
-                    j.genJet.pt < ptbin[1]
-                ))
+        dijetSel = noSel.refine("dijetSelection", cut=[op.rng_len(jets)>=1])#, op.deltaPhi(jets[0].p4, jets[1].p4)>2.7])
 
-                # plots.append(Plot.make1D(f"number2", op.rng_len(etaptjets),noSel,EqBin(5,0.,5.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))                
+        genjets = op.sort(tree.GenJet, lambda j: -j.pt)
+        etaBinning = [etabin[0] for etatag, etabin in eta_binning.items()]
+        etaBinning = etaBinning[:-1]
+        etaBinning = VarBin(etaBinning)
 
-                noLepton = noSel.refine(f"noLepton_{etatag}_{pttag}", cut=(op.rng_len(etaptjets)>0))
+        ptBinning = VarBin([ptbin[0] for pttag, ptbin in response_pt_binning.items()])
 
-                # plots.append(Plot.make1D(f"number3", op.rng_len(etaptjets),noLepton,EqBin(5,0.,5.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))                
-                plots.append(Plot.make1D(f"ptjet_{etatag}_{pttag}", etaptjets[0].pt,noLepton,EqBin(100,0.,1000.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
-                plots.append(Plot.make1D(f"genptjet_{etatag}_{pttag}", etaptjets[0].genJet.pt,noLepton,EqBin(100,0.,1000.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
-                plots.append(Plot.make1D(f"etajet_{etatag}_{pttag}", etaptjets[0].eta,noLepton,EqBin(100,-5.,5.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
-                plots.append(Plot.make1D(f"genetajet_{etatag}_{pttag}", etaptjets[0].genJet.eta,noLepton,EqBin(100,-5.,5.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
-                plots.append(Plot.make1D(f"noSel_response_{etatag}_{pttag}", etaptjets[0].pt / etaptjets[0].genJet.pt,noLepton,EqBin(100,0.,3.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
+        for ix in range(3):
+            genjet = genjets[ix]
+            recojet = op.rng_min_element_by(jets, lambda jet: op.deltaR(jet.p4,genjet.p4))
+            if ix == 0:
+                ratio0 = Plot.make3D("ratio_0", (op.switch(op.AND(op.rng_len(genjets)>ix,op.deltaR(recojet.p4,genjet.p4)<0.2, op.rng_len(jets)>0),recojet.pt/genjet.pt, -99.), genjet.pt, op.abs(genjet.eta)) , dijetSel, (EqB(100, 0., 2.),ptBinning, etaBinning), xTitle="Response", yTitle="pt", zTitle="eta")
+                plots.append(ratio0)
+            if ix == 1:
+                ratio1 = Plot.make3D("ratio_1", (op.switch(op.AND(op.rng_len(genjets)>ix,op.deltaR(recojet.p4,genjet.p4)<0.2, op.rng_len(jets)>0),recojet.pt/genjet.pt, -99.), genjet.pt, op.abs(genjet.eta)), dijetSel, (EqB(100, 0., 2.),ptBinning, etaBinning), xTitle="Response", yTitle="pt", zTitle="eta")
+                plots.append(ratio1)
+            if ix == 2:
+                ratio2 = Plot.make3D("ratio_2", (op.switch(op.AND(op.rng_len(genjets)>ix,op.deltaR(recojet.p4,genjet.p4)<0.2, op.rng_len(jets)>0),recojet.pt/genjet.pt, -99.), genjet.pt, op.abs(genjet.eta)), dijetSel, (EqB(100, 0., 2.),ptBinning, etaBinning), xTitle="Response", yTitle="pt", zTitle="eta")
+                plots.append(ratio2)
 
-            #     break
-            # break
+            jets = op.select(jets, lambda j: j.idx!=recojet.idx)
 
-        if sampleCfg['type'] == 'mc':  
-            recojetpt30 = op.select(tree.Jet, lambda jet: jet.pt > 30)
-            recojetpt20 = op.select(tree.Jet, lambda jet: jet.pt > 20)
-            
-            effjets = defs.effjets(recojetpt20)
-            purityjets = defs.purityjets(recojetpt30)
-        
-            plots+=cp.effPurityPlots(effjets,noSel,"effPurity_effmatched", tree)
-            plots+=cp.effPurityPlots(recojetpt30,noSel,"effPurity_allrecojets",tree)
-            plots+=cp.effPurityPlots(purityjets,noSel,"effPurity_puritymatched",tree)
-            # plots+=cp.effPurityPlots(pujets,dijet,"effPurity_pujets",tree)
+        plots.append(SummedPlot("ratio", [ratio0, ratio1, ratio2], xTitle="Response for 3 jets",yTitle="pt", zTitle="eta"))
 
 
         return plots
