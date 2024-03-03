@@ -16,17 +16,19 @@ class Constants():
             '2022': ['C','D','E','F','G'],
             'UL18': ['A','B','C','D'],
         }
-        self.MC_samples = ['DY','TTbar','QCD_Flat']
+        self.MC_samples = ['DY','TTbar','QCD_Flat', 'DYTau']
         self.data_samples = ['Muon', 'JetHT']
         self.modules = {
-            'DY':    ['Muon',  'DY'],
+            'DY':    ['Muon', 'DY', 'DYTau'],
             'TTbar': ['Muon',  'TTbar'],
             'QCD':   ['JetHT', 'QCD_Flat'],
             'test':   ['JetHT', 'QCD_Flat'],
+            'NanoJME':   ['JetHT', 'QCD_Flat'],
         }
         self.xsec = {
             'TTbar':  831.76,
             'DY':     5558,
+            'DYTau':     5558,
             'QCD_Flat':   185900000*10, #from QCD_HT100to200 * 10
         }
         self.files = {
@@ -47,6 +49,36 @@ class Constants():
                 'Summer22EE': {
                     # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
                     'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_Nano11_das.txt',
+                },
+                'Summer22EETau4GeV': {
+                    # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_Tau4GeV.txt',
+                },
+                'Summer22EETau10GeV': {
+                    # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_Tau10GeV.txt',
+                },
+                'Summer22EEFromPV2Tau4GeV': {
+                    'DY':       'datasets/DY_Summer23_fromPV4GeV_v2.txt',
+                    'QCD_Flat': 'datasets/QCD_Summer23_fromPV4GeV_v2.txt',
+                    'DYTau': 'datasets/DYto2TautoMuTauh_Summer23_fromPV4GeV_v2.txt',
+                    'TTbar': 'datasets/TTbar_Summer23_fromPV4GeV_v2.txt',
+                },
+                'Summer22EEFromPV2Tau0GeV': {
+                    # 'DY':       'datasets/DY_Summer23_fromPV0GeV_v2.txt',
+                    # 'QCD_Flat': 'datasets/QCD_Summer23_fromPV4GeV_v2.txt',
+                    'DYTau': 'datasets/DYto2TautoMuTauh_Summer23_fromPV0GeV_v2.txt',
+                    # 'TTbar': 'datasets/TTbar_Summer23_fromPV4GeV_v2.txt',
+                },
+                'Summer22EEnoCandRemoval': {
+                    # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_noCandRemoval.txt',
+                },
+                'Summer22EENOMINAL': {
+                    'DY':       'datasets/DY_Summer23_NOMINAL.txt',
+                    'QCD_Flat': 'datasets/QCD_Summer23_NOMINAL.txt',
+                    'DYTau': 'datasets/DYto2TautoMuTauh_Summer23_NOMINALwCHS.txt',
+                    'TTbar': 'datasets/TTbar_Summer23_NOMINAL.txt',
                 },
                 'Prompt':{
                     'MuonC':    'datasets/Muon_2022RunC_Prompt_Nano10_jme.txt',
