@@ -1,6 +1,7 @@
 from bamboo import treefunctions as op
-from bamboo.plots import Plot
+from bamboo.plots import Plot, SummedPlot
 from bamboo.plots import EquidistantBinning as EqBin
+from bamboo.plots import VariableBinning as VarBin
 from src.binnings import eta_binning, pt_binning, response_pt_binning
 
 def muonPlots(muons, sel, sel_tag, maxMuons = 4):
@@ -10,9 +11,9 @@ def muonPlots(muons, sel, sel_tag, maxMuons = 4):
     
     #### do a for loop through all Muons
     for i in range(maxMuons):
-        plots.append(Plot.make1D(f"{sel_tag}_Muon{i+1}_pt", muons[i].pt, sel, EqBin(20, 0., 500.), xTitle=f"muon_{{{i+1}}} p_{{T}} [GeV]"))
-        plots.append(Plot.make1D(f"{sel_tag}_Muon{i+1}_eta", muons[i].eta, sel, EqBin(20, -2.5, 2.5), xTitle=f"muon_{{{i+1}}} #eta"))
-        plots.append(Plot.make1D(f"{sel_tag}_Muon{i+1}_phi", muons[i].phi, sel, EqBin(20, -2.5, 2.5), xTitle=f"muon_{{{i+1}}} #phi"))
+        plots.append(Plot.make1D(f"{sel_tag}_Muon{i+1}_pt", op.switch(op.rng_len(muons)>i,muons[i].pt,-99.), sel, EqBin(20, 0., 500.), xTitle=f"muon_{{{i+1}}} p_{{T}} [GeV]"))
+        plots.append(Plot.make1D(f"{sel_tag}_Muon{i+1}_eta", op.switch(op.rng_len(muons)>i,muons[i].eta,-99.), sel, EqBin(20, -2.5, 2.5), xTitle=f"muon_{{{i+1}}} #eta"))
+        plots.append(Plot.make1D(f"{sel_tag}_Muon{i+1}_phi", op.switch(op.rng_len(muons)>i,muons[i].phi,-99.), sel, EqBin(20, -2.5, 2.5), xTitle=f"muon_{{{i+1}}} #phi"))
  
     return plots
 
@@ -24,9 +25,9 @@ def electronPlots(electrons, sel, sel_tag, maxElectrons = 4):
     
     #### do a for loop through all Electrons
     for i in range(maxElectrons):
-        plots.append(Plot.make1D(f"{sel_tag}_Electron{i+1}_pt", electrons[i].pt, sel, EqBin(20, 0., 500.), xTitle=f"electron_{{{i+1}}} p_{{T}} [GeV]"))
-        plots.append(Plot.make1D(f"{sel_tag}_Electron{i+1}_eta", electrons[i].eta, sel, EqBin(20, -2.5, 2.5), xTitle=f"electron_{{{i+1}}} #eta"))
-        plots.append(Plot.make1D(f"{sel_tag}_Electron{i+1}_phi", electrons[i].phi, sel, EqBin(20, -2.5, 2.5), xTitle=f"electron_{{{i+1}}} #phi"))
+        plots.append(Plot.make1D(f"{sel_tag}_Electron{i+1}_pt", op.switch(op.rng_len(electrons)>i,electrons[i].pt,-99.), sel, EqBin(20, 0., 500.), xTitle=f"electron_{{{i+1}}} p_{{T}} [GeV]"))
+        plots.append(Plot.make1D(f"{sel_tag}_Electron{i+1}_eta", op.switch(op.rng_len(electrons)>i,electrons[i].eta,-99.), sel, EqBin(20, -2.5, 2.5), xTitle=f"electron_{{{i+1}}} #eta"))
+        plots.append(Plot.make1D(f"{sel_tag}_Electron{i+1}_phi", op.switch(op.rng_len(electrons)>i,electrons[i].phi,-99.), sel, EqBin(20, -2.5, 2.5), xTitle=f"electron_{{{i+1}}} #phi"))
  
     return plots
 
@@ -40,14 +41,28 @@ def AK4jetPlots(jets, sel, sel_tag, maxJets=4):
     plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_eta",etas,sel,EqBin(100,-5.,5.), xTitle=f"#eta"))
 
     pts = op.map(jets, lambda j: j.pt)
-    plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_pt",pts,sel,EqBin(20,0.,500.), xTitle=f"p_{{T}}"))
+    plots.append(Plot.make1D(f"{sel_tag}_AK4Jets_pt",pts,sel,EqBin(250,0.,500.), xTitle=f"p_{{T}}"))
 
     #### do a for loop through all Jets
     for i in range(maxJets):
-        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_pt", jets[i].pt, sel, EqBin(20, 0., 500.), xTitle=f"jet_{{{i+1}}} p_{{T}} [GeV]"))
-        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_eta", jets[i].eta, sel, EqBin(100, -5., 5.), xTitle=f"jet_{{{i+1}}} #eta"))
-        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_phi", jets[i].phi, sel, EqBin(63, -3.5, 3.5), xTitle=f"jet_{{{i+1}}} #phi"))
-        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_nConst", jets[i].nConstituents, sel, EqBin(20, 0, 20), xTitle=f"jet_{{{i+1}}} number of constituents"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_pt", op.switch(op.rng_len(jets)>i,jets[i].pt,-99.), sel, EqBin(250, 0., 500.), xTitle=f"jet_{{{i+1}}} p_{{T}} [GeV]"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_eta", op.switch(op.rng_len(jets)>i,jets[i].eta,-99.), sel, EqBin(100, -5., 5.), xTitle=f"jet_{{{i+1}}} #eta"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_phi", op.switch(op.rng_len(jets)>i,jets[i].phi,-99.), sel, EqBin(63, -3.5, 3.5), xTitle=f"jet_{{{i+1}}} #phi"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_nConst", op.switch(op.rng_len(jets)>i,jets[i].nConstituents,-99.), sel, EqBin(20, 0, 20), xTitle=f"jet_{{{i+1}}} number of constituents"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_nConst_eta2p0to3p0",op.switch(op.AND(op.rng_len(jets)>i,jets[i].eta < 3,jets[i].eta > 2,jets[i].pt < 50),jets[i].nConstituents,-99.), sel, EqBin(20, 0, 20), xTitle=f"jet_{{{i+1}}} number of constituents"))
+        # DeepJet variable
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_btagDeepFlavB", op.switch(op.rng_len(jets)>i,jets[i].btagDeepFlavB,-99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} btagDeepFlavB"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_btagDeepFlavCvB", op.switch(op.rng_len(jets)>i,jets[i].btagDeepFlavCvB,-99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} btagDeepFlavCvB"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_btagDeepFlavCvL", op.switch(op.rng_len(jets)>i,jets[i].btagDeepFlavCvL,-99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} btagDeepFlavCvL"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_btagDeepFlavQG", op.switch(op.rng_len(jets)>i,jets[i].btagDeepFlavQG,-99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} btagDeepFlavQG"))
+        # DeepJet variable
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_btagPNetB", op.switch(op.rng_len(jets)>i,jets[i].btagPNetB,-99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} btagPNetB"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_btagPNetCvB", op.switch(op.rng_len(jets)>i,jets[i].btagPNetCvB,-99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} btagPNetCvB"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_btagPNetCvL", op.switch(op.rng_len(jets)>i,jets[i].btagPNetCvL,-99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} btagPNetCvL"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_btagPNetQvG", op.switch(op.rng_len(jets)>i,jets[i].btagPNetQvG,-99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} btagPNetQvG"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_PNetRegPtRawCorr", op.switch(op.rng_len(jets)>i,jets[i].PNetRegPtRawCorr,-99.), sel, EqBin(50, 0, 10), xTitle=f"jet_{{{i+1}}} PNetRegPtRawCorr"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_PNetRegPtRawCorrNeutrino", op.switch(op.rng_len(jets)>i,jets[i].PNetRegPtRawCorrNeutrino,-99.), sel, EqBin(50, 0, 10), xTitle=f"jet_{{{i+1}}} PNetRegPtRawCorrNeutrino"))
+        plots.append(Plot.make1D(f"{sel_tag}_Jet{i+1}_PNetRegPtRawRes", op.switch(op.rng_len(jets)>i,jets[i].PNetRegPtRawRes,-99.), sel, EqBin(50, 0, 10), xTitle=f"jet_{{{i+1}}} PNetRegPtRawRes"))
 
 
     chEmEF = op.map(jets, lambda j: j.chEmEF)
@@ -77,7 +92,43 @@ def AK4jetPlots(jets, sel, sel_tag, maxJets=4):
 
     return plots
 
+def AK8jetPlots(jets, sel, sel_tag, maxJets=4):
+    plots = []
 
+    plots.append(Plot.make1D(f"{sel_tag}_AK8Jets_nJets",op.rng_len(jets),sel,EqBin(15,0.,15.), xTitle=f"Number of Jets"))
+
+    etas = op.map(jets, lambda j: j.eta)
+    plots.append(Plot.make1D(f"{sel_tag}_AK8Jets_eta",etas,sel,EqBin(100,-5.,5.), xTitle=f"#eta"))
+
+    pts = op.map(jets, lambda j: j.pt)
+    plots.append(Plot.make1D(f"{sel_tag}_AK8Jets_pt",pts,sel,EqBin(500,0.,1000.), xTitle=f"p_{{T}}"))
+
+    #### do a for loop through all Jets
+    for i in range(maxJets):
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_pt",  op.switch(op.rng_len(jets)>i,jets[i].pt, -99.), sel, EqBin(500, 0., 1000.), xTitle=f"jet_{{{i+1}}} p_{{T}} [GeV]"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_eta", op.switch(op.rng_len(jets)>i,jets[i].eta, -99.), sel, EqBin(100, -5., 5.), xTitle=f"jet_{{{i+1}}} #eta"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_phi", op.switch(op.rng_len(jets)>i,jets[i].phi, -99.), sel, EqBin(63, -3.5, 3.5), xTitle=f"jet_{{{i+1}}} #phi"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_nConst", op.switch(op.rng_len(jets)>i,jets[i].nConstituents, -99.), sel, EqBin(20, 0, 20), xTitle=f"jet_{{{i+1}}} number of constituents"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_tau21", op.switch(op.rng_len(jets)>i,jets[i].tau2/jets[i].tau1, -99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} tau21"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_tau32", op.switch(op.rng_len(jets)>i,jets[i].tau3/jets[i].tau2, -99.), sel, EqBin(50, 0, 1), xTitle=f"jet_{{{i+1}}} tau32"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_mSD", op.switch(op.rng_len(jets)>i,jets[i].msoftdrop, -99.), sel, EqBin(150, 0, 300), xTitle=f"jet_{{{i+1}}} mSD"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetWithMass_QCD", op.switch(op.rng_len(jets)>i,jets[i].particleNetWithMass_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNet_QCD"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetWithMass_TvsQCD", op.switch(op.rng_len(jets)>i,jets[i].particleNetWithMass_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNet_TvsQCD"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetWithMass_H4qvsQCD", op.switch(op.rng_len(jets)>i,jets[i].particleNetWithMass_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNet_H4qvsQCD"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetWithMass_HbbvsQCD", op.switch(op.rng_len(jets)>i,jets[i].particleNetWithMass_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNet_HbbvsQCD"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetWithMass_WvsQCD", op.switch(op.rng_len(jets)>i,jets[i].particleNetWithMass_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNet_WvsQCD"))
+
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetMD_QCD", op.switch(op.rng_len(jets)>i,jets[i].particleNet_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNetMD_QCD"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetMD_TvsQCD", op.switch(op.rng_len(jets)>i,jets[i].particleNet_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNetMD_TvsQCD"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetMD_H4qvsQCD", op.switch(op.rng_len(jets)>i,jets[i].particleNet_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNetMD_H4qvsQCD"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetMD_HbbvsQCD", op.switch(op.rng_len(jets)>i,jets[i].particleNet_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNetMD_HbbvsQCD"))
+        plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetMD_WvsQCD", op.switch(op.rng_len(jets)>i,jets[i].particleNet_QCD, -99.), sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNetMD_WvsQCD"))
+
+        # plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetMD_QCD", jets[i].particleNetMD_QCD, sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNetMD_QCD"))
+        # plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNetMD_Xbb", jets[i].particleNetMD_Xbb, sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNetMD_Xbb"))
+        # plots.append(Plot.make1D(f"{sel_tag}_FatJet{i+1}_particleNet_WvsQCD", jets[i].particleNet_WvsQCD, sel, EqBin(20, 0, 1), xTitle=f"jet_{{{i+1}}} particleNet_WvsQCD"))
+
+        return plots
 
 def ZbosonPlots(Zboson, sel, sel_tag):
     plots = []
@@ -89,101 +140,215 @@ def ZbosonPlots(Zboson, sel, sel_tag):
     return plots
 
 
-def effPurityPlots(jet, sel, sel_tag, tree):
+def effPurityPlots(jets, gjets, recojets, sel, sel_tag, tree):
     plots = []
-    
-    genjets = op.select(tree.GenJet, lambda j: j.pt>30)
-    
-    # jetgenrecopairs = op.combine((tree.Jet, tree.GenJet), pred=lambda j,gj : op.deltaR(j.p4,gj.p4)<0.2)
-    # jetgenrecoMinDRPair = op.rng_min_element_by(jetgenrecopairs, lambda pair: op.deltaR(pair[0].p4, pair[1].p4))    
+    eff_pteta_num = []
+    eff_pteta_denum = []
 
-    # deltaRs = op.map(jetgenrecoMinDRPair, lambda j: op.deltaR(j[0].p4,j[1].p4))
-    # deltaRs = op.map(jet, lambda j: op.deltaR(j.p4,j.genJet.p4))
-    # deltaRs = op.map(jet, lambda j: op.deltaR(j.p4,tree.GenJet[j.genJetIdx].p4))
-    # plots.append(Plot.make1D(f"{sel_tag}_deltaR", deltaRs,sel,EqBin(300,0.,3.),xTitle = "#Delta R (recojet, genjet)"))
+    purity_pteta_num = []
+    purity_pteta_denum = []
+
+    eff_npveta_num = []
+    eff_npveta_denum = []
+
+    purity_npveta_num = []
+    purity_npveta_denum = []
 
 
-    ### eff and purity bins of eta vs pt
-    for etatag,etabin in eta_binning.items():
-        if "effmatched" in sel_tag:
-            etajets = op.select(jet, lambda j: op.AND(
-                op.abs(j.genJet.eta) > etabin[0],
-                op.abs(j.genJet.eta) < etabin[1]
-            ))
-        else: #for 'puritymatched' and 'allrecojets' sel_tags, used in purities
-            etajets = op.select(jet, lambda j: op.AND(
-                op.abs(j.eta) > etabin[0],
-                op.abs(j.eta) < etabin[1]
-            ))
+    # plot pT and eta at the beginning
+    jetinputpt = op.map(jets,lambda j:j.pt)
+    plots.append(Plot.make1D(f"{sel_tag}_effPurity_recoinput_pt", jetinputpt,sel,EqBin(200,0,1000),xTitle="p_{T}^{reco} [GeV]"))
+    genjetinputpt = op.map(gjets,lambda j:j.pt)
+    plots.append(Plot.make1D(f"{sel_tag}_effPurity_geninput_pt", genjetinputpt,sel,EqBin(200,0,1000),xTitle="p_{T}^{gen} [GeV]"))
 
-        etagenjets = op.select(genjets, lambda j:op.AND(
-            op.abs(j.eta) > etabin[0],
-            op.abs(j.eta) < etabin[1]
-        ))
+    etaBinning = [etabin[0] for etatag, etabin in eta_binning.items() if "0p0to5p2" not in etatag]
+    etaBinning+= [etabin[1] for etatag, etabin in eta_binning.items() if "0p0to5p2" not in etatag and etabin[1] not in etaBinning] 
+    etaBinning = VarBin(etaBinning)
 
-        genjetpt = op.map(etajets, lambda j: j.genJet.pt)
-        plots.append(Plot.make1D(f"{sel_tag}_{etatag}_genpt", genjetpt,sel,EqBin(200,0.,1000.),xTitle = "genjet p_{T} [GeV] "))
-        recojetpt = op.map(etajets, lambda j: j.pt)
-        plots.append(Plot.make1D(f"{sel_tag}_{etatag}_recopt", recojetpt,sel,EqBin(200,0.,1000.),xTitle = "recojet p_{T} [GeV] "))
-        unmatchedgenjetpt = op.map(etagenjets, lambda j: j.pt)
-        plots.append(Plot.make1D(f"{sel_tag}_{etatag}_unmatchedgenpt", unmatchedgenjetpt,sel,EqBin(200,0.,1000.),xTitle = "all genjet p_{T} [GeV] "))
-        unmatchedrecojetpt = op.map(etajets, lambda j: j.pt)
-        plots.append(Plot.make1D(f"{sel_tag}_{etatag}_unmatchedrecopt", unmatchedrecojetpt,sel,EqBin(200,0.,1000.),xTitle = "all recojet p_{T} [GeV] "))
+
+    ### eff: genjet pt > 30 GeV matched to reco jet over all genjets with pT > 30 GeV
+    for ix in range(3):
+        genjet = gjets[ix]
+        recojet = op.rng_min_element_by(jets, lambda jet: op.deltaR(jet.p4,genjet.p4))
+
+        eff_pteta_num.append(Plot.make2D(f"{sel_tag}_eff_pteta_num_{ix}",( 
+            op.switch(
+                op.AND(
+                    op.rng_len(gjets)>ix, 
+                    op.deltaR(recojet.p4,genjet.p4)<0.2, 
+                    genjet.pt > 30, op.rng_len(jets)>0
+                ), 
+                genjet.pt, -99.
+            ), 
+            op.abs(genjet.eta)
+        ), sel, (EqBin(200,0,400), etaBinning), xTitle="p_{T}^{gen} [GeV]", yTitle="|#eta|" ))
         
-        ####### vs NPU for the leading jet in bins of pT
-        for pttag, ptbin in pt_binning.items():
-            npujets = op.select(etajets, lambda j: op.AND(
-                j.genJet.pt > ptbin[0],
-                j.genJet.pt < ptbin[1]
-            ))
+        
+        eff_pteta_denum.append(Plot.make2D(f"{sel_tag}_eff_pteta_denum_{ix}",( 
+            op.switch(
+                op.AND(
+                    op.rng_len(gjets)>ix, 
+                    genjet.pt > 30 
+                ), 
+                genjet.pt, -99.
+            ), 
+            op.abs(genjet.eta)
+        ), sel, (EqBin(200,0,400), etaBinning), xTitle="p_{T}^{gen} [GeV]", yTitle="|#eta|" ))
 
-            npvs = op.map(npujets, lambda j: tree.PV.npvsGood)
-            plots.append(Plot.make1D(f"{sel_tag}_{etatag}_{pttag}_goodnpvs", npvs,sel,EqBin(100,0.,100.),xTitle = "Number of good PVs"))
-            npus = op.map(npujets, lambda j: tree.Pileup.nTrueInt)
-            plots.append(Plot.make1D(f"{sel_tag}_{etatag}_{pttag}_nTrueInt", npus,sel,EqBin(100,0.,100.),xTitle = "Number of true interactions"))
-            
+        #### vs npv, inclusive in pt
+        eff_npveta_num.append(Plot.make2D(f"{sel_tag}_eff_npveta_num_{ix}",( 
+            op.switch(
+                op.AND(
+                    op.rng_len(gjets)>ix, 
+                    op.deltaR(recojet.p4,genjet.p4)<0.2, 
+                    genjet.pt > 30, op.rng_len(jets)>0
+                ), 
+                tree.PV.npvsGood, -99.
+            ), 
+            op.abs(genjet.eta)
+        ), sel, (EqBin(20,0,100), etaBinning), xTitle="N_{PV}", yTitle="|#eta|" ))
+        
+        
+        eff_npveta_denum.append(Plot.make2D(f"{sel_tag}_eff_npveta_denum_{ix}",( 
+            op.switch(
+                op.AND(
+                    op.rng_len(gjets)>ix, 
+                    genjet.pt > 30 
+                ), 
+                tree.PV.npvsGood, -99.
+            ), 
+            op.abs(genjet.eta)
+        ), sel, (EqBin(20,0,100), etaBinning), xTitle="N_{PV}", yTitle="|#eta|" ))
+
+
+        jets = op.select(jets, lambda j: j.idx!=recojet.idx)
+    plots.append(SummedPlot(f"{sel_tag}_eff_pteta_num", eff_pteta_num, xTitle="p_{T}^{gen} [GeV]", yTitle="|#eta|"))
+    plots.append(SummedPlot(f"{sel_tag}_eff_pteta_denum", eff_pteta_denum, xTitle="p_{T}^{gen} [GeV]", yTitle="|#eta|"))
+
+    plots.append(SummedPlot(f"{sel_tag}_eff_npveta_num", eff_npveta_num, xTitle="N_{PV}", yTitle="|#eta|"))
+    plots.append(SummedPlot(f"{sel_tag}_eff_npveta_denum", eff_npveta_denum, xTitle="N_{PV}", yTitle="|#eta|"))
+
+    plots+=[num for num in eff_pteta_num]
+    plots+=[denum for denum in eff_pteta_denum]
+
+    plots+=[num for num in eff_npveta_num]
+    plots+=[denum for denum in eff_npveta_denum]
+
+
+    for ix in range(3):
+        recojet = recojets[ix]
+        genjet = op.rng_min_element_by(gjets, lambda jet: op.deltaR(recojet.p4,jet.p4))
+
+        purity_pteta_num.append(Plot.make2D(f"{sel_tag}_purity_pteta_num_{ix}",( 
+            op.switch(
+                op.AND(
+                    op.rng_len(recojets)>ix, 
+                    op.deltaR(recojet.p4,genjet.p4)<0.2, 
+                    recojet.pt > 30, op.rng_len(gjets)>0
+                ), 
+                recojet.pt, -99.
+            ), 
+        op.abs(recojet.eta)
+        ), sel, (EqBin(200,0,400), etaBinning), xTitle="p_{T}^{reco} [GeV]", yTitle="|#eta|" ))
+
+        purity_pteta_denum.append(Plot.make2D(f"{sel_tag}_purity_pteta_denum_{ix}",(
+            op.switch(
+                op.AND(
+                    op.rng_len(recojets)>ix, 
+                    recojet.pt > 30
+                ), 
+                recojet.pt, -99.
+            ), 
+           op.abs(recojet.eta)
+        ), sel, (EqBin(200,0,400), etaBinning), xTitle="p_{T}^{reco} [GeV]", yTitle="|#eta|" ))
+
+        #### vs npv, inclusive in pt
+        purity_npveta_num.append(Plot.make2D(f"{sel_tag}_purity_npveta_num_{ix}",( 
+            op.switch(
+                op.AND(
+                    op.rng_len(recojets)>ix, 
+                    op.deltaR(recojet.p4,genjet.p4)<0.2, 
+                    recojet.pt > 30, op.rng_len(gjets)>0
+                ), 
+                tree.PV.npvsGood, -99.
+            ), 
+        op.abs(recojet.eta)
+        ), sel, (EqBin(20,0,100), etaBinning), xTitle="N_{PV}", yTitle="|#eta|" ))
+
+        purity_npveta_denum.append(Plot.make2D(f"{sel_tag}_purity_npveta_denum_{ix}",(
+            op.switch(
+                op.AND(
+                    op.rng_len(recojets)>ix, 
+                    recojet.pt > 30
+                ), 
+                tree.PV.npvsGood, -99.
+            ), 
+           op.abs(recojet.eta)
+        ), sel, (EqBin(20,0,100), etaBinning), xTitle="N_{PV}", yTitle="|#eta|" ))
+        
+        gjets = op.select(gjets, lambda j: j.idx!=genjet.idx)
+    plots.append(SummedPlot(f"{sel_tag}_purity_pteta_num", purity_pteta_num, xTitle="p_{T}^{reco} [GeV]", yTitle="|#eta|"))
+    plots.append(SummedPlot(f"{sel_tag}_purity_pteta_denum", purity_pteta_denum, xTitle="p_{T}^{reco} [GeV]", yTitle="|#eta|"))
+
+    plots.append(SummedPlot(f"{sel_tag}_purity_npveta_num", purity_npveta_num, xTitle="N_{PV}", yTitle="|#eta|"))
+    plots.append(SummedPlot(f"{sel_tag}_purity_npveta_denum", purity_npveta_denum, xTitle="N_{PV}", yTitle="|#eta|"))
+
+
+    plots+=[num for num in purity_pteta_num]
+    plots+=[denum for denum in purity_pteta_denum]
+
+    plots+=[num for num in purity_npveta_num]
+    plots+=[denum for denum in purity_npveta_denum]
+
     return plots
 
 
-def responsePlots(jets, sel, sel_tag, tree, rawpt = False, debug_hists = False):
+def responsePlots(sel, sel_tag, genjets, jets, tree,ngenjets = 3, rawpt = False, debug_hists = False, deltaRcut = 0.2):
     plots = []
+    ratios = []
 
-    deltaRs = op.map(jets, lambda j: op.deltaR(j[1].p4,j[0].p4))
-    plots.append(Plot.make1D(f"{sel_tag}_deltaR", deltaRs,sel,EqBin(300,0.,3.),xTitle = "#Delta R (recojet, genjet)"))
+    # sort genjets to choose the leading three
+    genjets = op.sort(genjets, lambda j: -j.pt)
 
-    plots.append(Plot.make1D(f"{sel_tag}_njets", op.rng_len(jets),sel,EqBin(10,0.,10.),xTitle = "Number of jets"))
+    # create binning
+    etaBinning = [etabin[0] for etatag, etabin in eta_binning.items() if "0p0to5p2" not in etatag]
+    etaBinning+= [etabin[1] for etatag, etabin in eta_binning.items() if "0p0to5p2" not in etatag and etabin[1] not in etaBinning] 
+    etaBinning = VarBin(etaBinning)
+    ptBinning = VarBin([ptbin[0] for pttag, ptbin in response_pt_binning.items()])
 
-    for etatag,etabin in eta_binning.items():
-        for pttag,ptbin in response_pt_binning.items():
-            etaptjets = op.select(jets, lambda j: op.AND(
-                op.abs(j[0].eta) > etabin[0],
-                op.abs(j[0].eta) < etabin[1],
-                j[0].pt > ptbin[0],
-                j[0].pt < ptbin[1]
-            ))
+    # loop over n leading genjets
+    for ix in range(ngenjets):
+        genjet = genjets[ix]
+        recojet = op.rng_min_element_by(jets, lambda jet: op.deltaR(jet.p4,genjet.p4))
+        response = recojet.pt/genjet.pt if not rawpt else (tree._Jet.orig[recojet.idx].pt*(1-recojet.rawFactor))/genjet.pt
 
-            etaptsel = sel.refine(f"etaptsel_{sel_tag}_{etatag}_{pttag}", cut=(op.rng_len(etaptjets)))
+        # create n independent plots
+        ratios.append( Plot.make3D(f"{sel_tag}_ratio_"+str(ix),
+                                   (op.switch(
+                                       op.AND(
+                                           op.rng_len(genjets)>ix,
+                                           op.deltaR(recojet.p4,genjet.p4)<deltaRcut, 
+                                           op.rng_len(jets)>0
+                                       ),
+                                       response,
+                                       -99.
+                                   ),
+                                   genjet.pt,
+                                   op.abs(genjet.eta)),
+                                   sel,
+                                   (EqBin(100, 0., 2.), ptBinning, etaBinning),
+                                   xTitle="p_{T}^{reco}/p_{T}^{gen}",
+                                   yTitle="p_{T}^{gen}", zTitle="|#eta|"
+                               )
+                   )
 
-            if rawpt: response = op.map(etaptjets, lambda j: (tree._Jet.orig[j[1].idx].pt*(1-j[1].rawFactor))/j[0].pt)
-            else: response = op.map(etaptjets, lambda j: j[1].pt/j[0].pt)
+        jets = op.select(jets, lambda j: j.idx!=recojet.idx)
 
-            plots.append(Plot.make1D(f"{sel_tag}_{etatag}_{pttag}", response,etaptsel,EqBin(100,0.,3.),xTitle = "p_{T}^{reco}/p_{T}^{gen}"))
+    plots.append(SummedPlot(f"{sel_tag}_ratio", ratios, xTitle="p_{T}^{reco}/p_{T}^{gen}",yTitle="p_{T}^{gen}", zTitle="|#eta|"))
 
-            rawfactor = op.map(etaptjets, lambda j: j[1].rawFactor)
-            plots.append(Plot.make1D(f"rawfactor_{sel_tag}_{etatag}_{pttag}", rawfactor,etaptsel,EqBin(100,-1.,1.),xTitle = "rawfactor"))
-
-            if debug_hists:
-                genjetpt = op.map(etaptjets, lambda j: j[0].pt)
-                plots.append(Plot.make1D(f"{sel_tag}_genjet_pt_{etatag}_{pttag}", genjetpt,etaptsel,EqBin(1000,0.,2000.),xTitle = "p_{T}^{gen}"))
-                jetpt = op.map(etaptjets, lambda j: j[1].pt)
-                plots.append(Plot.make1D(f"{sel_tag}_recojet_pt_{etatag}_{pttag}", jetpt,etaptsel,EqBin(1000,0.,2000.),xTitle = "p_{T}^{reco}"))
-                
-                genjeteta = op.map(etaptjets, lambda j: j[0].eta)
-                plots.append(Plot.make1D(f"{sel_tag}_genjet_eta_{etatag}_{pttag}", genjeteta,etaptsel,EqBin(100,-5.,5.),xTitle = "#eta^{gen}"))
-                jeteta = op.map(etaptjets, lambda j: j[1].eta)
-                plots.append(Plot.make1D(f"{sel_tag}_recojet_eta_{etatag}_{pttag}", jeteta,etaptsel,EqBin(100,-5.,5.),xTitle = "#eta^{reco}"))
-
+    plots+=[ratio for ratio in ratios]
     return plots
+
 
 
 def eventPlots(tree, sel, sel_tag):
@@ -192,3 +357,96 @@ def eventPlots(tree, sel, sel_tag):
     plots.append(Plot.make1D(f"{sel_tag}_event_goodnpvs",tree.PV.npvsGood,sel,EqBin(100,0.,100.),xTitle = "Number of good PVs"))
 
     return plots
+
+
+def tauPlots(taus, jets, sel, sel_tag, ntaus = 3, deltaRcut = 0.4, bPNet = True):
+    plots = []
+    nums = []
+    denums = []
+
+    #sort tau by pT
+    taus = op.sort(taus, lambda j: -j.pt)
+
+    # create binning
+    etaBinning = [etabin[0] for etatag, etabin in eta_binning.items() if "0p0to5p2" not in etatag]
+    etaBinning+= [etabin[1] for etatag, etabin in eta_binning.items() if "0p0to5p2" not in etatag and etabin[1] not in etaBinning] 
+    etaBinning = VarBin(etaBinning)
+    # etaBinning = VarBin([0.0,2.0])
+    ptBinning = VarBin([0.,10.,20.,25.,30.,35.,40.,45.,50.,55.,60.,65.,70.,75.,80.,85.,90.,100.])
+    
+    taupt = op.map(taus, lambda t:t.pt)
+    plots.append(Plot.make1D(f"{sel_tag}_tau_pt",taupt,sel,EqBin(100,0.,200.),xTitle = "tau p_{T} [GeV]"))
+    taueta = op.map(taus, lambda t:t.eta)
+    plots.append(Plot.make1D(f"{sel_tag}_tau_eta",taueta,sel,EqBin(100,-5.,5.),xTitle = "tau #eta "))
+    plots.append(Plot.make1D(f"{sel_tag}_tau_nTau",op.rng_len(taus),sel,EqBin(10,0.,10.),xTitle = "number of taus"))
+
+    if bPNet:
+        #### PNet Tau nodes
+        tauPNet = op.map(jets, lambda j:j.btagPNetTauVJet)
+        plots.append(Plot.make1D(f"{sel_tag}_jet_PNetTauvsJet",tauPNet,sel,EqBin(100,0.,1.),xTitle = "btagPNetTauVJet"))
+        
+        plots.append(Plot.make1D(f"{sel_tag}_jet1_PNetTauvsJet",jets[0].btagPNetTauVJet,sel,EqBin(100,0.,1.),xTitle = "btagPNetTauVJet"))
+
+
+
+    # match each reco tau to closest jet
+    for ix in range(ntaus):
+        tau = taus[ix]
+        recojet =  op.rng_min_element_by(jets, lambda jet: op.deltaR(jet.p4,tau.p4))
+
+        #PNet for matched jets
+        if bPNet:
+            plots.append(Plot.make1D(f"{sel_tag}_matchedjet_PNetTauvsJet_"+str(ix),op.switch(
+                op.AND(
+                    op.rng_len(taus)>ix,
+                    op.deltaR(recojet.p4,tau.p4)<deltaRcut, 
+                    op.rng_len(jets)>0
+                ),
+                recojet.btagPNetTauVJet,
+                -99.
+            ),sel,EqBin(100,0.,1.),xTitle = "btagPNetTauVJet"))
+            
+        nums.append( Plot.make2D(f"{sel_tag}_numinatorTAU_"+str(ix),
+                                   (op.switch(
+                                       op.AND(
+                                           op.rng_len(taus)>ix,
+                                           op.deltaR(recojet.p4,tau.p4)<deltaRcut, 
+                                           op.rng_len(jets)>0
+                                       ),
+                                       tau.pt,
+                                       -99.
+                                   ),
+                                   op.abs(tau.eta)),
+                                   sel,
+                                   (ptBinning, etaBinning),
+                                   xTitle="#tau p_{T}",
+                                   yTitle="|#eta|"
+                               )
+                   )
+
+        denums.append( Plot.make2D(f"{sel_tag}_denuminatorTAU_"+str(ix),
+                                   (op.switch(
+                                       op.rng_len(taus)>ix,
+                                       tau.pt,
+                                       -99.
+                                   ),
+                                   op.abs(tau.eta)),
+                                   sel,
+                                   (ptBinning, etaBinning),
+                                   xTitle="#tau p_{T}",
+                                   yTitle="|#eta|"
+                               )
+                   )
+
+
+
+        jets = op.select(jets, lambda j: j.idx!=recojet.idx)
+    
+    plots.append(SummedPlot(f"{sel_tag}_numinatorTAU", nums, xTitle="#tau p_{T}",yTitle="|#eta|"))
+    plots.append(SummedPlot(f"{sel_tag}_denuminatorTAU", denums, xTitle="#tau p_{T}",yTitle="|#eta|"))
+
+    plots+=[num for num in nums]
+    plots+=[denum for denum in denums]
+
+    return plots
+    
