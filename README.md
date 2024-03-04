@@ -31,8 +31,13 @@ source recompile.sh
 
 Known changes needed:
     - `sed -i 's/"fixedGridRhoFastjetAll"/"Rho_fixedGridRhoFastjetAll"/g' bamboo/bamboo/analysisutils.py`
+    
     - `sed -i 's/JRDatabase/jme-validation/g' bamboo/bamboo/analysisutils.py`
+    
     - `sed -i 's/JECDatabase/jme-validation/g' bamboo/bamboo/analysisutils.py`
+    
     - `sed -i '/cms-jet\/jme-validation/s/$/ branch="main",/' bamboo/bamboo/analysisutils.py`
+    
     - `sed -i 's/heads\/master"/heads\/"+self.branch/g' bamboovenv/lib/python3.9/site-packages/CMSJMECalculators/jetdatabasecache.py`
+    
     - `sed -i 's/idxs=defCache(self.rng)/idxs=defCache(self.rng).replace("IndexRange<std::size_t>{","IndexRange<std::size_t>{static_cast<unsigned long>(").replace("}",")}")/g' bamboo/bamboo/treeoperations.py`
