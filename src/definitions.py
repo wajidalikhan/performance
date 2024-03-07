@@ -58,7 +58,7 @@ def cleanElectrons(electrons, muons):
 
 def ak4jetDef(jet):
     return op.AND(
-        jet.jetId & 0x2, 
+        jet.jetId & 0x2, # any jetID, i.e. > loose selection 
         jet.pt > 20.,
         op.abs(jet.eta) <= 5.2
     )
