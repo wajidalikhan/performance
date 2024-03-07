@@ -171,13 +171,20 @@ def effPurityPlots(jets, gjets, recojets, sel, sel_tag, tree):
         genjet = gjets[ix]
         recojet = op.rng_min_element_by(jets, lambda jet: op.deltaR(jet.p4,genjet.p4))
 
+        denum_sel =op.AND(
+            op.rng_len(gjets)>ix, 
+            genjet.pt > 30
+        ) 
+
+        num_sel =op.AND(
+            denum_sel,
+            op.deltaR(recojet.p4,genjet.p4)<0.2, 
+            op.rng_len(jets)>0
+        ) 
+
         eff_pteta_num.append(Plot.make2D(f"{sel_tag}_eff_pteta_num_{ix}",( 
             op.switch(
-                op.AND(
-                    op.rng_len(gjets)>ix, 
-                    op.deltaR(recojet.p4,genjet.p4)<0.2, 
-                    genjet.pt > 30, op.rng_len(jets)>0
-                ), 
+                num_sel, 
                 genjet.pt, -99.
             ), 
             op.abs(genjet.eta)
@@ -186,10 +193,7 @@ def effPurityPlots(jets, gjets, recojets, sel, sel_tag, tree):
         
         eff_pteta_denum.append(Plot.make2D(f"{sel_tag}_eff_pteta_denum_{ix}",( 
             op.switch(
-                op.AND(
-                    op.rng_len(gjets)>ix, 
-                    genjet.pt > 30 
-                ), 
+                denum_sel, 
                 genjet.pt, -99.
             ), 
             op.abs(genjet.eta)
@@ -198,11 +202,7 @@ def effPurityPlots(jets, gjets, recojets, sel, sel_tag, tree):
         #### vs npv, inclusive in pt
         eff_npveta_num.append(Plot.make2D(f"{sel_tag}_eff_npveta_num_{ix}",( 
             op.switch(
-                op.AND(
-                    op.rng_len(gjets)>ix, 
-                    op.deltaR(recojet.p4,genjet.p4)<0.2, 
-                    genjet.pt > 30, op.rng_len(jets)>0
-                ), 
+                num_sel, 
                 tree.PV.npvsGood, -99.
             ), 
             op.abs(genjet.eta)
@@ -211,10 +211,7 @@ def effPurityPlots(jets, gjets, recojets, sel, sel_tag, tree):
         
         eff_npveta_denum.append(Plot.make2D(f"{sel_tag}_eff_npveta_denum_{ix}",( 
             op.switch(
-                op.AND(
-                    op.rng_len(gjets)>ix, 
-                    genjet.pt > 30 
-                ), 
+                denum_sel, 
                 tree.PV.npvsGood, -99.
             ), 
             op.abs(genjet.eta)
@@ -239,13 +236,20 @@ def effPurityPlots(jets, gjets, recojets, sel, sel_tag, tree):
         recojet = recojets[ix]
         genjet = op.rng_min_element_by(gjets, lambda jet: op.deltaR(recojet.p4,jet.p4))
 
+        denum_sel =op.AND(
+            op.rng_len(recojets)>ix, 
+            recojet.pt > 30
+        )
+        num_sel = op.AND(
+            denum_sel,
+            op.deltaR(recojet.p4,genjet.p4)<0.2, 
+            op.rng_len(gjets)>0
+        )
+
+
         purity_pteta_num.append(Plot.make2D(f"{sel_tag}_purity_pteta_num_{ix}",( 
             op.switch(
-                op.AND(
-                    op.rng_len(recojets)>ix, 
-                    op.deltaR(recojet.p4,genjet.p4)<0.2, 
-                    recojet.pt > 30, op.rng_len(gjets)>0
-                ), 
+                num_sel, 
                 recojet.pt, -99.
             ), 
         op.abs(recojet.eta)
@@ -253,10 +257,7 @@ def effPurityPlots(jets, gjets, recojets, sel, sel_tag, tree):
 
         purity_pteta_denum.append(Plot.make2D(f"{sel_tag}_purity_pteta_denum_{ix}",(
             op.switch(
-                op.AND(
-                    op.rng_len(recojets)>ix, 
-                    recojet.pt > 30
-                ), 
+                denum_sel,
                 recojet.pt, -99.
             ), 
            op.abs(recojet.eta)
@@ -265,11 +266,7 @@ def effPurityPlots(jets, gjets, recojets, sel, sel_tag, tree):
         #### vs npv, inclusive in pt
         purity_npveta_num.append(Plot.make2D(f"{sel_tag}_purity_npveta_num_{ix}",( 
             op.switch(
-                op.AND(
-                    op.rng_len(recojets)>ix, 
-                    op.deltaR(recojet.p4,genjet.p4)<0.2, 
-                    recojet.pt > 30, op.rng_len(gjets)>0
-                ), 
+                num_sel, 
                 tree.PV.npvsGood, -99.
             ), 
         op.abs(recojet.eta)
@@ -277,10 +274,7 @@ def effPurityPlots(jets, gjets, recojets, sel, sel_tag, tree):
 
         purity_npveta_denum.append(Plot.make2D(f"{sel_tag}_purity_npveta_denum_{ix}",(
             op.switch(
-                op.AND(
-                    op.rng_len(recojets)>ix, 
-                    recojet.pt > 30
-                ), 
+                denum_sel, 
                 tree.PV.npvsGood, -99.
             ), 
            op.abs(recojet.eta)
@@ -394,25 +388,24 @@ def tauPlots(taus, jets, sel, sel_tag, ntaus = 3, deltaRcut = 0.4, bPNet = True)
         tau = taus[ix]
         recojet =  op.rng_min_element_by(jets, lambda jet: op.deltaR(jet.p4,tau.p4))
 
+        denum_sel = op.rng_len(taus)>ix
+        num_sel = op.AND(
+            denum_sel,
+            op.deltaR(recojet.p4,tau.p4)<deltaRcut, 
+            op.rng_len(jets)>0
+        )
+
         #PNet for matched jets
         if bPNet:
             plots.append(Plot.make1D(f"{sel_tag}_matchedjet_PNetTauvsJet_"+str(ix),op.switch(
-                op.AND(
-                    op.rng_len(taus)>ix,
-                    op.deltaR(recojet.p4,tau.p4)<deltaRcut, 
-                    op.rng_len(jets)>0
-                ),
+                num_sel,
                 recojet.btagPNetTauVJet,
                 -99.
             ),sel,EqBin(100,0.,1.),xTitle = "btagPNetTauVJet"))
             
         nums.append( Plot.make2D(f"{sel_tag}_TAU_pteta_num_"+str(ix),
                                    (op.switch(
-                                       op.AND(
-                                           op.rng_len(taus)>ix,
-                                           op.deltaR(recojet.p4,tau.p4)<deltaRcut, 
-                                           op.rng_len(jets)>0
-                                       ),
+                                       num_sel,
                                        tau.pt,
                                        -99.
                                    ),
@@ -426,7 +419,7 @@ def tauPlots(taus, jets, sel, sel_tag, ntaus = 3, deltaRcut = 0.4, bPNet = True)
 
         denums.append( Plot.make2D(f"{sel_tag}_TAU_pteta_denum_"+str(ix),
                                    (op.switch(
-                                       op.rng_len(taus)>ix,
+                                       denum_sel,
                                        tau.pt,
                                        -99.
                                    ),
