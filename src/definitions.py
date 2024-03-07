@@ -108,11 +108,14 @@ def pujets(jets):
 def matchedjets(tree, electrons, muons, redo_match = False):
     
     if redo_match:
+        # mapping reco jet index to genjet with smalles deltaR
         index = op.map(tree.GenJet,lambda gj: op.rng_min_element_index(tree.Jet, lambda rj: op.deltaR(gj.p4,rj.p4)))
+        # adding index variable to tree for genjet branch
         tree.GenJet.valueType.MyRJ = btd.itemProxy(index)
-        
+        # creating pair of genjet and reco jet based on index from above
         gjrj_pairs = op.combine((tree.GenJet, tree.Jet),pred=lambda gj,rj: gj.MyRJ == rj.idx)
     else:
+        # take matching from nanoAOD with recojet genindex
         gjrj_pairs = op.combine((tree.GenJet, tree.Jet),pred=lambda gj,rj: rj.genJet.idx == gj.idx)
     
     sort_jets = op.sort(tree.GenJet, lambda gjet: -gjet.pt)
