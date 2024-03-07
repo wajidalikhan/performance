@@ -22,15 +22,7 @@ class QCDModule(NanoBaseJME):
         yields.add(noSel, 'No Selection')
 
 
-        # # AK8 Jets
-        # ak8Jets = op.sort(
-        #     op.select(tree.FatJet, lambda jet: defs.ak8jetDef(jet)), lambda jet: -jet.pt)
-
-        # ak8JetsID = op.sort(
-        #     ak8Jets, lambda jet: jet.jetId & 2)
-
-
-        muons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4 = defs.defineObjects(tree)
+        muons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4, ak8Jets, clak8Jets, clak4genjets = defs.defineObjects(tree)
 
         ### dijet selection
         noLepton = noSel.refine("noLepton", cut=(
@@ -43,26 +35,15 @@ class QCDModule(NanoBaseJME):
         dijet = noLepton.refine("dijet", cut = (
             op.AND(
                 op.rng_len(clak4Jets)>1,
-                clak4Jets[0].pt > 50,
-                op.deltaPhi(clak4Jets[0].p4,clak4Jets[1].p4)>2.7
+                # this introduces a bias in the JES and needs to be revised
+                # clak4Jets[0].pt > 50,
+                # op.deltaPhi(clak4Jets[0].p4,clak4Jets[1].p4)>2.7
             )))
         
 
         if sampleCfg['type'] == 'mc':
-            #### efficiency and purity
-            ### efficiency match to generator jets with deltaR<0.2 and pT gen >30, pt reco > 20
-            recojetpt30 = op.select(ak4Jets, lambda jet: jet.pt > 30)
-            recojetpt20 = op.select(ak4Jets, lambda jet: jet.pt > 20)
-            
-            # firstgenjet = tree.Jet[0].chHEF
-            
-            effjets = defs.effjets(recojetpt20)
-
-            purityjets = defs.purityjets(recojetpt30)
-            
-            pujets = defs.pujets(ak4Jets)
-
-            matchedjets = defs.matchedjets(tree.Jet)
+            pujets = defs.pujets(clak4Jets)
+            matchedjets = defs.matchedjets(tree,clElectrons, muons, redo_match = True)
 
         #############################################################################
         #                                 Plots                                     #
@@ -74,6 +55,9 @@ class QCDModule(NanoBaseJME):
             plots+=cp.muonPlots(muons, noSel, "noSel")
             plots+=cp.electronPlots(electrons, noSel, "noSel")
             plots+=cp.AK4jetPlots(ak4Jets, noSel, "noSel")
+            plots+=cp.AK8jetPlots(tree.FatJet, noSel, "noSel")
+            plots+=cp.AK8jetPlots(ak8Jets, noSel, "noSel_ak8jet")
+            plots+=cp.AK8jetPlots(clak8Jets, noSel, "noSel_clak8jet")
             plots+=cp.AK4jetPlots(ak4JetsID, noSel, "noSelJetID")
             plots+=cp.AK4jetPlots(ak4Jetspt40, noSel, "noSelJetpt40")
             plots+=cp.eventPlots(tree, noSel, "noSel")
@@ -83,12 +67,14 @@ class QCDModule(NanoBaseJME):
             plots+=cp.electronPlots(electrons, noLepton, "noLepton")
 
 
+
             ### dijet
             plots+=cp.muonPlots(muons, dijet, "Dijet")
             plots+=cp.electronPlots(electrons, dijet, "Dijet")
 
         ### dijet
         plots+=cp.AK4jetPlots(ak4Jets, dijet, "Dijet")
+        plots+=cp.AK8jetPlots(ak8Jets, dijet, "Dijet")
         plots+=cp.AK4jetPlots(ak4JetsID, dijet, "DijetJetID")
         plots+=cp.AK4jetPlots(ak4Jetspt40, dijet, "DijetJetpt40")
         plots+=cp.AK4jetPlots(ak4Jetspt100, dijet, "DijetJetpt100")
@@ -96,25 +82,26 @@ class QCDModule(NanoBaseJME):
         plots+=cp.AK4jetPlots(ak4Jetsetag2p4, dijet, "DijetJetetag2p4")
 
         if sampleCfg['type'] == 'mc':  
-            plots+=cp.effPurityPlots(effjets,dijet,"effPurity_effmatched", tree)
-            plots+=cp.effPurityPlots(recojetpt30,dijet,"effPurity_allrecojets",tree)
-            plots+=cp.effPurityPlots(purityjets,dijet,"effPurity_puritymatched",tree)
-            plots+=cp.effPurityPlots(pujets,dijet,"effPurity_pujets",tree)
+            plots+=cp.effPurityPlots(clak4Jets,clak4genjets,clak4Jets, noSel,"effPurity", tree)
 
             if any([x in sampleCfg['plot_level'] for x in ["all","response"]]):
-                plots+=cp.responsePlots(matchedjets, dijet, "dijet_response",tree)
-                plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
-                plots+=cp.responsePlots(matchedjets, noSel, "noSel_response",tree)
+                plots+=cp.responsePlots( dijet, "dijet_AK4response", tree.GenJet, clak4Jets, tree, debug_hists= False)
+                plots+=cp.responsePlots( dijet, "dijet_AK8response", tree.GenJet, clak8Jets, tree,debug_hists= False, deltaRcut = 0.4)
 
             if any([x in sampleCfg['plot_level'] for x in ["all","rawresponse"]]):
-                plots+=cp.responsePlots(matchedjets, dijet, "dijet_rawresponse",tree, rawpt = True)
-                plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_rawresponse",tree, rawpt = True)
-                plots+=cp.responsePlots(matchedjets, noSel, "noSel_rawresponse",tree, rawpt = True)
+                plots+=cp.responsePlots( dijet, "dijet_AK4rawresponse", tree.GenJet, clak4Jets, tree, debug_hists= False, rawpt = True)
+                plots+=cp.responsePlots( dijet, "dijet_AK8rawresponse", tree.GenJet, clak8Jets, tree, debug_hists= False, deltaRcut = 0.4, rawpt = True)
+
+                plots+=cp.responsePlots( noSel, "noSel_AK4rawresponse", tree.GenJet, clak4Jets, tree, debug_hists= False, rawpt = True)
+                plots+=cp.responsePlots( noSel, "noSel_AK8rawresponse", tree.GenJet, clak8Jets, tree, debug_hists= False, deltaRcut = 0.4, rawpt = True)
 
 
         plots+=cp.eventPlots(tree, dijet, "Dijet")
+        plots+=cp.efftauPlots(tree.GenVisTau, clak4Jets, noSel, "dijet_taueff_leadingtau0p4",ntaus = 1, deltaRcut = 0.4)
+        plots+=cp.efftauPlots(tree.GenVisTau, clak4Jets, noSel, "dijet_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+        plots+=cp.efftauPlots(tree.GenVisTau, clak4Jets, noSel, "dijet_taueff_n3tau0p2",ntaus = 3, deltaRcut = 0.2)
         # Cutflow report
-        yields.add(noLepton, 'no lepton')
+        # yields.add(noLepton, 'no lepton')
         yields.add(dijet, 'dijet')
         return plots
 

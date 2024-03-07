@@ -2,29 +2,41 @@ class Constants():
     def __init__(self):
         self.lumi = {
             '2022': {'C': 4.96,'D': 2.94,'E': 5.84,'F': 17.80, 'G': 2},
+            'UL18': {'A': 4.96,'B': 2.94,'C': 5.84,'D': 17.80},
         }
         self.energy = {
             '2022': '13.6',
+            'UL18': '13.6',
         }
         self.pileup = {
             '2022': 43,
+            'UL18': 32,
         }
         self.year_run_map = {
             '2022': ['C','D','E','F','G'],
+            'UL18': ['A','B','C','D'],
         }
-        self.MC_samples = ['DY','TTbar','QCD_Flat']
+        self.MC_samples = ['DY','TTbar','QCD_Flat', 'DYTau']
         self.data_samples = ['Muon', 'JetHT']
         self.modules = {
-            'DY':    ['Muon',  'DY'],
+            'DY':    ['Muon', 'DY', 'DYTau'],
             'TTbar': ['Muon',  'TTbar'],
             'QCD':   ['JetHT', 'QCD_Flat'],
+            'test':   ['JetHT', 'QCD_Flat'],
+            'NanoJME':   ['JetHT', 'QCD_Flat'],
         }
         self.xsec = {
             'TTbar':  831.76,
             'DY':     5558,
+            'DYTau':     5558,
             'QCD_Flat':   185900000*10, #from QCD_HT100to200 * 10
         }
         self.files = {
+            'UL18':{
+                'Summer20UL':{
+                    'QCD_Flat' : 'datasets/QCD_Pt_15to7000_Flat_2018_Summer20_JMENano.txt',
+                },
+            },
             '2022': {
                 'Winter22': {
                     'DY':       'datasets/DY_2022_Winter22_Nano10_jme.txt',
@@ -38,19 +50,35 @@ class Constants():
                     # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
                     'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_Nano11_das.txt',
                 },
-                'Summer22_Nominal': {
-                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat2018_2022_Summer22_Nano11_Nominal.txt',
+                'Summer22EETau4GeV': {
+                    # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_Tau4GeV.txt',
                 },
-                'Summer22_NPVA2p0B0p13': {
-                    'DY':       'datasets/DY_2022_Winter22_Nano11_NPVA2p0B0p13.txt',
-                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat2018_2022_Summer22_Nano11_NPVA2p0B0p13.txt',
+                'Summer22EETau10GeV': {
+                    # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_Tau10GeV.txt',
                 },
-                'Summer22_NPVA2p0B0p3': {
-                    'DY':       'datasets/DY_2022_Winter22_Nano11_NPVA2p0B0p3.txt',
-                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat2018_2022_Summer22_Nano11_NPVA2p0B0p3.txt',
+                'Summer22EEFromPV2Tau4GeV': {
+                    'DY':       'datasets/DY_Summer23_fromPV4GeV_v2.txt',
+                    'QCD_Flat': 'datasets/QCD_Summer23_fromPV4GeV_v2.txt',
+                    'DYTau': 'datasets/DYto2TautoMuTauh_Summer23_fromPV4GeV_v2.txt',
+                    'TTbar': 'datasets/TTbar_Summer23_fromPV4GeV_v2.txt',
                 },
-                'Summer22_NPVA3p0B0p13': {
-                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat2018_2022_Summer22_Nano11_NPVA3p0B0p13.txt',
+                'Summer22EEFromPV2Tau0GeV': {
+                    # 'DY':       'datasets/DY_Summer23_fromPV0GeV_v2.txt',
+                    # 'QCD_Flat': 'datasets/QCD_Summer23_fromPV4GeV_v2.txt',
+                    'DYTau': 'datasets/DYto2TautoMuTauh_Summer23_fromPV0GeV_v2.txt',
+                    # 'TTbar': 'datasets/TTbar_Summer23_fromPV4GeV_v2.txt',
+                },
+                'Summer22EEnoCandRemoval': {
+                    # 'DY':       'datasets/DY_2022_Summer22EE_Nano10_jme.txt',
+                    'QCD_Flat': 'datasets/QCD_Pt_15to7000_Flat_2022_Summer22EE_noCandRemoval.txt',
+                },
+                'Summer22EENOMINAL': {
+                    'DY':       'datasets/DY_Summer23_NOMINAL.txt',
+                    'QCD_Flat': 'datasets/QCD_Summer23_NOMINAL.txt',
+                    'DYTau': 'datasets/DYto2TautoMuTauh_Summer23_NOMINALwCHS.txt',
+                    'TTbar': 'datasets/TTbar_Summer23_NOMINAL.txt',
                 },
                 'Prompt':{
                     'MuonC':    'datasets/Muon_2022RunC_Prompt_Nano10_jme.txt',
@@ -71,11 +99,6 @@ class Constants():
                     'JetHTC':   'datasets/JetHT_2022RunC_ReReco_Nano11_das.txt',
                     'JetHTD':   'datasets/JetHT_2022RunD_ReReco_Nano11_das.txt',
                     'JetHTE':   'datasets/JetHT_2022RunE_ReReco_Nano11_das.txt',
-                },
-                'PuppiTune':{
-                    # 'MuonG':    'datasets/Muon_2022RunG_Prompt_Nano11_NPVA2p0B0p13.txt',
-                    'JetHTG':   'datasets/JetMET_2022RunG_Prompt_Nano11_NPVA2p0B0p13.txt',
-                    'MuonG':    'datasets/Muon_2022RunG_Prompt_Nano11_NPVA2p0B0p3.txt',
                 },
             },
             '2023': {

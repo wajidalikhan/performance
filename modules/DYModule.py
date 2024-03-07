@@ -30,10 +30,8 @@ class DYModule(NanoBaseJME):
         #     ak8Jets, lambda jet: jet.jetId & 2)
 
 
-        muons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4 = defs.defineObjects(tree)
+        muons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4, ak8Jets, clak8Jets, clak4genjets = defs.defineObjects(tree)
 
-        # ak4bJets = op.select(
-        #     ak4Jets, lambda jet: jet.btagDeepB > 0.2770)  # 2018 WP
 
         ### Di-leptonic channel ###
 
@@ -48,14 +46,6 @@ class DYModule(NanoBaseJME):
                        clElectrons[0].pt > 25., clElectrons[1].pt > 15. )
             )
         ))
-
-
-
-        # lepton channels
-        # eePair = op.combine(clElectrons, N=2, pred=lambda el1,
-        #                     el2: el1.charge != el2.charge)
-        # mumuPair = op.combine(muons, N=2, pred=lambda mu1,
-        #                       mu2: mu1.charge != mu2.charge)
 
 
         ### reconstruct Z boson
@@ -76,19 +66,16 @@ class DYModule(NanoBaseJME):
         if sampleCfg['type'] == 'mc':
             #### efficiency and purity
             ### efficiency match to generator jets with deltaR<0.2 and pT gen >30, pt reco > 20
-            recojetpt30 = op.select(ak4Jets, lambda jet: jet.pt > 30)
-            recojetpt20 = op.select(ak4Jets, lambda jet: jet.pt > 20)
+            # recojetpt30 = op.select(ak4Jets, lambda jet: jet.pt > 30)
+            # recojetpt20 = op.select(ak4Jets, lambda jet: jet.pt > 20)
             
-            # firstgenjet = tree.Jet[0].chHEF
-            
-            effjets = defs.effjets(recojetpt20)
+            # effjets = defs.effjets(recojetpt20)
 
-            purityjets = defs.purityjets(recojetpt30)
+            # purityjets = defs.purityjets(recojetpt30)
             
             pujets = defs.pujets(ak4Jets)
 
-            matchedjets = defs.matchedjets(tree.Jet)
-
+            matchedjets = defs.matchedjets(tree,clElectrons, muons, redo_match = True)
 
         #############################################################################
         #                                 Plots                                     #
@@ -121,25 +108,50 @@ class DYModule(NanoBaseJME):
             plots+=cp.AK4jetPlots(ak4Jetsetag2p4, Zmasscut, "ZmasscutJetetag2p4")
 
         if sampleCfg['type'] == 'mc':  
-            plots+=cp.effPurityPlots(effjets,Zmasscut,"effPurity_effmatched", tree)
-            plots+=cp.effPurityPlots(recojetpt30,Zmasscut,"effPurity_allrecojets",tree)
-            plots+=cp.effPurityPlots(purityjets,Zmasscut,"effPurity_puritymatched",tree)
-            plots+=cp.effPurityPlots(pujets,Zmasscut,"effPurity_pujets",tree)
+            plots+=cp.effPurityPlots(clak4Jets,clak4genjets,clak4Jets,Zmasscut,"effPurity", tree)
 
             if any([x in sampleCfg['plot_level'] for x in ["all","response"]]): 
-                plots+=cp.responsePlots(matchedjets, Zmasscut, "Zmasscut_response",tree)
-                # plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_response",tree)
-                plots+=cp.responsePlots(matchedjets, noSel, "hasTwoSFLeptons_response",tree)
+                plots+=cp.responsePlots( Zmasscut, "Zmasscut_AK4response", tree.GenJet, clak4Jets, tree, debug_hists= False)
+                plots+=cp.responsePlots( Zmasscut, "Zmasscut_AK8response", tree.GenJet, clak8Jets, tree, debug_hists= False, deltaRcut = 0.4)
+
+                plots+=cp.responsePlots( noSel, "noSel_AK4response", tree.GenJet, clak4Jets, tree, debug_hists= False)
+                plots+=cp.responsePlots( noSel, "noSel_AK8response", tree.GenJet, clak8Jets, tree, debug_hists= False, deltaRcut = 0.4)
 
             if any([x in sampleCfg['plot_level'] for x in ["all","rawresponse"]]):
-                plots+=cp.responsePlots(matchedjets, Zmasscut, "Zmasscut_rawresponse",tree, rawpt = True)
-                # plots+=cp.responsePlots(matchedjets, noLepton, "noLepton_rawresponse",tree, rawpt = True)
-                plots+=cp.responsePlots(matchedjets, noSel, "hasTwoSFLeptons_rawresponse",tree, rawpt = True)
+                plots+=cp.responsePlots( Zmasscut, "Zmasscut_AK4rawresponse", tree.GenJet, clak4Jets, tree, debug_hists= False, rawpt = True)
+                plots+=cp.responsePlots( Zmasscut, "Zmasscut_AK8rawresponse", tree.GenJet, clak8Jets, tree, debug_hists= False, deltaRcut = 0.4, rawpt = True)
+
+                plots+=cp.responsePlots( noSel, "noSel_AK4rawresponse", tree.GenJet, clak4Jets, tree, debug_hists= False, rawpt = True)
+                plots+=cp.responsePlots( noSel, "noSel_AK8rawresponse", tree.GenJet, clak8Jets, tree, debug_hists= False, deltaRcut = 0.4, rawpt = True)
 
 
             plots+=cp.AK4jetPlots(pujets, Zmasscut, "ZmasscutPuJets")
-            plots+=cp.AK4jetPlots(matchedjets, Zmasscut, "ZmasscutMatchedJets")
             
+
+        #Hadronic tau decay mode. 0=OneProng0PiZero, 1=OneProng1PiZero, 2=OneProng2PiZero, 10=ThreeProng0PiZero, 11=ThreeProng1PiZero, 15=Other
+        taustati = [0,1,2,10,11,15]
+
+        plots+=cp.efftauPlots(tree.GenVisTau, tree.Jet, noSel, "noJetSel_taueff_leadingtau0p4",ntaus = 1, deltaRcut = 0.4)
+        plots+=cp.efftauPlots(tree.GenVisTau, tree.Jet,  noSel, "noJetSel_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+
+        for status in taustati:
+            plots+=cp.efftauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.Jet,  noSel, "noJetSeltaustatus"+str(status)+"_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+
+        if sampleCfg['withCHS']:
+            plots+=cp.efftauPlots(tree.GenVisTau, tree.JetCHS, noSel, "noJetSelCHS_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+
+            for status in taustati:
+                plots+=cp.efftauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.JetCHS,  noSel, "noJetSeltaustatus"+str(status)+"CHS_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+
+
+        plots+=cp.efftauPlots(tree.GenVisTau, tree.Tau, noSel, "noJetSelTau_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
+        for status in taustati:
+            plots+=cp.efftauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.Tau,  noSel, "noJetSeltaustatus"+str(status)+"Tau_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
+
+        plots+=cp.efftauPlots(tree.GenVisTau, tree.GenJet, noSel, "noJetSelGenJet_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
+        for status in taustati:
+            plots+=cp.efftauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.GenJet,  noSel, "noJetSeltaustatus"+str(status)+"GenJet_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
+
 
         plots+=cp.eventPlots(tree, Zmasscut, "Zmasscut")
         # Cutflow report

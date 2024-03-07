@@ -14,7 +14,7 @@ class GenericPath:
 
 class ModuleRunner(GenericPath, Constants):
     ''' Class container for list of objects for particular year '''
-    def __init__(self, module, years, runs, campaigns, jecs=None, extraName=None, extra_info={}, jec_level = "default"):
+    def __init__(self, module, years, runs, campaigns, jecs=None, extraName=None, extra_info={}, jec_level = "default",jec_algo=('','')):
         GenericPath.__init__(self)
         self.module = module
         self.module_name = os.path.join(self.module_path, self.module+'Module.py')
@@ -23,6 +23,7 @@ class ModuleRunner(GenericPath, Constants):
         self.runs = runs
         self.campaigns = campaigns
         self.jecs = jecs
+        self.jec_algo_AK4,self.jec_algo_AK8 = jec_algo
         self.extra_info = extra_info
         self.jec_level = jec_level
         self._unique_name = f'{self.module}_year_{"".join(self.runs)}_{"_".join(self.campaigns.values())}_{"_".join(self.jecs.values())}'
@@ -51,6 +52,7 @@ class ModuleRunner(GenericPath, Constants):
                 if not type_ in self.campaigns: continue
                 campaign = self.campaigns[type_]
                 jec = self.jecs[type_] if self.jecs else ''
+                jec_level = self.jec_level if "default" in self.jec_level else [el for el in self.jec_level]
                 sample_infos[ds] = {
                     'era': year,
                     'group': ds,
@@ -60,7 +62,9 @@ class ModuleRunner(GenericPath, Constants):
                     'split': self.split_files_in,
                     'campaign': campaign,
                     'jec': jec,
-                    'jec_level':self.jec_level,
+                    'jec_level': jec_level,
+                    'jec_algo_AK4': self.jec_algo_AK4,
+                    'jec_algo_AK8': self.jec_algo_AK8,
                     }
                 sample_infos[ds].update(self.extra_info)
                 if sample_infos[ds]['type']=='mc':
@@ -151,6 +155,7 @@ class ModuleRunner(GenericPath, Constants):
             path = os.path.join(self.output_path,self.get_unique_name(year)).replace(self.local_path+'/','')
             for sample in samples:
                 fname = os.path.join('results',sample)
-                MP = MakePlots(year=year, path=path, fname=fname, pdfextraname=pdfextraname, campaign = self.campaigns['mc']).PlotAll()
+                MP = MakePlots(year=year, path=path, fname=fname, pdfextraname=pdfextraname, campaign = self.campaigns['mc'], jec_algo=(self.jec_algo_AK4,self.jec_algo_AK8)).PlotAll()
+
 
     

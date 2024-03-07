@@ -1,17 +1,18 @@
 from bamboo import treefunctions as op
+from bamboo import treedecorators as btd
 
 # Object definitions
 
 
-def muonDef(mu):
+def muonDef(mu, iso = False):
     return op.AND(
-        mu.pt >= 35.,
+        mu.pt >= 20.,
         op.abs(mu.eta) <= 2.4,
         op.abs(mu.dxy) <= 0.05,
         op.abs(mu.dz) <= 0.1,
-        mu.miniPFRelIso_all <= 0.4,
+        mu.miniPFRelIso_all <= 0.4 if iso else 99,
         mu.sip3d <= 8,
-        mu.looseId
+        # mu.looseId
     )
 
 
@@ -25,7 +26,7 @@ def muonConePt(muons):
 
 def elDef(el):
     return op.AND(
-        el.pt >= 35.,
+        el.pt >= 20.,
         op.abs(el.eta) <= 2.5,
         op.abs(el.dxy) <= 0.05,
         op.abs(el.dz) <= 0.1,
@@ -57,35 +58,35 @@ def cleanElectrons(electrons, muons):
 
 def ak4jetDef(jet):
     return op.AND(
-        #jet.jetId & 2,  # tight
+        jet.jetId & 0x2, # any jetID, i.e. > loose selection 
         jet.pt > 20.,
-        #op.abs(jet.eta) <= 2.4
+        op.abs(jet.eta) <= 5.2
     )
-
-def cleanJets(jets, muons, electrons, sort=True):
-    jets = op.select(jets, lambda jet: op.AND(
-            op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(jet.p4, ele.p4) < 0.4)),
-            op.NOT(op.rng_any(muons, lambda mu: op.deltaR(jet.p4, mu.p4) < 0.4))
-        ))
-    if sort:
-        jets = op.sort(jets, lambda j: -j.pt)
-    return jets
-
 
 def ak8jetDef(jet):
     return op.AND(
-        #        jet.jetId & 2,  # tight
-        jet.subJet1.isValid,
-        jet.subJet2.isValid,
-        jet.subJet1.pt > 20.,
-        jet.subJet2.pt > 20.,
-        op.abs(jet.subJet1.eta) <= 2.4,
-        op.abs(jet.subJet2.eta) <= 2.4,
-        jet.msoftdrop >= 30.,
-        jet.msoftdrop <= 210.,
-        jet.pt > 200.,
-        op.abs(jet.eta) <= 2.4
+        # jet.jetId & 2, 
+        jet.nConstituents>0,
+        jet.pt > 150.,
+        op.abs(jet.eta) <= 2.5
     )
+
+
+
+def cleanJets(jets, genjets, muons, electrons, deltaRcut = 0.4, sort=True):
+    jets = op.select(jets, lambda jet: op.AND(
+            op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(jet.p4, ele.p4) < deltaRcut)),
+            op.NOT(op.rng_any(muons, lambda mu: op.deltaR(jet.p4, mu.p4) < deltaRcut))
+        ))
+    genjets = op.select(genjets, lambda jet: op.AND(
+            op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(jet.p4, ele.p4) < deltaRcut)),
+            op.NOT(op.rng_any(muons, lambda mu: op.deltaR(jet.p4, mu.p4) < deltaRcut))
+        ))
+
+    if sort:
+        jets = op.sort(jets, lambda j: -j.pt)
+    return jets,genjets
+
 
 def effjets(jets):
     return op.select(jets,lambda jet: op.AND(
@@ -104,11 +105,29 @@ def pujets(jets):
                 op.deltaR(jet.p4,jet.genJet.p4) > 0.4
             )
 
-def matchedjets(jets):
-    return  op.select(jets, lambda jet: op.AND( 
-                jet.idx < 3,
-                op.deltaR(jet.p4,jet.genJet.p4) < 0.2
-            ))
+def matchedjets(tree, electrons, muons, redo_match = False):
+    
+    if redo_match:
+        # mapping reco jet index to genjet with smalles deltaR
+        index = op.map(tree.GenJet,lambda gj: op.rng_min_element_index(tree.Jet, lambda rj: op.deltaR(gj.p4,rj.p4)))
+        # adding index variable to tree for genjet branch
+        tree.GenJet.valueType.MyRJ = btd.itemProxy(index)
+        # creating pair of genjet and reco jet based on index from above
+        gjrj_pairs = op.combine((tree.GenJet, tree.Jet),pred=lambda gj,rj: gj.MyRJ == rj.idx)
+    else:
+        # take matching from nanoAOD with recojet genindex
+        gjrj_pairs = op.combine((tree.GenJet, tree.Jet),pred=lambda gj,rj: rj.genJet.idx == gj.idx)
+    
+    sort_jets = op.sort(tree.GenJet, lambda gjet: -gjet.pt)
+    return  op.select(gjrj_pairs, lambda pair: op.AND( 
+        pair[0].pt >= sort_jets[2].pt,
+        op.deltaR(pair[0].p4,pair[1].p4) < 0.2,
+        op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(pair[1].p4, ele.p4) < 0.4)),
+        op.NOT(op.rng_any(muons, lambda mu: op.deltaR(pair[1].p4, mu.p4) < 0.4))
+    ))
+
+    
+
 
 def defineObjects(tree):
     # Muons
@@ -117,6 +136,13 @@ def defineObjects(tree):
         #lambda mu: -muonConePt(tree.Muon)[mu.idx]
         lambda mu: -mu.pt
     )
+
+    isomuons = op.sort(
+        op.select(tree.Muon, lambda mu: muonDef(mu,iso=True)),
+        #lambda mu: -muonConePt(tree.Muon)[mu.idx]
+        lambda mu: -mu.pt
+    )
+
     # Electrons
     electrons = op.sort(
         op.select(tree.Electron, lambda el: elDef(el)),
@@ -129,9 +155,14 @@ def defineObjects(tree):
     # AK4 Jets
     ak4Jets = op.sort(
         op.select(tree.Jet, lambda jet: ak4jetDef(jet)), lambda jet: -jet.pt)
+
+    # AK8 Jets
+    ak8Jets = op.sort(
+        op.select(tree.FatJet, lambda jet: ak8jetDef(jet)), lambda jet: -jet.pt)
     
     ## jet - lepton cleaning
-    clak4Jets = cleanJets(ak4Jets, muons, clElectrons)
+    clak4Jets, clak4genjets = cleanJets(ak4Jets, tree.GenJet, muons, clElectrons)
+    clak8Jets,_ = cleanJets(ak8Jets, tree.GenJet, muons, clElectrons, deltaRcut = 0.8)
     
     ## jet ID & pT recommendations
     ak4JetsID = op.select(
@@ -150,5 +181,5 @@ def defineObjects(tree):
         ak4JetsID, lambda jet: op.abs(jet.eta) > 2.4)
 
 
-    return muons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4
+    return isomuons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4, ak8Jets, clak8Jets, clak4genjets
     
