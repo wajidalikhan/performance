@@ -108,7 +108,8 @@ class MakePlots():
 
         self.quant   = array('d',[0.5])
         self.quant_y   = array('d',[0.5])
-        f = open("dummy.txt",'w')
+        fAK4 = open("dummy.txt",'w')
+        fAK8 = open("dummy.txt",'w')
         if len(self.rawresponse_names):
             fdirectory = "textFiles/"+self.campaign + self.year+"_USER_"+"MC/"
             os.system('mkdir -p '+fdirectory)
@@ -130,7 +131,8 @@ class MakePlots():
             else:
                 self.GetResponse(f_, fAK4, response_name+"_AK4rawresponse", response_name = "rawresponse")
                 self.GetResponse(f_, fAK8, response_name+"_AK8rawresponse", response_name = "rawresponse")
-                f.close()
+                fAK4.close()
+                fAK8.close()
 
         self.GetEffPurity(f_,"eff","effPurity")
         self.GetEffPurity(f_,"purity","effPurity")
