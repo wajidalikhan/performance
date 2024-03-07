@@ -353,7 +353,7 @@ def eventPlots(tree, sel, sel_tag):
     return plots
 
 
-def tauPlots(taus, jets, sel, sel_tag, ntaus = 3, deltaRcut = 0.4, bPNet = True):
+def efftauPlots(taus, jets, sel, sel_tag, ntaus = 3, deltaRcut = 0.4, bPNet = True):
     plots = []
     nums = []
     denums = []

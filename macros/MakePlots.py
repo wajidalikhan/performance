@@ -85,7 +85,7 @@ class MakePlots():
         self.campaign = campaign
         self.fname = fname
         self.inputPath = path
-        self.outputPath = os.path.join(self.inputPath,'pdfs')
+        self.outputPath = os.path.join(self.inputPath,'pdfs', fname.replace("results/",""))
         for fold in self.types.keys():
             os.system('mkdir -p '+os.path.join(self.outputPath,fold))
         self.pdfextraname = pdfextraname

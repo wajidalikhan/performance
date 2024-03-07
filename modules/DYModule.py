@@ -131,26 +131,26 @@ class DYModule(NanoBaseJME):
         #Hadronic tau decay mode. 0=OneProng0PiZero, 1=OneProng1PiZero, 2=OneProng2PiZero, 10=ThreeProng0PiZero, 11=ThreeProng1PiZero, 15=Other
         taustati = [0,1,2,10,11,15]
 
-        plots+=cp.tauPlots(tree.GenVisTau, tree.Jet, noSel, "noJetSel_taueff_leadingtau0p4",ntaus = 1, deltaRcut = 0.4)
-        plots+=cp.tauPlots(tree.GenVisTau, tree.Jet,  noSel, "noJetSel_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+        plots+=cp.efftauPlots(tree.GenVisTau, tree.Jet, noSel, "noJetSel_taueff_leadingtau0p4",ntaus = 1, deltaRcut = 0.4)
+        plots+=cp.efftauPlots(tree.GenVisTau, tree.Jet,  noSel, "noJetSel_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
 
         for status in taustati:
-            plots+=cp.tauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.Jet,  noSel, "noJetSeltaustatus"+str(status)+"_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+            plots+=cp.efftauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.Jet,  noSel, "noJetSeltaustatus"+str(status)+"_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
 
         if sampleCfg['withCHS']:
-            plots+=cp.tauPlots(tree.GenVisTau, tree.JetCHS, noSel, "noJetSelCHS_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+            plots+=cp.efftauPlots(tree.GenVisTau, tree.JetCHS, noSel, "noJetSelCHS_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
 
             for status in taustati:
-                plots+=cp.tauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.JetCHS,  noSel, "noJetSeltaustatus"+str(status)+"CHS_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+                plots+=cp.efftauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.JetCHS,  noSel, "noJetSeltaustatus"+str(status)+"CHS_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
 
 
-        plots+=cp.tauPlots(tree.GenVisTau, tree.Tau, noSel, "noJetSelTau_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
+        plots+=cp.efftauPlots(tree.GenVisTau, tree.Tau, noSel, "noJetSelTau_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
         for status in taustati:
-            plots+=cp.tauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.Tau,  noSel, "noJetSeltaustatus"+str(status)+"Tau_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
+            plots+=cp.efftauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.Tau,  noSel, "noJetSeltaustatus"+str(status)+"Tau_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
 
-        plots+=cp.tauPlots(tree.GenVisTau, tree.GenJet, noSel, "noJetSelGenJet_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
+        plots+=cp.efftauPlots(tree.GenVisTau, tree.GenJet, noSel, "noJetSelGenJet_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
         for status in taustati:
-            plots+=cp.tauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.GenJet,  noSel, "noJetSeltaustatus"+str(status)+"GenJet_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
+            plots+=cp.efftauPlots(op.select(tree.GenVisTau, lambda tau: tau.status ==status), tree.GenJet,  noSel, "noJetSeltaustatus"+str(status)+"GenJet_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2, bPNet = False)
 
 
         plots+=cp.eventPlots(tree, Zmasscut, "Zmasscut")

@@ -97,9 +97,9 @@ class QCDModule(NanoBaseJME):
 
 
         plots+=cp.eventPlots(tree, dijet, "Dijet")
-        plots+=cp.tauPlots(tree.GenVisTau, clak4Jets, noSel, "dijet_taueff_leadingtau0p4",ntaus = 1, deltaRcut = 0.4)
-        plots+=cp.tauPlots(tree.GenVisTau, clak4Jets, noSel, "dijet_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
-        plots+=cp.tauPlots(tree.GenVisTau, clak4Jets, noSel, "dijet_taueff_n3tau0p2",ntaus = 3, deltaRcut = 0.2)
+        plots+=cp.efftauPlots(tree.GenVisTau, clak4Jets, noSel, "dijet_taueff_leadingtau0p4",ntaus = 1, deltaRcut = 0.4)
+        plots+=cp.efftauPlots(tree.GenVisTau, clak4Jets, noSel, "dijet_taueff_leadingtau0p2",ntaus = 1, deltaRcut = 0.2)
+        plots+=cp.efftauPlots(tree.GenVisTau, clak4Jets, noSel, "dijet_taueff_n3tau0p2",ntaus = 3, deltaRcut = 0.2)
         # Cutflow report
         # yields.add(noLepton, 'no lepton')
         yields.add(dijet, 'dijet')
