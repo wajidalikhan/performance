@@ -79,8 +79,8 @@ def main():
 
 
 
-    # module = 'DY'
-    module = 'QCD'
+    module = 'DY'
+    # module = 'QCD'
     # module = 'test'
 
     # maxFiles=10

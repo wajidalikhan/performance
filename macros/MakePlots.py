@@ -137,10 +137,10 @@ class MakePlots():
 
         #read in tau histos and create eff
         #2D hist of pT and eta
-        self.tauefflist = list(set([ re.sub(r'_\d','',el.GetName().replace("_denuminatorTAU","").replace("_numinatorTAU","")) for el in f_.GetListOfKeys() if "TAU" in el.GetName()]))
+        self.tauefflist = list(set([ re.sub(r'_\d','',el.GetName().replace("_denum","").replace("_num","").replace("_pteta","").replace("_TAU","")) for el in f_.GetListOfKeys() if "TAU" in el.GetName()]))
         self.TauEffs = OrderedDict()
         for el in self.tauefflist:
-            self.GetTauEff(f_,el)
+            self.GetEffPurity(f_,"TAU",selection_name=el, quant = "pteta")
 
                 
     def Close(self):
@@ -234,39 +234,6 @@ class MakePlots():
             self.graphs[selection_name+response_name+eta_bin+'jes'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jes), array('d',pts_err), array('d',jes_err))
             self.graphs[selection_name+response_name+eta_bin+'jer'] = rt.TGraphErrors(len(pts), array('d',pts), array('d',jer), array('d',pts_err), array('d',jer_err))
 
-    def GetTauEff(self, f_, selection_name="dijet"):
-        den_hname = f'{selection_name}_denuminatorTAU'
-        den_2Dhist = f_.Get(den_hname)
-        num_hname = f'{selection_name}_numinatorTAU'
-        num_2Dhist = f_.Get(num_hname)
-
-        for y_bin in range(1, num_2Dhist.GetNbinsY()+1):
-            eta_bin = self.eta_bins[y_bin-1]
-            if "2p7to3p0" in eta_bin or "3p0to5p2" in eta_bin: continue
-            hname = f'{selection_name}_eta{eta_bin}'
-            # print("hname",hname)
-
-            edges = array("d")
-            for x_bin in range(1, num_2Dhist.GetNbinsX() + 1):
-                edges.append(num_2Dhist.GetXaxis().GetBinLowEdge(x_bin))
-            edges.append(num_2Dhist.GetXaxis().GetXmax())
-            # print("edges",edges)
-            num_hist = rt.TH1D(hname+"num", hname+"num", len(edges)-1, edges)
-            den_hist = rt.TH1D(hname+"den", hname+"den", len(edges)-1, edges)
-            self.TauEffs[hname] = num_hist.Clone(hname)
-
-            # Calculate the product for each X bin
-            for x_bin in range(1, num_2Dhist.GetNbinsX() + 1):
-                # print("eta",eta_bin,"x_bin",x_bin,"num",num_2Dhist.GetBinContent(x_bin,y_bin), "den", den_2Dhist.GetBinContent(x_bin,y_bin))
-                # print("num_2Dhist.GetXaxis",num_2Dhist.GetXaxis().GetBinLowEdge(x_bin),"num_hist.GetXaxis",num_hist.GetXaxis().GetBinLowEdge(x_bin))
-                num_hist.SetBinContent(x_bin, num_2Dhist.GetBinContent(x_bin,y_bin))
-                den_hist.SetBinContent(x_bin, den_2Dhist.GetBinContent(x_bin,y_bin))
-
-                num_hist.SetBinError(x_bin, num_2Dhist.GetBinError(x_bin,y_bin))
-                den_hist.SetBinError(x_bin, den_2Dhist.GetBinError(x_bin,y_bin))
-
-            
-            self.TauEffs[hname].Divide(num_hist, den_hist, 1, 1, 'B')
 
     def GetEffPurity(self, f_, effPurity = "eff", selection_name="dijet",quant="pteta"):
         den_hname = f'{selection_name}_{effPurity}_{quant}_denum'
@@ -276,6 +243,7 @@ class MakePlots():
 
         for y_bin in range(1, num_2Dhist.GetNbinsY()+1):
             eta_bin = self.eta_bins[y_bin-1]
+            if "TAU" in effPurity and ("2p7to3p0" in eta_bin or "3p0to5p2" in eta_bin): continue
             hname = f'{selection_name}_{effPurity}_{quant}_eta{eta_bin}'
             # print("hname",hname)
 
@@ -335,27 +303,9 @@ class MakePlots():
         
         self.canv.SaveAs(os.path.join(self.outputPath,('raw' if 'raw' in response_name else '')+ 'resolution'+'_'+selection_name + self.pdfextraname + '.pdf'))
 
-    def PlotTauEff(self, selection_name = "dijet"):
-        infos = {
-            '0p0to1p3' : {'legend': '0.0 < |#eta| < 1.3', 'color':  rt.kGreen+3,  'marker': rt.kFullSquare,       'msize':  1.0},
-            '1p3to2p4' : {'legend': '1.3 < |#eta| < 2.4', 'color':  rt.kBlue-4,   'marker': rt.kFullStar,         'msize':  1.3},
-            '2p4to2p7' : {'legend': '2.4 < |#eta| < 2.7', 'color':  rt.kAzure+2,  'marker': rt.kFullCrossX,       'msize':  1.3},
-            '2p7to3p0' : {'legend': '2.7 < |#eta| < 3.0', 'color':  rt.kRed+1,    'marker': rt.kFullTriangleUp,   'msize':  1.0},
-            '3p0to5p2' : {'legend': '3.0 < |#eta| < 5.2', 'color':  rt.kOrange+1, 'marker': rt.kFullTriangleDown, 'msize':  1.0},
-            '0p0to5p2' : {'legend': '0.0 < |#eta| < 5.2', 'color':  rt.kBlack,    'marker': rt.kFullCircle,       'msize':  1.0},
-        }
-
-        self.CreateCanvas(canvName="TauEff_"+selection_name, zoom=True)
-        for name, hist in self.TauEffs.items():
-            if not selection_name in name: continue
-            info = infos[name.replace(selection_name,'').replace('_','').replace('eta','')]
-            tdrDraw(hist, 'P', msize=info['msize'], marker=info['marker'], mcolor=info['color'])
-            self.leg.AddEntry(hist, info['legend'], 'lp')
-        
-        self.canv.SaveAs(os.path.join(self.outputPath, 'TauEff_'+selection_name + self.pdfextraname + '.pdf'))
-
     def PlotEffPurity(self, effPurity="eff",selection_name="effPurity",quant="pteta"):
         for eta_bin in self.eta_bins:
+            if "TAU" in effPurity and ("2p7to3p0" in eta_bin or "3p0to5p2" in eta_bin): continue
             hname = f'{selection_name}_{effPurity}_{quant}_eta{eta_bin}'
             self.CreateCanvas(canvName=hname, zoom=False)
             hist = self.hists[hname]
@@ -376,7 +326,7 @@ class MakePlots():
         self.PlotEffPurity()
         self.PlotEffPurity(effPurity="purity")
         for el in self.tauefflist:
-            self.PlotTauEff(el)
+            self.PlotEffPurity(effPurity="TAU",selection_name = el)
         self.Close()
 
 

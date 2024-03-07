@@ -406,7 +406,7 @@ def tauPlots(taus, jets, sel, sel_tag, ntaus = 3, deltaRcut = 0.4, bPNet = True)
                 -99.
             ),sel,EqBin(100,0.,1.),xTitle = "btagPNetTauVJet"))
             
-        nums.append( Plot.make2D(f"{sel_tag}_numinatorTAU_"+str(ix),
+        nums.append( Plot.make2D(f"{sel_tag}_TAU_pteta_num_"+str(ix),
                                    (op.switch(
                                        op.AND(
                                            op.rng_len(taus)>ix,
@@ -424,7 +424,7 @@ def tauPlots(taus, jets, sel, sel_tag, ntaus = 3, deltaRcut = 0.4, bPNet = True)
                                )
                    )
 
-        denums.append( Plot.make2D(f"{sel_tag}_denuminatorTAU_"+str(ix),
+        denums.append( Plot.make2D(f"{sel_tag}_TAU_pteta_denum_"+str(ix),
                                    (op.switch(
                                        op.rng_len(taus)>ix,
                                        tau.pt,
@@ -442,8 +442,8 @@ def tauPlots(taus, jets, sel, sel_tag, ntaus = 3, deltaRcut = 0.4, bPNet = True)
 
         jets = op.select(jets, lambda j: j.idx!=recojet.idx)
     
-    plots.append(SummedPlot(f"{sel_tag}_numinatorTAU", nums, xTitle="#tau p_{T}",yTitle="|#eta|"))
-    plots.append(SummedPlot(f"{sel_tag}_denuminatorTAU", denums, xTitle="#tau p_{T}",yTitle="|#eta|"))
+    plots.append(SummedPlot(f"{sel_tag}_TAU_pteta_num", nums, xTitle="#tau p_{T}",yTitle="|#eta|"))
+    plots.append(SummedPlot(f"{sel_tag}_TAU_pteta_denum", denums, xTitle="#tau p_{T}",yTitle="|#eta|"))
 
     plots+=[num for num in nums]
     plots+=[denum for denum in denums]

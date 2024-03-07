@@ -53,11 +53,11 @@ class CompareSamples():
             self.files[sname+'resp_eff_pur'] = rt.TFile(fname)
 
             for eta_bin in self.eta_bins:
-                h = self.files[sname+'resp_eff_pur'].Get(f'effPurity_eff_eta{eta_bin}')
+                h = self.files[sname+'resp_eff_pur'].Get(f'effPurity_eff_pteta_eta{eta_bin}')
                 h.SetDirectory(0)
                 self.hists[sname+'eff'+eta_bin] = h
                 
-                h = self.files[sname+'resp_eff_pur'].Get(f'effPurity_purity_eta{eta_bin}')
+                h = self.files[sname+'resp_eff_pur'].Get(f'effPurity_purity_pteta_eta{eta_bin}')
                 h.SetDirectory(0)
                 self.hists[sname+'purity'+eta_bin] = h
                 
@@ -70,14 +70,14 @@ class CompareSamples():
                 if "2p7to3p0" in eta_bin or "3p0to5p2" in eta_bin: continue
                 if "Tau" not in self.pdfextraname: continue
                 for sel_tag in self.tausel:
-                    h = self.files[sname+'resp_eff_pur'].Get(f'{sel_tag}_taueff_leadingtau0p2_eta{eta_bin}')
+                    h = self.files[sname+'resp_eff_pur'].Get(f'{sel_tag}_taueff_leadingtau0p2_TAU_pteta_eta{eta_bin}')
                     h.SetDirectory(0)
                     self.hists[sname+f'{sel_tag}tau_leadingtau0p2_{eta_bin}'] = h
                     if "NOMINAL" in sname:
-                        h = self.files[sname+'resp_eff_pur'].Get(f'{sel_tag}CHS_taueff_leadingtau0p2_eta{eta_bin}')
+                        h = self.files[sname+'resp_eff_pur'].Get(f'{sel_tag}CHS_taueff_leadingtau0p2_TAU_pteta_eta{eta_bin}')
                         h.SetDirectory(0)
                         self.hists[f'CHS{sel_tag}tau_leadingtau0p2_{eta_bin}'] = h
-                        h = self.files[sname+'resp_eff_pur'].Get(f'{sel_tag}Tau_taueff_leadingtau0p2_eta{eta_bin}')
+                        h = self.files[sname+'resp_eff_pur'].Get(f'{sel_tag}Tau_taueff_leadingtau0p2_TAU_pteta_eta{eta_bin}')
                         h.SetDirectory(0)
                         self.hists[f'Tau{sel_tag}tau_leadingtau0p2_{eta_bin}'] = h
     
@@ -140,8 +140,9 @@ class CompareSamples():
         self.canv = tdrDiCanvas(eta_bin, X_min,X_max, Y_min,Y_max, ratioy_min, ratioy_max, 'p_{T}^{gen}',quant if not "tau" in quant else "Eff.", f'Var./{self.refsample}')
         # self.canv = tdrDiCanvas(eta_bin, x_min, y_max, 1e-04, 1, 0.5, 1.5, eta_bin, 'A.U.', 'Ratio')
         # self.canv.cd(1).SetLogy(True)
-        self.canv.cd(1).SetLogx(True)
-        self.canv.cd(2).SetLogx(True)
+        if not "tau" in quant:
+            self.canv.cd(1).SetLogx(True)
+            self.canv.cd(2).SetLogx(True)
         FixXAsisPartition(self.canv.cd(2), shift=0.77, textsize=0.11, bins=[30,300,3000])
         self.canv.cd(1)
         self.leg  = tdrLeg(0.40,0.90-(len(self.samples)+1)*0.040,0.90,0.90)
