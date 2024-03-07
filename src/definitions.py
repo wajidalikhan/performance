@@ -88,21 +88,6 @@ def cleanJets(jets, genjets, muons, electrons, deltaRcut = 0.4, sort=True):
     return jets,genjets
 
 
-# def ak8jetDef(jet):
-#     return op.AND(
-#         #        jet.jetId & 2,  # tight
-#         jet.subJet1.isValid,
-#         jet.subJet2.isValid,
-#         jet.subJet1.pt > 20.,
-#         jet.subJet2.pt > 20.,
-#         op.abs(jet.subJet1.eta) <= 2.4,
-#         op.abs(jet.subJet2.eta) <= 2.4,
-#         jet.msoftdrop >= 30.,
-#         jet.msoftdrop <= 210.,
-#         jet.pt > 200.,
-#         op.abs(jet.eta) <= 2.4
-#     )
-
 def effjets(jets):
     return op.select(jets,lambda jet: op.AND(
                 op.deltaR(jet.p4,jet.genJet.p4) < 0.2,
