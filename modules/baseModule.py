@@ -34,7 +34,8 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
         era = sampleCfg['era']  # reserved for future use
         campaign = sampleCfg['campaign']
         jec = sampleCfg['jec']
-        jet_algo = 'AK4PF'+sampleCfg['jec_algo_AK4']
+        jet_algo_AK4 = 'AK4PF'+sampleCfg['jec_algo_AK4']
+        jet_algo_AK8 = 'AK8PF'+sampleCfg['jec_algo_AK8']
         if jec=='':
             jec = 'Winter22Run3_V2_MC' if self.is_MC else 'Winter22Run3_RunD_V2_DATA'
         self.triggersPerPrimaryDataset = {}
@@ -50,8 +51,8 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
 
         def getNanoAODDescription():
             groups = ["HLT_", "MET_","PV_","Pileup_","Rho_"]
-            collections = ["nElectron", "nJet", "nMuon", "nFatJet", "nSubJet","nGenJet","nGenVisTau","nJetCHS", "nTau"]
-            varReaders = [CalcCollectionsGroups(Jet=("pt", "mass"))]
+            collections = ["nElectron", "nJet", "nMuon", "nFatJet", "nSubJet","nGenJet","nGenVisTau","nJetCHS", "nTau","nGenJetAK8","nSubGenJetAK8"]
+            varReaders = [CalcCollectionsGroups(Jet=("pt", "mass"),FatJet=("pt", "mass"))]
             return NanoAODDescription(groups=groups, collections=collections, systVariations=varReaders)
 
         tree, noSel, backend, lumiArgs = super(NanoBaseJME, self).prepareTree(tree=tree,
@@ -104,12 +105,19 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
         #### reapply JECs ###
         from bamboo.analysisutils import configureJets, configureType1MET
         isNotWorker = (self.args.distributed != "worker") 
-        configureJets(tree._Jet, jet_algo,
+        configureJets(tree._Jet, jet_algo_AK4,
                       jec=jec,
                       mayWriteCache= isNotWorker,
                       jecLevels = sampleCfg['jec_level'],
                       # cachedir='/afs/cern.ch/user/a/anmalara/workspace/WorkingArea/JME/jme-validation/JECs_2022/',
                       isMC=self.is_MC, backend = backend)
+        configureJets(tree._FatJet, jet_algo_AK8,
+                      jec=jec,
+                      mayWriteCache= isNotWorker,
+                      jecLevels = sampleCfg['jec_level'],
+                      # cachedir='/afs/cern.ch/user/a/anmalara/workspace/WorkingArea/JME/jme-validation/JECs_2022/',
+                      isMC=self.is_MC, backend = backend)
+
         # configureType1MET(tree._MET,
         #     jec="Summer16_07Aug2017_V20_MC",
         #     smear="Summer16_25nsV1_MC",
