@@ -1,6 +1,6 @@
 # jme-validation
 
-Framework based on Bamboo (https://gitlab.cern.ch/cp3-cms/bamboo) to validate JME deliverables.
+Framework based on [Bamboo](https://gitlab.cern.ch/cp3-cms/bamboo), running on `NanoAOD`, to validate JME deliverables.
 
 ## Installation
 In order to install the framework, first git-clone:
@@ -10,8 +10,8 @@ git clone https://github.com/cms-jet/jme-validation
 Then, run the installation script:
 ```
 source install.sh
-
 ```
+The script will install Bamboo, [plotit](https://github.com/cp3-llbb/plotIt) and [CMSJMECalculators](https://gitlab.cern.ch/cms-analysis/general/CMSJMECalculators) inside a python virtual environment. \
 After installation, a few changes to the bamboo code are neeed. These changes will soon be implemented directly inside the installation script. For the time being, you can implement them using the `sed` command. Known changes needed:
 ```
      sed -i 's/"Rho_fixedGridRhoFastjetAll"/"Rho"/g' bamboo/bamboo/analysisutils.py
@@ -49,7 +49,17 @@ xrootdredirector = cms-xrd-global.cern.ch
 ```
 
 ## Running the framework
-You can first perform a test run. Do:
+To have the framework run, first source everything you need by doing
+```
+source setup.sh
+```
+We currently have two modules (corresponding to different selections) that can be run:
+* QCD: used to obtain MC truth corrections;
+* DY: used for jet reconstruction efficiency/purity and tau performance plots.
+
+The choice of which module to run can be made by setting the `module` variable inside `/macros/steer.py` accordingly.
+
+You can perform a test run by doing:
 ```
  ./macros/steer.py -c -t
 ```
@@ -61,3 +71,6 @@ Finally, you can make plots:
 ```
 ./macros/steer.py -p
 ```
+
+## Running on custom NanoAODs
+The framework can be run either on centrally-produced `NanoAOD` samples or custom ones. In order to produce custom NanoAOD samples that meet most of needs of the JME group, we are currently developing the [JMENano framework](https://gitlab.cern.ch/cms-jetmet/jmenano).
