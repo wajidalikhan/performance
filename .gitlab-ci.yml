@@ -1,0 +1,14 @@
+include:
+  - project: 'ci-tools/container-image-ci-templates'
+    file:
+      - 'kaniko-image.gitlab-ci.yml'
+
+build_image:
+  extends: .build_kaniko
+  tags:
+  - cvmfs
+  variables:
+    DOCKER_FILE_NAME: "Dockerfile"
+    PUSH_IMAGE: "true"
+    REGISTRY_IMAGE_PATH: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+
