@@ -12,17 +12,6 @@ Then, run the installation script:
 source install.sh
 ```
 The script will install Bamboo, [plotit](https://github.com/cp3-llbb/plotIt) and [CMSJMECalculators](https://gitlab.cern.ch/cms-analysis/general/CMSJMECalculators) inside a python virtual environment. \
-After installation, a few changes to the bamboo code are neeed. These changes will soon be implemented directly inside the installation script. For the time being, you can implement them using the `sed` command. Known changes needed:
-```
-     sed -i 's/"Rho_fixedGridRhoFastjetAll"/"Rho"/g' bamboo/bamboo/analysisutils.py
-     sed -i 's/"Rho_fixedGridRhoFastjetAll"/"Rho"/g' bamboovenv/lib/python3.9/site-packages/CMSJMECalculators/utils.py
-     sed -i 's/JRDatabase/jme-validation/g' bamboo/bamboo/analysisutils.py
-     sed -i 's/JECDatabase/jme-validation/g' bamboo/bamboo/analysisutils.py
-     sed -i '/cms-jet\/jme-validation/s/$/ branch="main",/' bamboo/bamboo/analysisutils.py
-     sed -i 's/heads\/master"/heads\/"+self.branch/g' bamboovenv/lib/python3.9/site-packages/CMSJMECalculators/jetdatabasecache.py
-     sed -i 's/idxs=defCache(self.rng)/idxs=defCache(self.rng).replace("IndexRange<std::size_t>{","IndexRange<std::size_t>{static_cast<unsigned long>(").replace("}",")}")/g' bamboo/bamboo/treeoperations.py
-
-```
 
 Every time you change bamboo-related code,  you have to reinstall the packages dependencies by doing
 ```sh
