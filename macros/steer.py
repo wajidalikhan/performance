@@ -30,21 +30,31 @@ def main():
 
     # Run3 22 configs
     years = ['2022']
+    #runs = ['C']  
     
+    runs = ['C','D', 'E','F','G']  
+    campaigns = { 'mc':'Summer22EENOMINAL', 'data': 'Prompt'}
+    extra_info = {'withCHS': False}
+    #jecs = {'mc': 'Winter22Run3_V2_MC', 'data': 'Winter22Run3_RunD_V2_DATA'} # default
+
+    jecs = {'mc': 'Summer22EE_22Sep2023_V2_MC', 'data': 'Summer22EE_22Sep2023_RunF_V2_DATA'} # default 
+    
+    #jecs = {'mc': 'Summer22EE_22Sep2023_V2_MC', 'data': 'Summer22EE_22Sep2023_RunF_V2_DATA'} # default
+    
+    #Winter22Run3_V2_MC' if self.is_MC else 'Winter22Run3_RunD_V2_DATA'
+
     #####test case
-    runs = ['G']
+    #runs = ['G']
+
     # campaigns = {'mc': 'Summer22EE'}
     # campaigns = { 'mc':'Summer22EETau4GeV'}
     # campaigns = { 'mc':'Summer22EETau10GeV'}
     # campaigns = { 'mc':'Summer22EEnoCandRemoval'}
     # campaigns = { 'mc':'Summer22EEFromPV2Tau0GeV'}
+    
     # extra_info = {'withCHS': False}
-    campaigns = { 'mc':'Summer22EEFromPV2Tau4GeV'}
-    extra_info = {'withCHS': False}
-    # campaigns = { 'mc':'Summer22EENOMINAL'}
-    # extra_info = {'withCHS': True}
-    jecs = {'mc': 'Summer22EERun3_V0_MC', 'data': 'Summer22EERun3_RunF_V0_DATA'} # default
-
+    #campaigns = { 'mc':'Summer22EEFromPV2Tau4GeV'}
+    #extra_info = {'withCHS': False}
 
     ###### prompt data taking
     # runs = ['C','D']
@@ -77,38 +87,40 @@ def main():
     # possible plot_level: 'all', 'rawresponse', 'response', 'default'
     extra_info['plot_level']= 'all'
 
-
-
     module = 'DY'
-    # module = 'QCD'
-    # module = 'test'
+    #module = 'QCD'
+    #module = 'test'
 
     # maxFiles=10
     maxFiles=1
 
     # extraName="test" # to be used to give extra name to the config and output folder
     args = commandline()
+    
     print(green(args))
 
     MR = ModuleRunner(module=module, years=years, runs=runs, campaigns=campaigns, jecs=jecs, extra_info=extra_info, jec_level = jec_level, jec_algo = (jec_algo_AK4,jec_algo_AK8))
     if args.config:
         MR.CreateConfigFiles()
+    
     if args.test:
-        
         MR.Test(maxFiles=maxFiles, extra_flags='--onlypost')
+    
     if args.local:
         MR.RunLocal()
         # MR.RunLocal(distributed="parallel")
+    
     if args.submit:
         MR.Submit()
+    
     if args.runlocal:
         MR.RunMissingLocal()
+    
     if args.merge:
         MR.Merge()
+    
     if args.plot:
         MR.Plot()
-
-
 
 if __name__ == '__main__':
     main()

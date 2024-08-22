@@ -16,20 +16,30 @@ class Constants():
             '2022': ['C','D','E','F','G'],
             'UL18': ['A','B','C','D'],
         }
-        self.MC_samples = ['DY','TTbar','QCD_Flat', 'DYTau']
-        self.data_samples = ['Muon', 'JetHT']
+        
+        #self.MC_samples = ['DY','TTbar','QCD_Flat', 'DYTau']
+        #self.MC_samples = ['DY','TTbar','QCD_Flat']
+        #self.MC_samples = ['DY']
+        
+        self.MC_samples = ['DY','TTbar','QCD_Flat','WJets']
+        self.data_samples = ['Muon']
         self.modules = {
-            'DY':    ['Muon', 'DY', 'DYTau'],
+            #'DY':    ['Muon'],
+            #'DY':    ['DY'],
+            #'DY':    ['DY', 'Muon'],
+            'DY':    ['DY', 'TTbar', 'QCD_Flat','WJets', 'Muon'],
+
             'TTbar': ['Muon',  'TTbar'],
             'QCD':   ['JetHT', 'QCD_Flat'],
             'test':   ['JetHT', 'QCD_Flat'],
             'NanoJME':   ['JetHT', 'QCD_Flat'],
         }
         self.xsec = {
-            'TTbar':  831.76,
-            'DY':     5558,
-            'DYTau':     5558,
-            'QCD_Flat':   185900000*10, #from QCD_HT100to200 * 10
+            'WJets':        64481.5,
+            'TTbar':        831.76,
+            'DY':           5558,
+            'DYTau':        5558,
+            'QCD_Flat':     185900000, #from QCD_HT100to200 * 10
         }
         self.files = {
             'UL18':{
@@ -77,20 +87,15 @@ class Constants():
                 'Summer22EENOMINAL': {
                     'DY':       'datasets/DY_Summer23_NOMINAL.txt',
                     'QCD_Flat': 'datasets/QCD_Summer23_NOMINAL.txt',
-                    'DYTau': 'datasets/DYto2TautoMuTauh_Summer23_NOMINALwCHS.txt',
-                    'TTbar': 'datasets/TTbar_Summer23_NOMINAL.txt',
+                    'TTbar':    'datasets/TTbar_Summer23_NOMINAL.txt',
+                    'WJets':    'datasets/WJets_Summer23_NOMINAL.txt',
                 },
                 'Prompt':{
-                    'MuonC':    'datasets/Muon_2022RunC_Prompt_Nano10_jme.txt',
-                    'MuonD':    'datasets/Muon_2022RunD_Prompt_Nano10_jme.txt',
-                    'MuonE':    'datasets/Muon_2022RunE_Prompt_Nano10_jme.txt',
-                    'MuonF':    'datasets/Muon_2022RunF_Prompt_Nano10_jme.txt',
-                    'MuonG':    'datasets/Muon_2022RunG_Prompt_Nano10_das.txt',
-                    'JetHTC':   'datasets/JetHT_2022RunC_Prompt_Nano10_jme.txt',
-                    'JetHTD':   'datasets/JetHT_2022RunD_Prompt_Nano10_jme.txt',
-                    'JetHTE':   'datasets/JetHT_2022RunE_Prompt_Nano10_jme.txt',
-                    'JetHTF':   'datasets/JetHT_2022RunF_Prompt_Nano11_das.txt',
-                    'JetHTG':   'datasets/JetHT_2022RunG_Prompt_Nano11_das.txt',
+                    'MuonC':    'datasets/Muon_Run2022C_Prompt_16Dec2023.txt',
+                    'MuonD':    'datasets/Muon_Run2022D_Prompt_16Dec2023.txt',
+                    'MuonE':    'datasets/Muon_Run2022E_Prompt_16Dec2023.txt',
+                    'MuonF':    'datasets/Muon_Run2022F_Prompt_16Dec2023.txt',
+                    'MuonG':    'datasets/Muon_Run2022G_Prompt_16Dec2023.txt',
                 },
                 'ReReco':{
                     'MuonC':    'datasets/Muon_2022RunC_ReReco_Nano11_das.txt',

@@ -4,6 +4,88 @@ from bamboo.plots import EquidistantBinning as EqBin
 from bamboo.plots import VariableBinning as VarBin
 from src.binnings import eta_binning, pt_binning, response_pt_binning
 
+def METPlots(tree, tree2, metlabel, sel, sel_tag, Zboson):
+    plots = []
+    
+    plots.append(Plot.make1D(f"{sel_tag}_{metlabel}_pt", tree.pt, sel, EqBin(200,0.,400.), xTitle = f"{metlabel} pt"))
+    plots.append(Plot.make1D(f"{sel_tag}_{metlabel}_phi",tree.phi, sel, EqBin(100,-4.,4.), xTitle = f"{metlabel} phi"))
+    
+    ptBinning = VarBin([ptbin[0] for pttag, ptbin in pt_binning.items()][:-1])
+    
+    Zpx= Zboson.px()/Zboson.pt()
+    Zpy= Zboson.py()/Zboson.pt()
+    
+    # MET response
+    hadronicRecoil = op.sum(tree.p4, -Zboson)
+    upar = op.sum(op.product(hadronicRecoil.px(), Zpx),op.product(hadronicRecoil.py(), Zpy))
+    uper = op.sqrt(op.pow(hadronicRecoil.pt(),2)- op.pow(upar,2))
+
+    plots.append(Plot.make2D(f"{sel_tag}_{metlabel}_response_pt",
+                             ( -upar/Zboson.pt(),Zboson.pt()),
+                             sel,
+                             (EqBin(100,0,2), EqBin(50,0,200)),
+                             xTitle="{metlabel} response",
+                             yTitle="Z p_{T}"
+                         ))
+
+    plots.append(Plot.make2D(f"{sel_tag}_{metlabel}_resolution_upar",
+                             ( -upar-Zboson.pt(),Zboson.pt()),
+                             sel,
+                             (EqBin(100,0,100), EqBin(50,0,200)),
+                             xTitle="{metlabel} resolution upar",
+                             yTitle="Z p_{T}"
+                         ))
+
+    plots.append(Plot.make2D(f"{sel_tag}_{metlabel}_resolution_uper",
+                             ( uper,Zboson.pt()),
+                             sel,
+                             (EqBin(100,0,100), EqBin(50,0,200)),
+                             xTitle="{metlabel} resolution uper",
+                             yTitle="Z p_{T}"
+                         ))
+    
+    plots.append(Plot.make2D(f"{sel_tag}_{metlabel}_resolution_upar_vs_N_pv", ( -upar-Zboson.pt(), tree2.npvsGood), sel, (EqBin(100,0,100), EqBin(12, 0., 60.)), 
+        xTitle="{metlabel} resolution upar", yTitle="Z p_{T}" ))
+    
+    plots.append(Plot.make2D(f"{sel_tag}_{metlabel}_resolution_uper_vs_N_pv", ( -uper, tree2.npvsGood), sel, (EqBin(100,0,100), EqBin(12, 0., 60.)), 
+        xTitle="{metlabel} resolution uper", yTitle="Z p_{T}" ))
+
+    #
+    ## Puppi MET
+    #hadronicRecoil_puppi = op.sum(tree.PuppiMET.p4, -Zboson) 
+    #upar_puppi = op.sum(op.product(hadronicRecoil_puppi.px(), Zpx),op.product(hadronicRecoil_puppi.py(), Zpy))
+    #uper_puppi = op.sqrt(op.pow(hadronicRecoil_puppi.pt(),2)- op.pow(upar_puppi,2))
+
+
+    #plots.append(Plot.make2D(f"{sel_tag}_PuppiMET_response_pt",
+    #                         ( -upar_puppi/Zboson.pt(), Zboson.pt()),
+    #                         sel,
+    #                         (EqBin(100,0,2), EqBin(50,0,200)),
+    #                         xTitle="PuppiMET response",
+    #                         yTitle="Z p_{T}"
+    #                     ))
+
+    #plots.append(Plot.make2D(f"{sel_tag}_PuppiMET_resolution_upar",
+    #                         ( -upar_puppi - Zboson.pt(), Zboson.pt()),
+    #                         sel,
+    #                         (EqBin(100,0,100), EqBin(50,0,200)),
+    #                         xTitle="PuppiMET resolution upar",
+    #                         yTitle="Z p_{T}"
+    #                     ))
+
+    #plots.append(Plot.make2D(f"{sel_tag}_PuppiMET_resolution_uper",
+    #                         ( uper_puppi, Zboson.pt()),
+    #                         sel,
+    #                         (EqBin(100,0,100), EqBin(50,0,200)),
+    #                         xTitle="Puppi MET resolution uper",
+    #                         yTitle="Z p_{T}"
+    #                     ))
+
+    #  
+
+    return plots
+
+
 def muonPlots(muons, sel, sel_tag, maxMuons = 4):
     plots = []
 

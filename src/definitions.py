@@ -3,7 +3,6 @@ from bamboo import treedecorators as btd
 
 # Object definitions
 
-
 def muonDef(mu, iso = False):
     return op.AND(
         mu.pt >= 20.,
@@ -73,20 +72,41 @@ def ak8jetDef(jet):
 
 
 
-def cleanJets(jets, genjets, muons, electrons, deltaRcut = 0.4, sort=True):
+#def cleanJets(jets, genjets, muons, electrons, deltaRcut = 0.4, sort=True):
+#    jets = op.select(jets, lambda jet: op.AND(
+#            op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(jet.p4, ele.p4) < deltaRcut)),
+#            op.NOT(op.rng_any(muons, lambda mu: op.deltaR(jet.p4, mu.p4) < deltaRcut))
+#        ))
+#    genjets = op.select(genjets, lambda jet: op.AND(
+#            op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(jet.p4, ele.p4) < deltaRcut)),
+#            op.NOT(op.rng_any(muons, lambda mu: op.deltaR(jet.p4, mu.p4) < deltaRcut))
+#        ))
+#
+#    if sort:
+#        jets = op.sort(jets, lambda j: -j.pt)
+#    return jets,genjets
+
+
+def cleanJets(jets, muons, electrons, deltaRcut = 0.4, sort=True):
     jets = op.select(jets, lambda jet: op.AND(
             op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(jet.p4, ele.p4) < deltaRcut)),
             op.NOT(op.rng_any(muons, lambda mu: op.deltaR(jet.p4, mu.p4) < deltaRcut))
         ))
-    genjets = op.select(genjets, lambda jet: op.AND(
-            op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(jet.p4, ele.p4) < deltaRcut)),
-            op.NOT(op.rng_any(muons, lambda mu: op.deltaR(jet.p4, mu.p4) < deltaRcut))
-        ))
-
     if sort:
         jets = op.sort(jets, lambda j: -j.pt)
-    return jets,genjets
+    
+    return jets
 
+# separating genjets 
+#def cleanGenJets(genjets, muons, electrons, deltaRcut = 0.4, sort=True):
+#    genjets = op.select(genjets, lambda jet: op.AND(
+#            op.NOT(op.rng_any(electrons, lambda ele: op.deltaR(jet.p4, ele.p4) < deltaRcut)),
+#            op.NOT(op.rng_any(muons, lambda mu: op.deltaR(jet.p4, mu.p4) < deltaRcut))
+#        ))
+#    if sort:
+#        genjets = op.sort(genjets, lambda j: -j.pt)
+#    
+#    return genjets
 
 def effjets(jets):
     return op.select(jets,lambda jet: op.AND(
@@ -128,8 +148,7 @@ def matchedjets(tree, electrons, muons, redo_match = False):
 
     
 
-
-def defineObjects(tree):
+def defineObjects(tree, sampleCfg=None):
     # Muons
     muons = op.sort(
         op.select(tree.Muon, lambda mu: muonDef(mu)),
@@ -161,8 +180,21 @@ def defineObjects(tree):
         op.select(tree.FatJet, lambda jet: ak8jetDef(jet)), lambda jet: -jet.pt)
     
     ## jet - lepton cleaning
-    clak4Jets, clak4genjets = cleanJets(ak4Jets, tree.GenJet, muons, clElectrons)
-    clak8Jets,_ = cleanJets(ak8Jets, tree.GenJet, muons, clElectrons, deltaRcut = 0.8)
+    #clak4Jets, clak4genjets = cleanJets(ak4Jets, tree.GenJet, muons, clElectrons)
+    #clak8Jets,_ = cleanJets(ak8Jets, tree.GenJet, muons, clElectrons, deltaRcut = 0.8)
+    
+    if sampleCfg == 'data':
+        clak4Jets = cleanJets(ak4Jets, muons, clElectrons)
+        clak8Jets = cleanJets(ak8Jets, muons, clElectrons, deltaRcut = 0.8)
+
+    if sampleCfg == 'mc':
+        clak4Jets = cleanJets(ak4Jets, muons, clElectrons)
+        clak4genjets = cleanJets(tree.GenJet, muons, clElectrons)
+        clak8Jets = cleanJets(ak8Jets, muons, clElectrons, deltaRcut = 0.8)
+
+    #clak4genjets = cleanGenJets(ak4Jets, tree.GenJet, muons, clElectrons)
+    #clak8Jets = cleanGenJets(ak8Jets, muons, clElectrons, deltaRcut = 0.8)
+
     
     ## jet ID & pT recommendations
     ak4JetsID = op.select(
@@ -181,5 +213,17 @@ def defineObjects(tree):
         ak4JetsID, lambda jet: op.abs(jet.eta) > 2.4)
 
 
-    return isomuons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4, ak8Jets, clak8Jets, clak4genjets
+    if sampleCfg == 'mc':
+        return isomuons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4, ak8Jets, clak4genjets, clak8Jets
+
+    if sampleCfg == 'data':
+        return isomuons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4, ak8Jets, clak8Jets
+
+    #return isomuons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4, ak8Jets, clak8Jets, clak4genjets
+    
+    # mc
+    #return isomuons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4, ak8Jets, clak4genjets, clak8Jets
+    
+    # data
+    #return isomuons, electrons, clElectrons, ak4Jets, clak4Jets, ak4JetsID, ak4Jetspt40, ak4Jetspt100, ak4Jetsetas2p4, ak4Jetsetag2p4, ak8Jets, clak8Jets
     

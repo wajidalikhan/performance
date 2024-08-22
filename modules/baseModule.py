@@ -3,6 +3,7 @@ from bamboo.treedecorators import NanoAODDescription, CalcCollectionsGroups
 from bamboo.analysisutils import makeMultiPrimaryDatasetTriggerSelection
 from bamboo import treefunctions as op
 from bamboo.analysisutils import forceDefine
+import os.path
 
 from itertools import chain
 
@@ -50,8 +51,8 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
                 print("Couldn't find branch tree.HLT.%s, will omit it!" % HLT)
 
         def getNanoAODDescription():
-            groups = ["HLT_", "MET_","PV_","Pileup_","Rho_"]
-            collections = ["nElectron", "nJet", "nMuon", "nFatJet", "nSubJet","nGenJet","nGenVisTau","nJetCHS", "nTau","nGenJetAK8","nSubGenJetAK8"]
+            groups = ["HLT_", "RawMET_", "MET_", "RawPuppiMET_", "PuppiMET_","PV_","Pileup_","Rho_"]
+            collections = ["nElectron", "nJet", "nMuon", "nFatJet", "nSubJet","nGenJet","nGenVisTau","nJetCHS", "nTau","nGenJetAK8","nSubGenJetAK8", "GenJet"]
             varReaders = [CalcCollectionsGroups(Jet=("pt", "mass"),FatJet=("pt", "mass"))]
             return NanoAODDescription(groups=groups, collections=collections, systVariations=varReaders)
 
@@ -104,19 +105,27 @@ class NanoBaseJME(NanoAODModule, HistogramsModule):
 
         #### reapply JECs ###
         from bamboo.analysisutils import configureJets, configureType1MET
-        isNotWorker = (self.args.distributed != "worker") 
-        configureJets(tree._Jet, jet_algo_AK4,
-                      jec=jec,
-                      mayWriteCache= isNotWorker,
-                      jecLevels = sampleCfg['jec_level'],
-                      # cachedir='/afs/cern.ch/user/a/anmalara/workspace/WorkingArea/JME/jme-validation/JECs_2022/',
-                      isMC=self.is_MC, backend = backend)
-        configureJets(tree._FatJet, jet_algo_AK8,
-                      jec=jec,
-                      mayWriteCache= isNotWorker,
-                      jecLevels = sampleCfg['jec_level'],
-                      # cachedir='/afs/cern.ch/user/a/anmalara/workspace/WorkingArea/JME/jme-validation/JECs_2022/',
-                      isMC=self.is_MC, backend = backend)
+
+        def localizePOGSF(era, POG, fileName):
+            return os.path.join("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration", "POG", POG, era, fileName)
+        
+        if self.is_MC:
+            cmJMEArgs = {
+                "jsonFile":localizePOGSF(sampleCfg["era"]+"_"+sampleCfg["jec"].split("_")[0],"JME","jet_jerc.json.gz"),
+                "jec": jec,
+                "jecLevels": sampleCfg['jec_level'],
+                "isMC": self.isMC,
+                "backend": backend,
+            }
+
+            configureJets(tree._Jet, jetType=jet_algo_AK4, **cmJMEArgs)
+
+            cmJMEArgs.update({"jsonFile":localizePOGSF(sampleCfg["era"]+"_"+sampleCfg["jec"].split("_")[0],"JME","fatJet_jerc.json.gz")})
+            cmJMEArgs.update({"jetAlgoSubjet": "AK4PFPuppi", })  
+            cmJMEArgs.update({"jecSubjet": jec, })
+            cmJMEArgs.update({"jsonFileSubjet": localizePOGSF(sampleCfg["era"]+"_"+sampleCfg["jec"].split("_")[0],"JME","jet_jerc.json.gz")})
+
+            configureJets(tree._FatJet, jetType=jet_algo_AK8, **cmJMEArgs)
 
         # configureType1MET(tree._MET,
         #     jec="Summer16_07Aug2017_V20_MC",
