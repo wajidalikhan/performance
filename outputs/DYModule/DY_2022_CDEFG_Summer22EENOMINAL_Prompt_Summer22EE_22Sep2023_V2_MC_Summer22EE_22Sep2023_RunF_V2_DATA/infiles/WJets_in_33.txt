@@ -1,0 +1,14 @@
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/40000/ec63bc18-1ed8-4309-a266-a41488b1bcdd.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/40000/6ba8ede8-4a28-4802-9d35-4a262d166f3e.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/40000/aa93a6b0-9511-45d6-ace6-ab1055a4f871.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/40000/84c439bb-2628-4422-862a-cacf80b739a9.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/40000/05ea3237-20b8-4584-b534-232edb06e7e6.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/40000/23ae4bd7-550a-453b-97de-c2813dfdbb8e.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/40000/82cae6cd-e574-43dc-b3d7-458fac89936e.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/40000/9a91d291-84f3-4ecc-8654-3a147e7439c1.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/30000/cd86b716-fb4d-469f-8ca0-c5cdd704354d.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/30000/984cb924-8893-4263-a101-d4891ae830b2.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/30000/b59ea16a-3ccb-4f7b-ba73-e98ee598412c.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/30000/c27f33ec-ab00-4152-bd22-b1a33b97b1cb.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/30000/16b7be5e-9a2e-4363-b047-457e1a364d05.root
+root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/WtoLNu-2Jets_0J_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v3/2820000/6c50ddcb-f71d-4b34-95e1-7d658fff26d2.root

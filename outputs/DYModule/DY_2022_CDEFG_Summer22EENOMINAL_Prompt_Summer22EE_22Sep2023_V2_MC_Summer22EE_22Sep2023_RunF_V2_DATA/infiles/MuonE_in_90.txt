@@ -1,0 +1,1 @@
+root://cms-xrd-global.cern.ch//store/data/Run2022E/Muon/NANOAOD/16Dec2023-v1/2540000/9269adb2-18ee-4836-8786-8e1e9b346263.root

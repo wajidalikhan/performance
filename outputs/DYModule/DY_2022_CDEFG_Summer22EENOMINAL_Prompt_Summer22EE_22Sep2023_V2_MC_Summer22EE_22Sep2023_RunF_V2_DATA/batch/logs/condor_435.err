@@ -1,0 +1,19 @@
+INFO:bamboo.workflow:Worker processing sample MuonE with module /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/modules/DYModule.py. Inputs: ['root://cms-xrd-global.cern.ch//store/data/Run2022E/Muon/NANOAOD/16Dec2023-v1/2550000/5229a644-bdb4-44c3-af88-3e028ee8914a.root'], tree: Events, output: MuonE.root, certifiedLumiFile=None, runRange=None
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::Hash<1> is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ParameterSetBlob is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ProcessHistory is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ProcessConfiguration is available
+TClass::Init:0: RuntimeWarning: no dictionary for class pair<edm::Hash<1>,edm::ParameterSetBlob> is available
+WARNING:bamboo.treedecorators:No branch name starting with Pileup_ in the tree - skipping group
+WARNING:bamboo.treedecorators:nGenJet is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:nGenVisTau is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:nJetCHS is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:nGenJetAK8 is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:nSubGenJetAK8 is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:GenJet is not a branch in the tree - skipping collection
+INFO:bamboo.analysismodules:798 plots defined for MuonE in 1.32s, max RSS: 689.12MB
+INFO:bamboo.workflow:Start backend graph construction
+INFO:bamboo.dataframebackend:Number of uses per node type: 763 Histo1D, 3 Filter, 13 gInterpreter_Declare, 498 Define, 40 Histo2D
+INFO:bamboo.workflow:Backend graph construction done in 16.62s, max RSS: 980.32MB
+INFO:bamboo.workflow:Starting to fill plots (and skims)
+INFO:bamboo.workflow:Plots finished in 164.78s, max RSS: 1125.63MB. 801 histograms, 0 skims

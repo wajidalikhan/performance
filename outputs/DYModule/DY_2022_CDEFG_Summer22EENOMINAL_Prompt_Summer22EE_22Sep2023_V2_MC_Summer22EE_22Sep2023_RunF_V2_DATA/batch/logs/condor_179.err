@@ -1,0 +1,14 @@
+INFO:bamboo.workflow:Worker processing sample QCD_Flat with module /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/modules/DYModule.py. Inputs: ['root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/QCD_PT-15to7000_TuneCP5_13p6TeV_pythia8/NANOAODSIM/castor_130X_mcRun3_2023_realistic_v14-v1/2560000/914d0834-2e41-4b47-ac8d-03b8984e915d.root'], tree: Events, output: QCD_Flat.root, certifiedLumiFile=None, runRange=None
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::Hash<1> is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ProcessHistory is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ProcessConfiguration is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ParameterSetBlob is available
+TClass::Init:0: RuntimeWarning: no dictionary for class pair<edm::Hash<1>,edm::ParameterSetBlob> is available
+WARNING:bamboo.treedecorators:nJetCHS is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:GenJet is not a branch in the tree - skipping collection
+INFO:bamboo.analysismodules:921 plots defined for QCD_Flat in 1.94s, max RSS: 766.61MB
+INFO:bamboo.workflow:Start backend graph construction
+INFO:bamboo.dataframebackend:Number of uses per node type: 34 gInterpreter_Declare, 645 Define, 837 Histo1D, 64 Histo2D, 12 Histo3D, 2 Filter
+INFO:bamboo.workflow:Backend graph construction done in 29.92s, max RSS: 1126.04MB
+INFO:bamboo.workflow:Starting to fill plots (and skims)
+INFO:bamboo.workflow:Plots finished in 242.41s, max RSS: 1340.90MB. 923 histograms, 0 skims

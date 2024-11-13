@@ -1,0 +1,19 @@
+INFO:bamboo.workflow:Worker processing sample MuonF with module /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/modules/DYModule.py. Inputs: ['root://cms-xrd-global.cern.ch//store/data/Run2022F/Muon/NANOAOD/16Dec2023-v1/2550000/f19eeae4-9b3a-40f7-baf8-d47e30fa4381.root', 'root://cms-xrd-global.cern.ch//store/data/Run2022F/Muon/NANOAOD/16Dec2023-v1/2550000/a8f03b45-4693-4aef-a42c-e493fd00790e.root', 'root://cms-xrd-global.cern.ch//store/data/Run2022F/Muon/NANOAOD/16Dec2023-v1/2550000/4c353eab-4525-48d0-9349-8022779f9efa.root'], tree: Events, output: MuonF.root, certifiedLumiFile=None, runRange=None
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::Hash<1> is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ParameterSetBlob is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ProcessHistory is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ProcessConfiguration is available
+TClass::Init:0: RuntimeWarning: no dictionary for class pair<edm::Hash<1>,edm::ParameterSetBlob> is available
+WARNING:bamboo.treedecorators:No branch name starting with Pileup_ in the tree - skipping group
+WARNING:bamboo.treedecorators:nGenJet is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:nGenVisTau is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:nJetCHS is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:nGenJetAK8 is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:nSubGenJetAK8 is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:GenJet is not a branch in the tree - skipping collection
+INFO:bamboo.analysismodules:798 plots defined for MuonF in 1.72s, max RSS: 673.42MB
+INFO:bamboo.workflow:Start backend graph construction
+INFO:bamboo.dataframebackend:Number of uses per node type: 763 Histo1D, 3 Filter, 13 gInterpreter_Declare, 498 Define, 40 Histo2D
+INFO:bamboo.workflow:Backend graph construction done in 20.39s, max RSS: 961.56MB
+INFO:bamboo.workflow:Starting to fill plots (and skims)
+INFO:bamboo.workflow:Plots finished in 709.67s, max RSS: 1109.74MB. 801 histograms, 0 skims

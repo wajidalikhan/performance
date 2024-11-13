@@ -1,0 +1,14 @@
+INFO:bamboo.workflow:Worker processing sample TTbar with module /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/modules/DYModule.py. Inputs: ['root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/TTto2L2Nu-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v2/2550000/f42b325d-266a-4b5d-8e2b-8c400cc72ba8.root', 'root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/TTto2L2Nu-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v2/2550000/3c1b347c-7a77-462b-a1c3-b69940f44536.root', 'root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/TTto2L2Nu-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v2/2550000/a5610986-1623-4cd6-a02f-a4bbff44eb82.root', 'root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/TTto2L2Nu-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v2/2550000/5c5807bf-4e74-40ad-b0e6-066ebef0eb7d.root', 'root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/TTto2L2Nu-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v2/2550000/1c975bd6-b2fb-4368-841a-71f55939102c.root', 'root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/TTto2L2Nu-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v2/2550000/96f3a397-bc44-45d1-9bcf-5e3df2895f4f.root', 'root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/TTto2L2Nu-2Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_v14-v2/2550000/5cdf6280-6158-4a04-99bf-f723fa9f0c99.root'], tree: Events, output: TTbar.root, certifiedLumiFile=None, runRange=None
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::Hash<1> is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ProcessHistory is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ProcessConfiguration is available
+TClass::Init:0: RuntimeWarning: no dictionary for class edm::ParameterSetBlob is available
+TClass::Init:0: RuntimeWarning: no dictionary for class pair<edm::Hash<1>,edm::ParameterSetBlob> is available
+WARNING:bamboo.treedecorators:nJetCHS is not a branch in the tree - skipping collection
+WARNING:bamboo.treedecorators:GenJet is not a branch in the tree - skipping collection
+INFO:bamboo.analysismodules:921 plots defined for TTbar in 2.88s, max RSS: 759.74MB
+INFO:bamboo.workflow:Start backend graph construction
+INFO:bamboo.dataframebackend:Number of uses per node type: 34 gInterpreter_Declare, 645 Define, 837 Histo1D, 64 Histo2D, 12 Histo3D, 2 Filter
+INFO:bamboo.workflow:Backend graph construction done in 51.93s, max RSS: 1116.01MB
+INFO:bamboo.workflow:Starting to fill plots (and skims)
+INFO:bamboo.workflow:Plots finished in 651.84s, max RSS: 1335.25MB. 923 histograms, 0 skims

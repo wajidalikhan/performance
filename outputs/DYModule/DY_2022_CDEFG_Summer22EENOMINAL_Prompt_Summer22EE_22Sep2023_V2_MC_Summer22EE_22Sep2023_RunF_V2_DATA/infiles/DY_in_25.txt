@@ -1,0 +1,1 @@
+root://cms-xrd-global.cern.ch//store/mc/Run3Winter24NanoAOD/DYto2L-4Jets_MLL-50_TuneCP5_13p6TeV_madgraphMLM-pythia8/NANOAODSIM/JMENano_133X_mcRun3_2024_realistic_v10-v3/60000/8c826954-13a3-4e39-be78-18f4b114c700.root

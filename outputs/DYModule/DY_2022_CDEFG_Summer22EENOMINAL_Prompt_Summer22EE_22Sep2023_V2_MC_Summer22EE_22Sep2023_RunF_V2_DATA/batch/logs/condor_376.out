@@ -1,0 +1,26 @@
+RDF event loop started to process entries
+Processed 12000 entries. Elapsed: 3.05077s, average rate: 3.93344 kHz
+Processed 24000 entries. Elapsed: 4.30469s, average rate: 5.57532 kHz
+Processed 36000 entries. Elapsed: 5.45231s, average rate: 6.6027 kHz
+Processed 48000 entries. Elapsed: 6.68262s, average rate: 7.18281 kHz
+Processed 60000 entries. Elapsed: 7.75653s, average rate: 7.73542 kHz
+Processed 72000 entries. Elapsed: 10.7011s, average rate: 6.72827 kHz
+Processed 84000 entries. Elapsed: 11.7861s, average rate: 7.12705 kHz
+Processed 96000 entries. Elapsed: 12.9762s, average rate: 7.39814 kHz
+Processed 108000 entries. Elapsed: 14.0557s, average rate: 7.68373 kHz
+Processed 120000 entries. Elapsed: 14.8235s, average rate: 8.09525 kHz
+Processed 132000 entries. Elapsed: 17.8576s, average rate: 7.39183 kHz
+Processed 144000 entries. Elapsed: 18.9411s, average rate: 7.60253 kHz
+Processed 156000 entries. Elapsed: 20.2073s, average rate: 7.71999 kHz
+Processed 168000 entries. Elapsed: 21.3863s, average rate: 7.85551 kHz
+Processed 180000 entries. Elapsed: 22.6458s, average rate: 7.94851 kHz
+Processed 192000 entries. Elapsed: 25.5912s, average rate: 7.50258 kHz
+Processed 204000 entries. Elapsed: 27.0583s, average rate: 7.53929 kHz
+Processed 216000 entries. Elapsed: 28.6213s, average rate: 7.54683 kHz
+Processed 228000 entries. Elapsed: 29.889s, average rate: 7.62821 kHz
+Processed 240000 entries. Elapsed: 31.2716s, average rate: 7.6747 kHz
+Processed 252000 entries. Elapsed: 32.4835s, average rate: 7.75778 kHz
+Processed 264000 entries. Elapsed: 35.7184s, average rate: 7.39116 kHz
+Processed 276000 entries. Elapsed: 37.0082s, average rate: 7.45781 kHz
+Processed 288000 entries. Elapsed: 38.3s, average rate: 7.51959 kHz
+Moving MuonC.root to /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/outputs/DYModule/DY_2022_CDEFG_Summer22EENOMINAL_Prompt_Summer22EE_22Sep2023_V2_MC_Summer22EE_22Sep2023_RunF_V2_DATA/batch/output/376/

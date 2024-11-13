@@ -1,0 +1,17 @@
+RDF event loop started to process entries
+Processed 12000 entries. Elapsed: 3.72877s, average rate: 3.21822 kHz
+Processed 24000 entries. Elapsed: 6.19333s, average rate: 3.87514 kHz
+Processed 36000 entries. Elapsed: 9.07427s, average rate: 3.96726 kHz
+Processed 48000 entries. Elapsed: 11.9882s, average rate: 4.00392 kHz
+Processed 60000 entries. Elapsed: 14.4773s, average rate: 4.14443 kHz
+Processed 72000 entries. Elapsed: 17.9972s, average rate: 4.00063 kHz
+Processed 84000 entries. Elapsed: 20.782s, average rate: 4.04195 kHz
+Processed 96000 entries. Elapsed: 23.7626s, average rate: 4.03996 kHz
+Processed 108000 entries. Elapsed: 26.645s, average rate: 4.0533 kHz
+Processed 120000 entries. Elapsed: 29.152s, average rate: 4.11636 kHz
+Processed 132000 entries. Elapsed: 32.4164s, average rate: 4.07201 kHz
+Processed 144000 entries. Elapsed: 34.72s, average rate: 4.14747 kHz
+Processed 156000 entries. Elapsed: 37.1463s, average rate: 4.19961 kHz
+Processed 168000 entries. Elapsed: 39.7887s, average rate: 4.22231 kHz
+Processed 180000 entries. Elapsed: 42.5226s, average rate: 4.23305 kHz
+Moving MuonG.root to /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/outputs/DYModule/DY_2022_CDEFG_Summer22EENOMINAL_Prompt_Summer22EE_22Sep2023_V2_MC_Summer22EE_22Sep2023_RunF_V2_DATA/batch/output/673/

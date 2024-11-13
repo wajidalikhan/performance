@@ -1,0 +1,12 @@
+RDF event loop started to process entries
+Processed 12000 entries. Elapsed: 16.3154s, average rate: 0.735501 kHz
+Processed 24000 entries. Elapsed: 42.664s, average rate: 0.562535 kHz
+Processed 36000 entries. Elapsed: 48.3992s, average rate: 0.743815 kHz
+Processed 48000 entries. Elapsed: 52.9879s, average rate: 0.905868 kHz
+Processed 60000 entries. Elapsed: 67.6684s, average rate: 0.886676 kHz
+Processed 72000 entries. Elapsed: 73.073s, average rate: 0.985316 kHz
+Processed 84000 entries. Elapsed: 78.4477s, average rate: 1.07078 kHz
+Processed 96000 entries. Elapsed: 84.4869s, average rate: 1.13627 kHz
+Processed 108000 entries. Elapsed: 92.2714s, average rate: 1.17046 kHz
+Processed 120000 entries. Elapsed: 98.1699s, average rate: 1.22237 kHz
+Moving TTbar.root to /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/outputs/DYModule/DY_2022_CDEFG_Summer22EENOMINAL_Prompt_Summer22EE_22Sep2023_V2_MC_Summer22EE_22Sep2023_RunF_V2_DATA/batch/output/147/

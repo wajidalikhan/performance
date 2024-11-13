@@ -1,0 +1,183 @@
+tree: Events
+eras:
+  '2022':
+    luminosity: 33540
+dbcache: dascache
+samples:
+  DY:
+    era: '2022'
+    group: DY
+    files: /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/datasets/DY_Summer23_NOMINAL.txt
+    type: mc
+    split: 100
+    campaign: Summer22EENOMINAL
+    jec: Summer22EE_22Sep2023_V2_MC
+    jec_level: default
+    jec_algo_AK4: Puppi
+    jec_algo_AK8: Puppi
+    withCHS: false
+    plot_level: all
+    cross-section: 5558
+    generated-events: genEventSumw
+  TTbar:
+    era: '2022'
+    group: TTbar
+    files: /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/datasets/TTbar_Summer23_NOMINAL.txt
+    type: mc
+    split: 100
+    campaign: Summer22EENOMINAL
+    jec: Summer22EE_22Sep2023_V2_MC
+    jec_level: default
+    jec_algo_AK4: Puppi
+    jec_algo_AK8: Puppi
+    withCHS: false
+    plot_level: all
+    cross-section: 831.76
+    generated-events: genEventSumw
+  QCD_Flat:
+    era: '2022'
+    group: QCD_Flat
+    files: /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/datasets/QCD_Summer23_NOMINAL.txt
+    type: mc
+    split: 100
+    campaign: Summer22EENOMINAL
+    jec: Summer22EE_22Sep2023_V2_MC
+    jec_level: default
+    jec_algo_AK4: Puppi
+    jec_algo_AK8: Puppi
+    withCHS: false
+    plot_level: all
+    cross-section: 185900000
+    generated-events: genEventSumw
+  WJets:
+    era: '2022'
+    group: WJets
+    files: /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/datasets/WJets_Summer23_NOMINAL.txt
+    type: mc
+    split: 100
+    campaign: Summer22EENOMINAL
+    jec: Summer22EE_22Sep2023_V2_MC
+    jec_level: default
+    jec_algo_AK4: Puppi
+    jec_algo_AK8: Puppi
+    withCHS: false
+    plot_level: all
+    cross-section: 64481.5
+    generated-events: genEventSumw
+  MuonC:
+    era: '2022'
+    group: data
+    files: /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/datasets/Muon_Run2022C_Prompt_16Dec2023.txt
+    type: data
+    split: 100
+    campaign: Prompt
+    jec: Summer22EE_22Sep2023_RunF_V2_DATA
+    jec_level: default
+    jec_algo_AK4: Puppi
+    jec_algo_AK8: Puppi
+    withCHS: false
+    plot_level: all
+  MuonD:
+    era: '2022'
+    group: data
+    files: /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/datasets/Muon_Run2022D_Prompt_16Dec2023.txt
+    type: data
+    split: 100
+    campaign: Prompt
+    jec: Summer22EE_22Sep2023_RunF_V2_DATA
+    jec_level: default
+    jec_algo_AK4: Puppi
+    jec_algo_AK8: Puppi
+    withCHS: false
+    plot_level: all
+  MuonE:
+    era: '2022'
+    group: data
+    files: /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/datasets/Muon_Run2022E_Prompt_16Dec2023.txt
+    type: data
+    split: 100
+    campaign: Prompt
+    jec: Summer22EE_22Sep2023_RunF_V2_DATA
+    jec_level: default
+    jec_algo_AK4: Puppi
+    jec_algo_AK8: Puppi
+    withCHS: false
+    plot_level: all
+  MuonF:
+    era: '2022'
+    group: data
+    files: /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/datasets/Muon_Run2022F_Prompt_16Dec2023.txt
+    type: data
+    split: 100
+    campaign: Prompt
+    jec: Summer22EE_22Sep2023_RunF_V2_DATA
+    jec_level: default
+    jec_algo_AK4: Puppi
+    jec_algo_AK8: Puppi
+    withCHS: false
+    plot_level: all
+  MuonG:
+    era: '2022'
+    group: data
+    files: /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/datasets/Muon_Run2022G_Prompt_16Dec2023.txt
+    type: data
+    split: 100
+    campaign: Prompt
+    jec: Summer22EE_22Sep2023_RunF_V2_DATA
+    jec_level: default
+    jec_algo_AK4: Puppi
+    jec_algo_AK8: Puppi
+    withCHS: false
+    plot_level: all
+plotIt:
+  configuration:
+    width: 800
+    height: 600
+    margin-left: 0.2
+    margin-right: 0.03
+    margin-top: 0.05
+    margin-bottom: 0.15
+    luminosity-label: 2022, %1$.2f fb^-1 (13.6 TeV)
+    experiment: CMS
+    extra-label: Work in progress
+    error-fill-style: 3154
+    error-fill-color: '#ee556270'
+    ratio-fit-error-fill-style: 1001
+    ratio-fit-error-fill-color: '#aa556270'
+    ratio-fit-line-color: '#0B486B'
+    yields-table-align: v
+  legend:
+    position:
+    - 0.7
+    - 0.6
+    - 0.91
+    - 0.91
+  groups:
+    data:
+      legend: data
+    DY:
+      legend: DY
+      fill-color: '#609e1b'
+    TTbar:
+      legend: TTbar
+      fill-color: '#99ccff'
+    QCD_Flat:
+      legend: QCD
+      fill-color: '#FFC300'
+    WJets:
+      legend: WJets
+      fill-color: '#9c04c4'
+  plotdefaults:
+    y-axis: Events
+    log-y: both
+    y-axis-show-zero: true
+    save-extensions:
+    - pdf
+    show-ratio: true
+    sort-by-yields: true
+    legend-columns: 2
+    ratio-y-axis: '#frac{Data}{MC}'
+    ratio-y-axis-range:
+    - 0.8
+    - 1.2
+    normalized: true

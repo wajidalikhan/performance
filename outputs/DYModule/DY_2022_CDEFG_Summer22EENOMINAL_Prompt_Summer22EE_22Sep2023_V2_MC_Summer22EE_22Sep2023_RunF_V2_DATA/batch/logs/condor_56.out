@@ -1,0 +1,10 @@
+RDF event loop started to process entries
+Processed 12000 entries. Elapsed: 9.06893s, average rate: 1.3232 kHz
+Processed 24000 entries. Elapsed: 15.2402s, average rate: 1.57478 kHz
+Processed 36000 entries. Elapsed: 22.9837s, average rate: 1.56632 kHz
+Processed 48000 entries. Elapsed: 28.482s, average rate: 1.68528 kHz
+Processed 60000 entries. Elapsed: 35.5537s, average rate: 1.68759 kHz
+Processed 72000 entries. Elapsed: 41.5344s, average rate: 1.7335 kHz
+Processed 84000 entries. Elapsed: 48.0962s, average rate: 1.7465 kHz
+Processed 96000 entries. Elapsed: 54.8787s, average rate: 1.74931 kHz
+Moving DY.root to /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/outputs/DYModule/DY_2022_CDEFG_Summer22EENOMINAL_Prompt_Summer22EE_22Sep2023_V2_MC_Summer22EE_22Sep2023_RunF_V2_DATA/batch/output/56/

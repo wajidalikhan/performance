@@ -1,0 +1,31 @@
+RDF event loop started to process entries
+Processed 12000 entries. Elapsed: 9.37766s, average rate: 1.27964 kHz
+Processed 24000 entries. Elapsed: 15.2111s, average rate: 1.5778 kHz
+Processed 36000 entries. Elapsed: 21.6443s, average rate: 1.66326 kHz
+Processed 48000 entries. Elapsed: 27.5558s, average rate: 1.74192 kHz
+Processed 60000 entries. Elapsed: 33.4169s, average rate: 1.7955 kHz
+Processed 72000 entries. Elapsed: 39.7971s, average rate: 1.80918 kHz
+Processed 84000 entries. Elapsed: 78.1716s, average rate: 1.07456 kHz
+Processed 96000 entries. Elapsed: 85.3608s, average rate: 1.12464 kHz
+Processed 108000 entries. Elapsed: 99.3s, average rate: 1.08761 kHz
+Processed 120000 entries. Elapsed: 105.376s, average rate: 1.13878 kHz
+Processed 132000 entries. Elapsed: 113.229s, average rate: 1.16578 kHz
+Processed 144000 entries. Elapsed: 119.223s, average rate: 1.20782 kHz
+Processed 156000 entries. Elapsed: 125.429s, average rate: 1.24374 kHz
+Processed 168000 entries. Elapsed: 135.656s, average rate: 1.23843 kHz
+Processed 180000 entries. Elapsed: 141.76s, average rate: 1.26976 kHz
+Processed 192000 entries. Elapsed: 149.589s, average rate: 1.28352 kHz
+Processed 204000 entries. Elapsed: 155.769s, average rate: 1.30963 kHz
+Processed 216000 entries. Elapsed: 163.264s, average rate: 1.32301 kHz
+Processed 228000 entries. Elapsed: 169.377s, average rate: 1.34611 kHz
+Processed 240000 entries. Elapsed: 184.448s, average rate: 1.30118 kHz
+Processed 252000 entries. Elapsed: 190.318s, average rate: 1.3241 kHz
+Processed 264000 entries. Elapsed: 196.426s, average rate: 1.34402 kHz
+Processed 276000 entries. Elapsed: 203.758s, average rate: 1.35455 kHz
+Processed 288000 entries. Elapsed: 209.538s, average rate: 1.37445 kHz
+Processed 300000 entries. Elapsed: 217.147s, average rate: 1.38155 kHz
+Processed 312000 entries. Elapsed: 223.257s, average rate: 1.39749 kHz
+Processed 324000 entries. Elapsed: 229.357s, average rate: 1.41264 kHz
+Processed 336000 entries. Elapsed: 237.045s, average rate: 1.41745 kHz
+Processed 348000 entries. Elapsed: 242.543s, average rate: 1.4348 kHz
+Moving TTbar.root to /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/outputs/DYModule/DY_2022_CDEFG_Summer22EENOMINAL_Prompt_Summer22EE_22Sep2023_V2_MC_Summer22EE_22Sep2023_RunF_V2_DATA/batch/output/151/
