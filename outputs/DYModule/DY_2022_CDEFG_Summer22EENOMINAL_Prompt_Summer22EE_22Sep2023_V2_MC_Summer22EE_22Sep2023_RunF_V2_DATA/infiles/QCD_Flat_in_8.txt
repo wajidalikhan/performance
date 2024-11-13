@@ -1,1 +1,0 @@
-root://cms-xrd-global.cern.ch//store/mc/Run3Summer23NanoAODv12/QCD_PT-15to7000_TuneCP5_13p6TeV_pythia8/NANOAODSIM/castor_130X_mcRun3_2023_realistic_v14-v1/2560000/4bc2a19b-e2f2-4a8a-9192-4d7bcc6f23a4.root

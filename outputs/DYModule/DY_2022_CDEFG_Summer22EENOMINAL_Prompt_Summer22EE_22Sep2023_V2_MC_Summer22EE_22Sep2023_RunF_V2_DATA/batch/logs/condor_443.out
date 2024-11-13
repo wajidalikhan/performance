@@ -1,6 +1,0 @@
-RDF event loop started to process entries
-Processed 12000 entries. Elapsed: 14.2183s, average rate: 0.843986 kHz
-Processed 24000 entries. Elapsed: 16.9488s, average rate: 1.41603 kHz
-Processed 36000 entries. Elapsed: 19.7753s, average rate: 1.82045 kHz
-Processed 48000 entries. Elapsed: 22.445s, average rate: 2.13856 kHz
-Moving MuonE.root to /afs/cern.ch/work/w/wajid/METStudies/JMEFrameWrk/jme-validation/outputs/DYModule/DY_2022_CDEFG_Summer22EENOMINAL_Prompt_Summer22EE_22Sep2023_V2_MC_Summer22EE_22Sep2023_RunF_V2_DATA/batch/output/443/
